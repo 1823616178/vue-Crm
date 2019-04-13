@@ -1,5 +1,6 @@
 export default {
   route: {
+    jurisdiction: "系统管理",
     Ly_dispatching: '流延生产任务派工',
     dycoms: '动态排版',
     curtain_coating: '流延生产任务列表',

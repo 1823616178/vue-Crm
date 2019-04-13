@@ -8,6 +8,7 @@ import Layout from '@/views/layout/Layout'
 // import Context from "@/views/TextContent"
 
 /* Router Modules */
+import jurisdiction from './modules/jurisdiction.js'
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
@@ -156,6 +157,7 @@ export const asyncRoutes = [
     ]
   },
   {
+    hidden: true,
     path: '/icon',
     component: Layout,
     children: [
@@ -169,15 +171,17 @@ export const asyncRoutes = [
   },
 
   /** When your routing table is too long, you can split it into small modules**/
+  jurisdiction,
+  saleTableRouter,
   production,
   componentsRouter,
   chartsRouter,
-  nestedRouter,
-  tableRouter,
-  treeTableRouter,
-  saleTableRouter,
+  // nestedRouter,
+  // tableRouter,
+  // treeTableRouter,
 
   {
+    hidden: true,
     path: '/example',
     component: Layout,
     redirect: '/example/list',
@@ -210,6 +214,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/tab',
     component: Layout,
     children: [
@@ -223,6 +228,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/error',
     component: Layout,
     redirect: 'noredirect',
@@ -248,6 +254,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/error-log',
     component: Layout,
     redirect: 'noredirect',
@@ -262,6 +269,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/excel',
     component: Layout,
     redirect: '/excel/export-excel',
@@ -299,6 +307,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/zip',
     component: Layout,
     redirect: '/zip/download',
@@ -315,6 +324,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',
@@ -357,6 +367,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/pdf',
     component: Layout,
     redirect: '/pdf/index',
@@ -376,6 +387,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/theme',
     component: Layout,
     redirect: 'noredirect',
@@ -390,6 +402,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/clipboard',
     component: Layout,
     redirect: 'noredirect',
@@ -404,6 +417,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: '/i18n',
     component: Layout,
     children: [
@@ -417,6 +431,7 @@ export const asyncRoutes = [
   },
 
   {
+    hidden: true,
     path: 'external-link',
     component: Layout,
     children: [
