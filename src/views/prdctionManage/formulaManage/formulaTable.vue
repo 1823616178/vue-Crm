@@ -1,11 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <!-- <el-checkbox-group v-model="checkboxVal">
-        <el-checkbox label="apple">apple</el-checkbox>
-        <el-checkbox label="banana">banana</el-checkbox>
-        <el-checkbox label="orange">orange</el-checkbox>
-      </el-checkbox-group>-->
+
       <div class="filter-container">
         <el-input v-model="listQuery.title"
                   :placeholder="$t('orderTable.customerName')"
@@ -16,17 +12,25 @@
                    type="primary"
                    icon="el-icon-search"
                    @click="handleFilter">{{ $t('table.search') }}</el-button>
+        <el-button type="primary"
+                   icon="document"
+                   class="filter-item"
+                   @click="handleDownload">{{ $t('route.exportExcel') }}</el-button>
       </div>
     </div>
 
-    <el-table :data="tableData"
+    <el-table ref="formulaTable"
+              :data="tableData"
               stripe
               high
               border
               fit
               highlight-current-row
-              style="width: 100%">
+              style="width: 100%"
+              @selection-change="handleSelectionChange">
 
+      <el-table-column type="selection"
+                       align="center" />
       <el-table-column align="center"
                        v-for="( { prop, label }) in colConfigs"
                        :key="prop"
@@ -55,43 +59,43 @@
                      :visible.sync="dialogTableVisible">
             <el-form :model="this.temp">
               <el-form-item :label="$t('formulaTable.formulaId')">
-                <el-input :value="temp.formulaId"/>
+                <el-input :value="temp.formulaId" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.goods')">
-                <el-input :value="temp.goods"/>
+                <el-input :value="temp.goods" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.createTime')">
-                <el-input :value="temp.createTime"/>
+                <el-input :value="temp.createTime" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.createPeop')">
-                <el-input :value="temp.createPeop"/>
+                <el-input :value="temp.createPeop" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.stopTime')">
-                <el-input :value="temp.stopTime"/>
+                <el-input :value="temp.stopTime" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.stopPeop')">
-                <el-input :value="temp.stopPeop"/>
+                <el-input :value="temp.stopPeop" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.updateTime')">
-                <el-input :value="temp.updateTime"/>
+                <el-input :value="temp.updateTime" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.updatePeop')">
-                <el-input :value="temp.updatePeop"/>
+                <el-input :value="temp.updatePeop" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.defaultVal')">
-                <el-input :value="temp.defaultVal"/>
+                <el-input :value="temp.defaultVal" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.level')">
-                <el-input :value="temp.level"/>
+                <el-input :value="temp.level" />
               </el-form-item>
               <el-form-item :label="$t('formulaTable.remark')">
-                <el-input :value="temp.remark"/>
+                <el-input :value="temp.remark" />
               </el-form-item>
               <div slot=""
                    class="dialog-footer">
                 <el-button @click="dialogTableVisible = false">{{$t('permission.cancel')}}</el-button>
                 <el-button type="primary"
-                           @click="dialogTableVisible = false">{{$t('permission.confirm')}}</el-button>
+                           @click="updateData()">{{$t('permission.confirm')}}</el-button>
               </div>
             </el-form>
           </el-dialog>
@@ -130,6 +134,7 @@ export default {
       { prop: "remark", label: "备注" }
     ];
     return {
+      multipleSelection: [],
       tableData: [],
       temp: {},
       total: 0,
@@ -162,8 +167,46 @@ export default {
 
   },
   methods: {
-    handleDelete(index,row) {
-      row.splice(index,1);
+    formatJson (filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    handleDownload () {
+      if (this.multipleSelection.length) {
+        this.downloadLoading = true
+        import('@/vendor/Export2Excel').then(excel => {
+          const filterVal = ['formulaId', 'goods', 'createTime', 'createPeop', 'stopTime','stopPeop','updateTime','updatePeop','level','defaultVal','remark']
+          const tHeader = ['配方编号', '对应产品', '创建时间', '创建人', '停止时间','停止人','修改时间','修改人','配方等级','默认选用值','备注']
+          const list = this.multipleSelection
+          const data = this.formatJson(filterVal, list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename
+          })
+          this.$refs.formulaTable.clearSelection()
+          this.downloadLoading = false
+        })
+      } else {
+        this.$message({
+          message: 'Please select at least one item',
+          type: 'warning'
+        })
+      }
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    updateData () {
+      this.dialogTableVisible = false
+      this.$notify({
+        title: '成功',
+        message: '更新成功',
+        type: 'success',
+        duration: 2000
+      })
+    },
+    handleDelete (index, row) {
+      row.splice(index, 1);
     },
     handleEdit (row) {
       this.temp = Object.assign({}, row) // copy obj

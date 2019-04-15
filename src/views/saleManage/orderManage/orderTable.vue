@@ -165,6 +165,10 @@
                 </el-table>
               </el-row>
             </el-form>
+            <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogTableVisible = false">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" @click="updateData()">{{ $t('table.confirm') }}</el-button>
+      </div>
           </el-dialog>
         </template>
       </el-table-column>
@@ -300,6 +304,15 @@ export default {
     }
   },
   methods: {
+    updateData() {
+            this.dialogTableVisible = false
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
+    },
     handleDelete(index,row) {
       row.splice(index,1);
     },
