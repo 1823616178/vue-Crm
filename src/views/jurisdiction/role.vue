@@ -7,21 +7,21 @@
               style="width: 100%;margin-top:30px;"
               border>
       <el-table-column align="center"
-                       label="Role Key"
+                       label="权限"
                        width="220">
         <template slot-scope="scope">{{ scope.row.key }}</template>
       </el-table-column>
       <el-table-column align="center"
-                       label="Role Name"
+                       label="员工"
                        width="220">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
       <el-table-column align="header-center"
-                       label="Description">
+                       label="描述">
         <template slot-scope="scope">{{ scope.row.description }}</template>
       </el-table-column>
       <el-table-column align="center"
-                       label="Operations">
+                       label="操作">
         <template slot-scope="scope">
           <el-button type="primary"
                      size="small"

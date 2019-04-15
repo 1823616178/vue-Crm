@@ -3,7 +3,7 @@
     <split-pane split="vertical"
                 @resize="resize">
       <template slot="paneL">
-        <div class="left-container">
+        <div class="left-container verticaloverflow">
           <Kanban :key="1"
                   :list="list1"
                   :options="options"
@@ -14,7 +14,7 @@
       <template slot="paneR">
         <split-pane split="horizontal">
           <template slot="paneL">
-            <div class="top-container">
+            <div class="top-container verticaloverflow">
               <Kanban :key="2"
                       :list="list2"
                       :options="options"
@@ -23,7 +23,7 @@
             </div>
           </template>
           <template slot="paneR">
-            <div class="bottom-container">
+            <div class="top-container verticaloverflow">
               <Kanban :key="3"
                       :list="list3"
                       :options="options"
@@ -78,6 +78,9 @@ export default {
 </script>
 
 <style>
+.verticaloverflow {
+  overflow: auto;
+}
 .oNdragClass {
   color: aqua;
   background-color: blueviolet;
@@ -109,6 +112,7 @@ export default {
 }
 
 .bottom-container {
+  overflow: initial;
   width: 100%;
   background-color: #95e1d3;
   height: 100%;

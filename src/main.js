@@ -21,7 +21,6 @@ import './mock' // simulation data/
 import * as filters from './filters' // global filters
 import VCharts from 'v-charts'
 
-
 Vue.use(VCharts)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size

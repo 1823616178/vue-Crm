@@ -255,6 +255,6 @@ export default {
     duty: "职务",
     sex: "性别",
     site: "办公地址",
-    timestamp:"更新时间"
+    timestamp: "更新时间"
   }
 }

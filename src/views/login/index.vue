@@ -1,80 +1,100 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm"
-             :model="loginForm"
-             :rules="loginRules"
-             class="login-form"
-             auto-complete="on"
-             label-position="left">
-      <div class="title-container">
-        <h3 class="title">
-          {{ $t('login.title') }}
-        </h3>
-        <lang-select class="set-language" />
-      </div>
+  <div>
+    <div class="homepage-hero-module">
+      <div class="video-container">
+        <div :style="fixStyle"
+             class="filter">
+          <video :style="fixStyle"
+                 autoplay
+                 loop
+                 v-on:canplay="canplay">
+            <source src="@/MP4/ofo.mp4"
+                    type="video/mp4" />
+          </video>
+          <div class="poster hidden"
+               v-if="!vedioCanPlay">
+            <img :style="fixStyle"
+                 src="@/MP4/ofo.png"
+                 alt="">
+          </div>
+          <div class="login-container">
+            <el-form ref="loginForm"
+                     :model="loginForm"
+                     :rules="loginRules"
+                     class="login-form"
+                     auto-complete="on"
+                     label-position="left">
+              <div class="title-container">
+                <h3 class="title">
+                  {{ $t('login.title') }}
+                </h3>
+                <lang-select class="set-language" />
+              </div>
 
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input v-model="loginForm.username"
-                  :placeholder="$t('login.username')"
-                  name="username"
-                  type="text"
-                  auto-complete="on" />
-      </el-form-item>
+              <el-form-item prop="username">
+                <span class="svg-container">
+                  <svg-icon icon-class="user" />
+                </span>
+                <el-input v-model="loginForm.username"
+                          :placeholder="$t('login.username')"
+                          name="username"
+                          type="text"
+                          auto-complete="on" />
+              </el-form-item>
 
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input v-model="loginForm.password"
-                  :type="passwordType"
-                  :placeholder="$t('login.password')"
-                  name="password"
-                  auto-complete="on"
-                  @keyup.enter.native="handleLogin" />
-        <span class="show-pwd"
-              @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
-      </el-form-item>
+              <el-form-item prop="password">
+                <span class="svg-container">
+                  <svg-icon icon-class="password" />
+                </span>
+                <el-input v-model="loginForm.password"
+                          :type="passwordType"
+                          :placeholder="$t('login.password')"
+                          name="password"
+                          auto-complete="on"
+                          @keyup.enter.native="handleLogin" />
+                <span class="show-pwd"
+                      @click="showPwd">
+                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+                </span>
+              </el-form-item>
 
-      <el-button :loading="loading"
-                 type="primary"
-                 style="width:100%;margin-bottom:30px;"
-                 @click.native.prevent="handleLogin">
-        {{ $t('login.logIn') }}
-      </el-button>
+              <el-button :loading="loading"
+                         type="primary"
+                         style="width:100%;margin-bottom:30px;"
+                         @click.native.prevent="handleLogin">
+                {{ $t('login.logIn') }}
+              </el-button>
 
-      <div style="position:relative">
-        <div class="tips">
-          <span>{{ $t('login.rootadmin') }} : admin</span>
-          <!-- <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span> -->
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;">
-            {{ $t('login.username') }} : editor
-          </span>
-          <!-- <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span> -->
-        </div>
+              <div style="position:relative">
+                <div class="tips">
+                  <span>{{ $t('login.rootadmin') }} : admin</span>
+                </div>
+                <div class="tips">
+                  <span style="margin-right:18px;">
+                    {{ $t('login.username') }} : editor
+                  </span>
+                </div>
 
-        <el-button class="thirdparty-button"
+                <!-- <el-button class="thirdparty-button"
                    type="primary"
                    @click="showDialog=true">
           {{ $t('login.thirdparty') }}
-        </el-button>
+        </el-button> -->
+              </div>
+            </el-form>
+          </div>
+        </div>
       </div>
-    </el-form>
+      <el-dialog :title="$t('login.thirdparty')"
+                 :visible.sync="showDialog">
+        {{ $t('login.thirdpartyTips') }}
+        <br>
+        <br>
+        <br>
+        <social-sign />
 
-    <el-dialog :title="$t('login.thirdparty')"
-               :visible.sync="showDialog">
-      {{ $t('login.thirdpartyTips') }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -82,7 +102,8 @@
 import { validUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
-
+import { Promise } from 'q';
+import { setTimeout } from 'timers';
 
 export default {
   name: 'Login',
@@ -103,6 +124,8 @@ export default {
       }
     }
     return {
+      vedioCanPlay: false,
+      fixStyle: '',
       loginForm: {
         username: '',
         password: ''
@@ -126,12 +149,46 @@ export default {
     }
   },
   created () {
+    this.canplay()
     // window.addEventListener('hashchange', this.afterQRScan)
   },
   destroyed () {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
+  mounted: function () {
+    window.onresize = () => {
+      const windowWidth = document.body.clientWidth
+      const windowHeight = document.body.clientHeight
+      const windowAspectRatio = windowHeight / windowWidth
+      let videoWidth
+      let videoHeight
+      if (windowAspectRatio < 0.5625) {
+        videoWidth = windowWidth
+        videoHeight = videoWidth * 0.5625
+        this.fixStyle = {
+          height: windowWidth * 0.5625 + 'px',
+          width: windowWidth + 'px',
+          'margin-bottom': (windowHeight - videoHeight) / 2 + 'px',
+          'margin-left': 'initial'
+        }
+      } else {
+        videoHeight = windowHeight
+        videoWidth = videoHeight / 0.5625
+        this.fixStyle = {
+          height: windowHeight + 'px',
+          width: windowHeight / 0.5625 + 'px',
+          'margin-left': (windowWidth - videoWidth) / 2 + 'px',
+          'margin-bottom': 'initial'
+        }
+      }
+    }
+    window.onresize()
+  },
   methods: {
+    canplay (val) {
+      console.log(val)
+      this.vedioCanPlay = true
+    },
     showPwd () {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -177,6 +234,35 @@ export default {
   }
 }
 </script>
+
+<style>
+.OnvideoLogin {
+  position: absolute;
+}
+</style>
+
+
+<style scoped>
+.homepage-hero-module,
+.video-container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.video-container .poster img,
+.video-container video {
+  z-index: 0;
+  position: absolute;
+}
+
+.video-container .filter {
+  z-index: 1;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.4);
+}
+</style>
+
 
 <style rel="stylesheet/scss" lang="scss">
 /* 修复input 背景不协调 和光标变色 */
@@ -226,14 +312,14 @@ $cursor: #fff;
 </style>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-$bg: #2d3a4b;
+$bg: #2f4f4f;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background-color: $bg;
+  // background-color: $bg;
   overflow: hidden;
   .login-form {
     position: relative;
