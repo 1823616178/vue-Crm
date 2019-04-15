@@ -14,22 +14,12 @@ const jurisdiction = {
   },
   children: [
     {
-      path: 'page',
-      component: () => import('@/views/jurisdiction/page'),
+      path: 'section',
+      component: () => import('@/views/jurisdiction/section'),
       name: 'PagePermission',
       meta: {
-        title: 'pagePermission',
+        title: ' divisional_management ',
         roles: ['admin', 'editor'] // or you can only set roles in sub nav
-      }
-    },
-    {
-      path: 'directive',
-      component: () => import('@/views/jurisdiction/directive'),
-      name: 'DirectivePermission',
-      meta: {
-        title: 'directivePermission',
-        roles: ['admin', 'editor']
-        // if do not set roles, means: this page does not require permission
       }
     },
     {

@@ -1,5 +1,6 @@
 export default {
   route: {
+    divisional_management: "部门管理",
     jurisdiction: "系统管理",
     Ly_dispatching: '流延生产任务派工',
     dycoms: '动态排版',
@@ -240,5 +241,20 @@ export default {
     defaultVal: '默认选用值',
     level: '配方等级',
     remark: '备注'
+  },
+  Peole: {
+    id: '序号',
+    Jobnumber: "工号",
+    name: "姓名",
+    Phone: "电话",
+    unit: "单位",
+    role: "权限",
+    user: "用户名",
+    CardId: "身份证号",
+    birthday: "生日",
+    duty: "职务",
+    sex: "性别",
+    site: "办公地址",
+    timestamp:"更新时间"
   }
 }

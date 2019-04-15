@@ -1,9 +1,17 @@
 <template>
   <div class="app-container documentation-container">
-    <a class="document-btn" target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/">{{ $t('documentation.documentation') }}</a>
-    <a class="document-btn" target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">{{ $t('documentation.github') }}</a>
-    <a class="document-btn" target="_blank" href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">国内文档</a>
-    <dropdown-menu :items="articleList" style="float:left;margin-left:50px;" title="系列文章" />
+    <a class="document-btn"
+       target="_blank"
+       href="https://panjiachen.github.io/vue-element-admin-site/">{{ $t('documentation.documentation') }}</a>
+    <a class="document-btn"
+       target="_blank"
+       href="https://github.com/PanJiaChen/vue-element-admin/">{{ $t('documentation.github') }}</a>
+    <a class="document-btn"
+       target="_blank"
+       href="https://panjiachen.gitee.io/vue-element-admin-site/zh/">国内文档</a>
+    <dropdown-menu :items="articleList"
+                   style="float:left;margin-left:50px;"
+                   title="系列文章" />
   </div>
 </template>
 <script>
@@ -12,7 +20,7 @@ import DropdownMenu from '@/components/Share/dropdownMenu'
 export default {
   name: 'Documentation',
   components: { DropdownMenu },
-  data() {
+  data () {
     return {
       articleList: [
         { title: '基础篇', href: 'https://juejin.im/post/59097cd7a22b9d0065fb61d2' },

@@ -90,19 +90,6 @@ export const constantRoutes = [
   },
   {
     hidden: true,
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
-    hidden: true,
     path: '/guide',
     component: Layout,
     redirect: '/guide/index',
@@ -174,8 +161,8 @@ export const asyncRoutes = [
   jurisdiction,
   saleTableRouter,
   production,
-  componentsRouter,
-  chartsRouter,
+  // componentsRouter,
+  // chartsRouter,
   // nestedRouter,
   // tableRouter,
   // treeTableRouter,

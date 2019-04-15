@@ -6,7 +6,9 @@
     <h3>{{ $t('errorLog.tips') }}</h3>
     <code>
       {{ $t('errorLog.description') }}
-      <a target="_blank" class="link-type" href="https://panjiachen.github.io/vue-element-admin-site/guide/advanced/error.html">
+      <a target="_blank"
+         class="link-type"
+         href="https://panjiachen.github.io/vue-element-admin-site/guide/advanced/error.html">
         {{ $t('errorLog.documentation') }}
       </a>
     </code>
@@ -27,7 +29,7 @@ export default {
 </script>
 
 <style scoped>
-  .errPage-container {
-    padding: 30px;
-  }
+.errPage-container {
+  padding: 30px;
+}
 </style>

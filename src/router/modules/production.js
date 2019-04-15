@@ -44,12 +44,12 @@ const production = {
       meta: { title: 'Ly_dispatching' }
     },
 
-    {
-      path: 'slitting-management',
-      component: () => import('@/views/production/dynamicTable/index'),
-      name: 'DynamicTable',
-      meta: { title: 'slitting_management' }
-    },
+    // {
+    //   path: 'slitting-management',
+    //   component: () => import('@/views/production/dynamicTable/index'),
+    //   name: 'DynamicTable',
+    //   meta: { title: 'slitting_management' }
+    // },
     {
       path: 'dycoms',
       component: () => import('@/views/dynamic_composing/Index'),

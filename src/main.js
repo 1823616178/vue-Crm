@@ -18,9 +18,11 @@ import './icons' // icon
 import './errorLog' // error log
 import './permission' // permission control
 import './mock' // simulation data/
-
 import * as filters from './filters' // global filters
+import VCharts from 'v-charts'
 
+
+Vue.use(VCharts)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)

@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import production from '../router/modules/production'
 
-export function fetchList(query) {
+export function fetchList (query) {
   return request({
     url: '/article/list',
     method: 'get',
@@ -9,21 +9,21 @@ export function fetchList(query) {
   })
 }
 
-export function GetLiuYanList() {
+export function GetLiuYanList () {
   return request({
     url: '/production/getliuyanList',
     method: 'get'
   })
 }
 
-export function fetchListS() {
+export function fetchListS () {
   return request({
     url: '/content/getContentList',
     method: 'get'
   })
 }
 
-export function fetchArticle(id) {
+export function fetchArticle (id) {
   return request({
     url: '/article/detail',
     method: 'get',
@@ -31,7 +31,7 @@ export function fetchArticle(id) {
   })
 }
 
-export function fetchPv(pv) {
+export function fetchPv (pv) {
   return request({
     url: '/article/pv',
     method: 'get',
@@ -39,7 +39,7 @@ export function fetchPv(pv) {
   })
 }
 
-export function createArticle(data) {
+export function createArticle (data) {
   return request({
     url: '/article/create',
     method: 'post',
@@ -47,7 +47,7 @@ export function createArticle(data) {
   })
 }
 
-export function updateArticle(data) {
+export function updateArticle (data) {
   return request({
     url: '/article/update',
     method: 'post',
@@ -55,7 +55,7 @@ export function updateArticle(data) {
   })
 }
 
-export function getIndexData() {
+export function getIndexData () {
   return request({
     url: '/article/indexData',
     method: 'get'
@@ -63,35 +63,35 @@ export function getIndexData() {
   })
 }
 
-export function getIndexpiedata() {
+export function getIndexpiedata () {
   return request({
     url: '/article/piedata',
     method: 'get'
   })
 }
 
-export function defalutList() {
+export function defalutList () {
   return request({
     url: '/article/defalutList',
     method: 'get'
   })
 }
 
-export function contts() {
+export function contts () {
   return request({
     url: '/article/contts',
     method: 'get'
   })
 }
 
-export function IndexArr() {
+export function IndexArr () {
   return request({
     url: '/article/arrfuse',
     method: 'get'
   })
 }
 
-export function gaveContent(data) {
+export function gaveContent (data) {
   return request({
     url: '/content/getcontent',
     method: 'post',
@@ -99,10 +99,18 @@ export function gaveContent(data) {
   })
 }
 
-export function productionList(data) {
+export function productionList (data) {
   return request({
     url: '/production/getListData',
     method: 'post',
+    data
+  })
+}
+
+export function fetPeopleList (data) {
+  return request({
+    url: "/jurisdiction/gavePeopleList",
+    method: "post",
     data
   })
 }

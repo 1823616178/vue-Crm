@@ -3,13 +3,16 @@
     <div class="board-column-header">
       {{ headerText }}
     </div>
-    <draggable
-      :list="list"
-      :options="options"
-      class="board-column-content"
-    >
-      <div v-for="element in list" :key="element.id" class="board-item">
-        {{ element.name }} {{ element.id }}
+    <draggable :list="list"
+               :options="options"
+               class="board-column-content">
+      <div v-for="element in list"
+           :key="element.id"
+           class="board-item">
+        {{ element.name }}
+        {{ element.id }}
+        {{element.tesk}}
+        {{element.role}}
       </div>
     </draggable>
   </div>
@@ -29,16 +32,19 @@ export default {
     },
     options: {
       type: Object,
-      default() {
+      default () {
         return {}
       }
     },
     list: {
       type: Array,
-      default() {
+      default () {
         return []
       }
     }
+  },
+  methods: {
+
   }
 }
 </script>

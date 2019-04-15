@@ -2,12 +2,12 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.serial"
-                :placeholder="$t('production.serial')"
+                :placeholder="$t('Peole.id')"
                 style="width: 200px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.id"
-                 :placeholder="$t('production.id')"
+                 :placeholder="$t('Peole.Jobnumber')"
                  clearable
                  style="width: 90px"
                  class="filter-item">
@@ -17,7 +17,7 @@
                    :value="item.id" />
       </el-select>
       <el-select v-model="listQuery.type"
-                 :placeholder="$t('production.code')"
+                 :placeholder="$t('Peole.Phone')"
                  clearable
                  class="filter-item"
                  style="width: 130px">
@@ -26,6 +26,11 @@
                    :label="item.code"
                    :value="item.code" />
       </el-select>
+      <el-button class="filter-item"
+                 style="margin-left: 10px;"
+                 type="primary"
+                 icon="el-icon-edit"
+                 @click="handleCreate">{{ $t('table.add') }}</el-button>
       <el-button v-waves
                  class="filter-item"
                  type="primary"
@@ -51,110 +56,48 @@
               @selection-change="handleSelectionChange">
       <el-table-column type="selection"
                        align="center" />
-      <el-table-column :label="$t('production.id')"
+      <el-table-column :label="$t('Peole.id')"
                        prop="id"
                        sortable="custom"
                        align="center"
-                       width="80px">
+                       width="150px">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('production.time')"
-                       width="150px"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.getdate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('production.serial')"
-                       min-width="90px">
+      <el-table-column :label="$t('Peole.Jobnumber')"
+                       min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.serial }}</span>
+                @click="handleUpdate(scope.row)">{{ scope.row.Jobnumber}}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('production.code')"
-                       min-width="90px">
-        <template slot-scope="scope">
-          <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.code }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('production.name')"
-                       min-width="90px">
+      <el-table-column :label="$t('Peole.name')"
+                       min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
                 @click="handleUpdate(scope.row)">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('production.width')"
-                       width="90px"
-                       align="center">
+      <el-table-column :label="$t('Peole.Phone')"
+                       min-width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.width }}</span>
+          <span class="link-type"
+                @click="handleUpdate(scope.row)">{{ scope.row.Phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('production.bridge')"
-                       width="50px"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.bridge }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('production.complete')"
-                       width="50px"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.complete }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('production.specification')"
-                       align="center"
-                       width="80px">
-        <template slot-scope="scope">
-          <span v-if="scope.row.specification"
-                class="link-type">{{ scope.row.specification }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('production.require')"
-                       width="50px"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.require }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('production.remark')"
-                       width="90px"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('production.getdate')"
+      <el-table-column :label="$t('Peole.unit')"
                        width="150px"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.getdate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.unit }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column :label="$t('production.dispatch')"
+      <el-table-column :label="$t('Peole.role')"
                        width="150px"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.dispatch | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column :label="$t('production.status')"
-                       class-name="status-col"
-                       width="100">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <span>{{ scope.row.role }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('production.actions')"
@@ -164,23 +107,7 @@
         <template slot-scope="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="handleUpdate(scope.row)">{{ $t('production.edit') }}</el-button>
-          <el-button v-if="scope.row.status!='published'"
-                     size="mini"
-                     type="success"
-                     @click="handleModifyStatus(scope.row,'published')">
-            {{ $t('production.publish') }}
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'"
-                     size="mini"
-                     @click="handleModifyStatus(scope.row,'draft')">
-            {{ $t('production.draft') }}
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'"
-                     size="mini"
-                     type="danger"
-                     @click="handleModifyStatus(scope.row,'deleted')">
-            {{ $t('production.delete') }}
+                     @click="handleUpdate(scope.row)">{{ $t('production.edit') }}
           </el-button>
         </template>
       </el-table-column>
@@ -203,53 +130,55 @@
                       prop="id">
           {{temp.id}}
         </el-form-item>
-        <el-form-item :label="$t('production.stage')"
+        <el-form-item :label="$t('Peole.Jobnumber')"
                       prop="stage">
-          <el-select v-model="temp.stage"
-                     :placeholder="$t('production.stage')"
-                     clearable
-                     style="width: 90px"
-                     class="filter-item">
-            <el-option v-for="(item,index) in StageName"
-                       :key="index"
-                       :label="item"
-                       :value="item" />
-          </el-select>
+          <el-input v-model="temp.Jobnumber" />
         </el-form-item>
-        <el-form-item :label="$t('production.PinName')"
+        <el-form-item :label="$t('Peole.Phone')"
                       prop="PinName">
-          <el-input v-model="temp.PinName" />
+          <el-input v-model="temp.Phone" />
         </el-form-item>
 
-        <el-form-item :label="$t('production.require')">
-          <el-input v-model="temp.require" />
+        <el-form-item :label="$t('Peole.unit')">
+          <el-input v-model="temp.unit" />
         </el-form-item>
 
-        <el-form-item :label="$t('production.specification')">
-          {{temp.specification}}
+        <el-form-item :label="$t('Peole.duty')">
+          <el-input v-model="temp.duty" />
         </el-form-item>
 
-        <el-form-item :label="$t('production.bridge')">
-          {{temp.bridge}}
-        </el-form-item>
-
-        <el-form-item :label="$t('production.recipe')">
-          <el-select v-model="temp.id"
-                     :placeholder="$t('production.recipe')"
+        <el-form-item :label="$t('Peole.role')">
+          <el-select v-model="temp.role"
+                     :placeholder="$t('Peole.role')"
                      clearable
                      style="width: 90px"
                      class="filter-item">
-            <el-option v-for="(item,index) in StageName"
+            <el-option v-for="(item,index) in ReloName"
                        :key="index"
                        :label="item"
                        :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('production.remark')">
-          <el-input v-model="temp.remark"
-                    :autosize="{ minRows: 2, maxRows: 4}"
-                    type="textarea"
-                    placeholder="Please input" />
+
+        <el-form-item :label="$t('Peole.user')">
+          <el-input v-model="temp.user" />
+        </el-form-item>
+
+        <el-form-item :label="$t('Peole.CardId')">
+          <el-input v-model="temp.CardId" />
+        </el-form-item>
+        <el-form-item :label="$t('Peole.birthday')">
+          <el-input v-model="temp.birthday" />
+        </el-form-item>
+
+        <el-form-item :label="$t('Peole.sex')">
+          <el-input v-model="temp.sex" />
+        </el-form-item>
+        <el-form-item :label="$t('Peole.site')">
+          <el-input v-model="temp.site" />
+        </el-form-item>
+        <el-form-item :label="$t('Peole.timestamp')">
+          <el-input v-model="temp.timestamp" />
         </el-form-item>
       </el-form>
       <div slot="footer"
@@ -278,12 +207,11 @@
                    @click="dialogPvVisible = false">{{ $t('table.confirm') }}</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { productionList, fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { productionList, fetchList, fetPeopleList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -309,6 +237,7 @@ export default {
     return {
       multipleSelection: [],
       StageName: ['机台1', '机台2', '机台3', '机台4'],
+      ReloName: ['admin', 'editor'],
       tableKey: 0,
       list: null,
       listData: null,
@@ -331,14 +260,18 @@ export default {
       showReviewer: false,
       temp: {
         id: undefined,
-        PinName: '21312312312',
-        stage: '',
-        remark: '',
-        require: '',
-        timestamp: new Date(),
-        serial: '',
-        type: '',
-        status: 'published'
+        Jobnumber: undefined,
+        name: '',
+        timestamp: new Date().getTime(),
+        Phone: undefined,
+        unit: '',
+        role: '',
+        user: "",
+        CardId: "",
+        birthday: undefined,
+        duty: "",
+        sex: "",
+        site: "",
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -363,6 +296,7 @@ export default {
   methods: {
     handleSelectionChange (val) {
       this.multipleSelection = val
+      console.log(this.multipleSelection)
     },
     getList () {
       this.listLoading = true
@@ -377,7 +311,7 @@ export default {
     },
     getListTwo () {
       this.listLoading = true
-      productionList(this.listQuery).then(response => {
+      fetPeopleList(this.listQuery).then(response => {
         if (response) {
           this.$nextTick(() => {
             this.listData = response.data.items
@@ -421,12 +355,19 @@ export default {
     resetTemp () {
       this.temp = {
         id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
+        Jobnumber: undefined,
+        name: '',
+        timestamp: new Date().getTime(),
+        Phone: undefined,
+        unit: '',
+        role: '',
+        user: "",
+        CardId: "",
+        birthday: undefined,
+        duty: "",
+        sex: "",
+        site: "",
+        // author: ''
       }
     },
     handleCreate () {
@@ -441,8 +382,9 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
+          // this.temp.author = 'vue-element-admin'
           createArticle(this.temp).then(() => {
+            console.log(this.temp)
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
@@ -469,7 +411,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
+          updateArticle(tempData).then((res) => {
+            console.log(tempData)
             for (const v of this.listData) {
               if (v.id === this.temp.id) {
                 const index = this.listData.indexOf(v)
@@ -498,42 +441,13 @@ export default {
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
     },
-    // handleFetchPv (pv) {
-    //   fetchPv(pv).then(response => {
-    //     this.pvData = response.data.pvData
-    //     this.dialogPvVisible = true
-    //   })
-    // },
-    // handleDownload () {
-    //   this.downloadLoading = true
-    //   import('@/vendor/Export2Excel').then(excel => {
-    //     const tHeader = ['id', 'name', 'specification', 'width', 'bridge', 'status']
-    //     const filterVal = ['id', 'name', 'specification', 'width', 'bridge', 'status']
-    //     const data = this.formatJson(filterVal, this.listData)
-    //     excel.export_json_to_excel({
-    //       header: tHeader,
-    //       data,
-    //       filename: 'table-list'
-    //     })
-    //     this.downloadLoading = false
-    //   })
-    // },
-    // formatJson (filterVal, jsonData) {
-    //   return jsonData.map(v => filterVal.map(j => {
-    //     if (j === 'timestamp') {
-    //       return parseTime(v[j])
-    //     } else {
-    //       return v[j]
-    //     }
-    //   }))
-    // }
 
     handleDownload () {
       if (this.multipleSelection.length) {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['Id', 'name', 'remark', 'require', 'status']
-          const filterVal = ['id', 'name', 'remark', 'require', 'status']
+          const tHeader = ['Id', 'Jobnumber', 'name', 'Phone', 'unit']
+          const filterVal = ['id', 'Jobnumber', 'name', 'Phone', 'unit']
           const list = this.multipleSelection
           const data = this.formatJson(filterVal, list)
           excel.export_json_to_excel({
