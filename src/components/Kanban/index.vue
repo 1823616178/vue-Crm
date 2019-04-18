@@ -17,7 +17,7 @@
     </draggable>
   </div>
 </template>
-<script>
+<script> 
 import draggable from 'vuedraggable'
 
 export default {

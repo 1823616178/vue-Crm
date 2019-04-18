@@ -76,7 +76,9 @@ export default {
     productionTable: '流延生产任务列表',
     formulaTable: '配方管理',
     saleManage: '销售管理',
-    saleOrderManage: '销售订单管理'
+    saleOrderManage: '销售订单管理',
+    stockManage: '采购管理',
+    stockOrderManage: '采购订单管理',
   },
   navbar: {
     logOut: '退出登录',
@@ -230,6 +232,7 @@ export default {
     detail: '详情'
   },
   formulaTable: {
+    formulaName: '配方名称',
     formulaId: '配方编号',
     goods: '对应产品',
     createTime: '创建时间',

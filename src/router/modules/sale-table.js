@@ -13,8 +13,8 @@ const saleTableRouter = {
   },
   children: [
     {
-      path: 'order-table',
-      component: () => import('@/views/saleManage/orderManage/orderTable'),
+      path: '/order-table',
+      component: () => import('@/views/saleManage/orderTable'),
       name: 'OrderTable',
       meta: { title: 'saleOrderManage' }
     }
