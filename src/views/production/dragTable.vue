@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { fetchList, GetLiuYanList } from '@/api/article'
+import { GetLiuYanList } from '@/api/article'
 import Sortable from 'sortablejs'
 import { connect } from 'net';
 
