@@ -20,7 +20,7 @@
               highlight-current-row
               style="width: 100%">
       <el-table-column align="center"
-                       prop="orderId" 
+                       prop="orderId"
                        :label="$t('orderTable.orderId')" />
       <el-table-column align="center"
                        prop="orderDate"
@@ -324,7 +324,7 @@ export default {
         this.$refs['dataForm']
       })
     },
-    
+
     handleFilter () {
       querySaleOrder(this.listQuery).then(response => {
         this.listData = response.data.data;
