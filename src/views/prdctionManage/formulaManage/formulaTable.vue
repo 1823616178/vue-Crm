@@ -29,7 +29,7 @@
           <el-form :model="this.temp"
                    style="width: 70%; padding:20px">
             <el-row :gutter="150">
-              <el-col :span="10">
+              <el-col :span="11">
                 <el-form-item :label="$t('formulaTable.formulaName')">:
                   {{temp.formulaName}}
                 </el-form-item>
@@ -40,21 +40,21 @@
                   {{temp.goods}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.createTime')">:
-                  {{temp.createTime}}
+                  {{temp.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.createPeop')">:
                   {{temp.createPeop}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.stopTime')">:
-                  {{temp.stopTime}}
+                  {{temp.stopTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
                 </el-form-item>
               </el-col>
-              <el-col :span="10">
+              <el-col :span="11">
                 <el-form-item :label="$t('formulaTable.stopPeop')">:
                   {{temp.stopPeop}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.updateTime')">:
-                  {{temp.updateTime}}
+                  {{temp.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.updatePeop')">:
                   {{temp.updatePeop}}
@@ -85,74 +85,123 @@
     <template>
       <el-dialog :title="$t('table.edit')"
                  :visible.sync="dialogTableVisible"
-                 label-width="100px">
+                 label-width="50%">
         <!-- <div class="grid-content bg-purple"> -->
         <el-form :model="this.temp"
                  ref="formulaForm"
                  :rules="rules"
-                 style="width: 400px; margin-left:50px;">
+                 style="width: 100%;">
           <el-form-item :label="$t('formulaTable.formulaName')"
-                        prop="formulaName">
+                        prop="formulaName"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.formulaName" />
           </el-form-item>
-          <el-form-item :label="$t('formulaTable.formulaId')">
-            </br>
+          <el-form-item :label="$t('formulaTable.formulaId')"
+                        prop="formulaId"
+                        :label-width="formLabelWidth">
+
             {{temp.formulaId}}
           </el-form-item>
           <el-form-item :label="$t('formulaTable.goods')"
-                        prop="goods">
+                        prop="goods"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.goods" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.createTime')"
-                        prop="createTime">
-            <el-date-picker v-model="temp.createTime"
-                            type="datetime"
-                            placeholder="Please pick a date" />
+                        prop="createTime"
+                        :label-width="formLabelWidth">
+            <el-col :span="11">
+              <el-date-picker type="date"
+                              placeholder="选择日期"
+                              v-model="temp.createTime"
+                              value-format="{y}-{m}-{d}"
+                              style="width: 100%;"></el-date-picker>
+            </el-col>
+            <el-col class="line"
+                    :span="2">-</el-col>
+            <el-col :span="11">
+              <el-time-picker placeholder="选择时间"
+                              v-model="temp.createTime"
+                              value-format="{h}:{i}:{s}"
+                              style="width: 100%;"></el-time-picker>
+            </el-col>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.createPeop')"
-                        prop="createPeop">
+                        prop="createPeop"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.createPeop" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.stopTime')"
-                        prop="stopTime">
-            <el-date-picker v-model="temp.stopTime"
-                            type="datetime"
-                            placeholder="Please pick a date" />
+                        prop="stopTime"
+                        :label-width="formLabelWidth">
+            <el-col :span="11">
+              <el-date-picker type="date"
+                              placeholder="选择日期"
+                              v-model="temp.stopTime"
+                              value-format="{y}-{m}-{d}"
+                              style="width: 100%;"></el-date-picker>
+            </el-col>
+            <el-col class="line"
+                    :span="2">-</el-col>
+            <el-col :span="11">
+              <el-time-picker placeholder="选择时间"
+                              v-model="temp.stopTime"
+                              value-format="{h}:{i}:{s}"
+                              style="width: 100%;"></el-time-picker>
+            </el-col>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.stopPeop')"
-                        prop="stopPeop">
+                        prop="stopPeop"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.stopPeop" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.updateTime')"
-                        prop="updateTime">
-            <el-date-picker v-model="temp.updateTime"
-                            type="datetime"
-                            placeholder="Please pick a date" />
+                        prop="updateTime"
+                        :label-width="formLabelWidth">
+            <el-col :span="11">
+              <el-date-picker type="date"
+                              placeholder="选择日期"
+                              v-model="temp.updateTime"
+                              value-format="{y}-{m}-{d}"
+                              style="width: 100%;"></el-date-picker>
+            </el-col>
+            <el-col class="line"
+                    :span="2">-</el-col>
+            <el-col :span="11">
+              <el-time-picker placeholder="选择时间"
+                              v-model="temp.updateTime"
+                              value-format="{h}:{i}:{s}"
+                              style="width: 100%;"></el-time-picker>
+            </el-col>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.updatePeop')"
-                        prop="updatePeop">
+                        prop="updatePeop"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.updatePeop" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.defaultVal')"
-                        prop="defaultVal">
+                        prop="defaultVal"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.defaultVal" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.level')"
-                        prop="level">
+                        prop="level"
+                        :label-width="formLabelWidth">
             <el-input v-model.number="temp.level" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.remark')"
-                        prop="remark">
+                        prop="remark"
+                        :label-width="formLabelWidth">
             <el-input v-model="temp.remark" />
           </el-form-item>
-          <div slot=""
-               class="dialog-footer">
-            <el-form-item>
+          <el-row type="flex"
+                  justify="end">
+            <el-col :span="8">
               <el-button @click="dialogTableVisible = false">{{$t('permission.cancel')}}</el-button>
               <el-button type="primary"
                          @click="updateData('formulaForm')">{{$t('permission.confirm')}}</el-button>
-            </el-form-item>
-          </div>
+            </el-col>
+          </el-row>
         </el-form>
         <!-- </div> -->
       </el-dialog>
@@ -162,8 +211,8 @@
 
 <script>
 import SectionPan from './components/sectionPanle.vue'
-// import { fetchListS } from '@/api/article'
-import { querySaleOrder, getOrderList, getFormulaList, queryOneFormula } from '@/api/mock'
+// import { fetchList } from '@/api/article'
+import { querySaleOrder, getOrderList, getFormulaList, getOneFormula, updateFormula } from '@/api/mock'
 import splitPane from 'vue-splitpane'
 import Kanban from '@/components/Kanban'
 import Pagination from '@/components/Pagination'
@@ -222,12 +271,13 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        customerServ: undefined,
-        customerName: undefined,
-        payCondition: undefined,
-        sendExpress: undefined,
-        customerFaith: undefined,
-        sort: '+id'
+        // customerServ: undefined,
+        // customerName: undefined,
+        // payCondition: undefined,
+        // sendExpress: undefined,
+        // customerFaith: undefined,
+        // sort: '+id',
+        formulaId: undefined,
       },
       temp: {
         "formulaName": "-----",
@@ -258,6 +308,7 @@ export default {
       oneDetailData: [],
       dialogTableVisible: false,
       canEdit: true,
+      formLabelWidth: "120px",
     };
   },
 
@@ -277,13 +328,16 @@ export default {
     updateData (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.dialogTableVisible = false;
-          console.log(this.temp);
-          this.$notify({
-            title: '成功',
-            message: '更新成功',
-            type: 'success',
-            duration: 2000
+          console.log(this.temp.req);
+          updateFormula(this.temp).then(response => {
+
+            this.dialogTableVisible = false;
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
           })
         } else {
           console.log('error submit!!');
@@ -302,7 +356,8 @@ export default {
     },
     formulaDetail (id) {
       // dialogTableVisible = true;
-      queryOneFormula().then(response => {
+      this.listQuery.formulaId = id;
+      getOneFormula(this.listQuery).then(response => {
         // dialogTableVisible = true;
         console.log(id);
         this.temp = response.data.data;
@@ -346,7 +401,7 @@ export default {
     },
     getListTwo () {
       this.listLoading = true
-      getOrderList().then(response => {
+      getSaleOrderList().then(response => {
         if (response) {
           this.$nextTick(() => {
             console.log("=================>")

@@ -2,37 +2,47 @@ import request from '@/utils/mockRequest'
 
 export function getFormulaList() {
   return request({
-    url: '/formulaList',
-    method: 'get'
+    url: '/getFormulaList',
+    method: 'post'
+  })
+}
+export function getOneFormula(query) {
+  return request({
+    url: '/getOneFormula',
+    method: 'post',
+    data: query
   })
 }
 
-export function getOrderList() {
+export function getSaleOrderList() {
   return request({
-    url: '/orderList',
-    method: 'get'
+    url: '/getSaleOrderList',
+    method: 'post'
   })
 }
 
-export function queryFormulaList(query) {
-  return request({
-    url: '/queryFormulaList',
-    method: 'get',
-    params: query
-  })
-}
+
 
 export function querySaleOrder(query) {
   return request({
     url: '/querySaleOrder',
-    method: 'get',
-    params: query
+    method: 'post',
+    data: query,
   })
 }
-export function queryOneFormula(query) {
+
+export function deleteSaleOrder(query) {
   return request({
-    url: '/queryOneFormula',
-    method: 'get',
-    params: query
+    url: '/deleteSaleOrder',
+    method: 'post',
+    data: query,
+  })
+}
+
+export function updateFormula(query) {
+  return request({
+    url: '/updateFormula',
+    method: 'post',
+    data: query,
   })
 }
