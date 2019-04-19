@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title"
+      <el-input v-model="listQuery.customerName"
                 :placeholder="$t('orderTable.customerName')"
                 style="width: 600px;"
                 class="filter-item"
@@ -20,7 +20,7 @@
               highlight-current-row
               style="width: 100%">
       <el-table-column align="center"
-                       prop="orderId"
+                       prop="orderId" 
                        :label="$t('orderTable.orderId')" />
       <el-table-column align="center"
                        prop="orderDate"
@@ -187,7 +187,7 @@
 
 <script>
 import { fetchList } from '@/api/article'
-import { querySaleOrder, getOrderList } from '@/api/mock'
+import { querySaleOrder, getSaleOrderList, deleteSaleOrder } from '@/api/mock'
 import Pagination from '@/components/Pagination'
 export default {
   components: { Pagination },
@@ -272,6 +272,9 @@ export default {
           type: "47"
         },
       ],
+      deleteParam: {
+        orderId: undefined,
+      },
       dialogTableVisible: false,
       // key: 1, // table key
       // formTheadOptions: ['apple', 'banana', 'orange'],
@@ -287,7 +290,8 @@ export default {
         payCondition: undefined,
         sendExpress: undefined,
         customerFaith: undefined,
-        sort: '+id'
+        orderId: undefined,
+        sort: '+id',
       },
       temp: {},
     };
@@ -306,8 +310,11 @@ export default {
   },
   methods: {
 
-    handleDelete (index, row) {
-      row.splice(index, 1);
+    handleDelete (index, listData) {
+      this.deleteParam.orderId = listData[index].orderId;
+      deleteSaleOrder(this.deleteParam).then(response => {
+        listData.splice(index, 1);
+      })
     },
     handleDetail (row) {
       this.temp = Object.assign({}, row) // copy obj
@@ -320,13 +327,12 @@ export default {
     
     handleFilter () {
       querySaleOrder(this.listQuery).then(response => {
-        this.listData = response.data.items
-        this.total = this.listData.length
-        console.log(this.tableData)
+        this.listData = response.data.data;
+        this.total = this.listData.length;
       })
     },
     getData () {
-      getOrderList().then(response => {
+      getSaleOrderList().then(response => {
         this.listData = response.data.data;
         this.total = response.data.data.length;
       })
@@ -334,7 +340,7 @@ export default {
     },
     getListTwo () {
       this.listLoading = true
-      getOrderList().then(response => {
+      getSaleOrderList().then(response => {
         if (response) {
           this.$nextTick(() => {
             console.log("=================>")
