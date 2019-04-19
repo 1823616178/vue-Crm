@@ -17,7 +17,7 @@
               <el-col :span="22"
                       class="text-center">
                 <div class="pan-btn blue-btn PeiFCss"
-                     @click="formulaDetail(item.formulaId)">{{item.formulaName}}</div>
+                     @click="formulaDetail(index)">{{item.formulaName}}</div>
               </el-col>
             </el-row>
           </div>
@@ -87,14 +87,14 @@
                  :visible.sync="dialogTableVisible"
                  label-width="50%">
         <!-- <div class="grid-content bg-purple"> -->
-        <el-form :model="this.temp"
+        <el-form :model="temp"
                  ref="formulaForm"
                  :rules="rules"
                  style="width: 100%;">
           <el-form-item :label="$t('formulaTable.formulaName')"
                         prop="formulaName"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.formulaName" />
+            <el-input :value="temp.formulaName" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.formulaId')"
                         prop="formulaId"
@@ -110,21 +110,7 @@
           <el-form-item :label="$t('formulaTable.createTime')"
                         prop="createTime"
                         :label-width="formLabelWidth">
-            <el-col :span="11">
-              <el-date-picker type="date"
-                              placeholder="选择日期"
-                              v-model="temp.createTime"
-                              value-format="{y}-{m}-{d}"
-                              style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line"
-                    :span="2">-</el-col>
-            <el-col :span="11">
-              <el-time-picker placeholder="选择时间"
-                              v-model="temp.createTime"
-                              value-format="{h}:{i}:{s}"
-                              style="width: 100%;"></el-time-picker>
-            </el-col>
+            {{temp.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
           <el-form-item :label="$t('formulaTable.createPeop')"
                         prop="createPeop"
@@ -134,21 +120,7 @@
           <el-form-item :label="$t('formulaTable.stopTime')"
                         prop="stopTime"
                         :label-width="formLabelWidth">
-            <el-col :span="11">
-              <el-date-picker type="date"
-                              placeholder="选择日期"
-                              v-model="temp.stopTime"
-                              value-format="{y}-{m}-{d}"
-                              style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line"
-                    :span="2">-</el-col>
-            <el-col :span="11">
-              <el-time-picker placeholder="选择时间"
-                              v-model="temp.stopTime"
-                              value-format="{h}:{i}:{s}"
-                              style="width: 100%;"></el-time-picker>
-            </el-col>
+            {{temp.stopTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
           <el-form-item :label="$t('formulaTable.stopPeop')"
                         prop="stopPeop"
@@ -158,22 +130,9 @@
           <el-form-item :label="$t('formulaTable.updateTime')"
                         prop="updateTime"
                         :label-width="formLabelWidth">
-            <el-col :span="11">
-              <el-date-picker type="date"
-                              placeholder="选择日期"
-                              v-model="temp.updateTime"
-                              value-format="{y}-{m}-{d}"
-                              style="width: 100%;"></el-date-picker>
-            </el-col>
-            <el-col class="line"
-                    :span="2">-</el-col>
-            <el-col :span="11">
-              <el-time-picker placeholder="选择时间"
-                              v-model="temp.updateTime"
-                              value-format="{h}:{i}:{s}"
-                              style="width: 100%;"></el-time-picker>
-            </el-col>
+                        {{temp.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
+          <!-- <el-form-item :label=""> -->
           <el-form-item :label="$t('formulaTable.updatePeop')"
                         prop="updatePeop"
                         :label-width="formLabelWidth">
@@ -348,21 +307,18 @@ export default {
 
     },
     editFormula (temp) {
-      this.temp = temp;
+      // this.temp = temp;
+      console.log("外部"+this.temp.formulaId+","+this.temp.updateTime);
       this.dialogTableVisible = true;
     },
     resize () {
       console.log('resize')
     },
-    formulaDetail (id) {
-      // dialogTableVisible = true;
-      this.listQuery.formulaId = id;
-      getOneFormula(this.listQuery).then(response => {
-        // dialogTableVisible = true;
-        console.log(id);
-        this.temp = response.data.data;
+    formulaDetail (index) {
+        
+        this.temp = this.oneDetailData[index];
         this.canEdit = false;
-      })
+
     },
     getData () {
       getFormulaList().then(response => {
