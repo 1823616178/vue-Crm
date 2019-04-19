@@ -114,7 +114,7 @@
               <el-date-picker type="date"
                               placeholder="选择日期"
                               v-model="temp.createTime"
-                              value-format="yyyy-MM-dd"
+                              value-format="{y}-{m}-{d}"
                               style="width: 100%;"></el-date-picker>
             </el-col>
             <el-col class="line"
@@ -122,7 +122,7 @@
             <el-col :span="11">
               <el-time-picker placeholder="选择时间"
                               v-model="temp.createTime"
-                              value-format="HH:mm:ss"
+                              value-format="{h}:{i}:{s}"
                               style="width: 100%;"></el-time-picker>
             </el-col>
           </el-form-item>
@@ -138,7 +138,7 @@
               <el-date-picker type="date"
                               placeholder="选择日期"
                               v-model="temp.stopTime"
-                              value-format="yyyy-MM-dd"
+                              value-format="{y}-{m}-{d}"
                               style="width: 100%;"></el-date-picker>
             </el-col>
             <el-col class="line"
@@ -146,7 +146,7 @@
             <el-col :span="11">
               <el-time-picker placeholder="选择时间"
                               v-model="temp.stopTime"
-                              value-format="HH:mm:ss"
+                              value-format="{h}:{i}:{s}"
                               style="width: 100%;"></el-time-picker>
             </el-col>
           </el-form-item>
@@ -162,7 +162,7 @@
               <el-date-picker type="date"
                               placeholder="选择日期"
                               v-model="temp.updateTime"
-                              value-format="yyyy-MM-dd"
+                              value-format="{y}-{m}-{d}"
                               style="width: 100%;"></el-date-picker>
             </el-col>
             <el-col class="line"
@@ -170,7 +170,7 @@
             <el-col :span="11">
               <el-time-picker placeholder="选择时间"
                               v-model="temp.updateTime"
-                              value-format="HH:mm:ss"
+                              value-format="{h}:{i}:{s}"
                               style="width: 100%;"></el-time-picker>
             </el-col>
           </el-form-item>
