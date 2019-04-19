@@ -72,14 +72,15 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutesTest, getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
+import { getRoutesTest, getRoutes, addRolelocalHost, deleteRoleslocalHost, upDataRoleLocalHost } from '@/api/role'
 import i18n from '@/lang'
 
 const defaultRole = {
   key: '',
   name: '',
   description: '',
-  routes: []
+  routes: [],
+  id: undefined
 }
 
 export default {
@@ -198,7 +199,7 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          await deleteRole(row.id)
+          await deleteRoleslocalHost(row.id)
           this.rolesList.splice($index, 1)
           this.$message({
             type: 'success',
@@ -231,15 +232,15 @@ export default {
       console.log('role.route')
       console.log(this.role.routes)
       if (isEdit) {
-        await updateRole(this.role.key, this.role)
+        await upDataRoleLocalHost(this.role.id, this.role)
         for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
+          if (this.rolesList[index].id === this.role.id) {
             this.rolesList.splice(index, 1, Object.assign({}, this.role))
             break
           }
         }
       } else {
-        const { data } = await addRole(this.role)
+        const { data } = await addRolelocalHost(this.role)
         this.role.key = data
         this.rolesList.push(this.role)
       }

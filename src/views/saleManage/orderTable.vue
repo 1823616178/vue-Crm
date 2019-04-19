@@ -165,10 +165,11 @@
                 </el-table>
               </el-row>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogTableVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="updateData()">{{ $t('table.confirm') }}</el-button>
-      </div>
+            <div slot="footer"
+                 class="dialog-footer">
+              <el-button type="primary"
+                         @click="dialogTableVisible = false">{{ $t('tagsView.close') }}</el-button>
+            </div>
           </el-dialog>
         </template>
       </el-table-column>
@@ -185,8 +186,8 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
-import { querySaleOrder,getOrderList } from '@/api/mock'
+import { fetchListS } from '@/api/article'
+import { querySaleOrder, getOrderList } from '@/api/mock'
 import Pagination from '@/components/Pagination'
 export default {
   components: { Pagination },
@@ -292,9 +293,9 @@ export default {
     };
   },
   created () {
-        this.getData()
-        this.getListTwo()
-      },
+    this.getData()
+    this.getListTwo()
+  },
   watch: {
     checkboxVal (valArr) {
       this.formThead = this.formTheadOptions.filter(
@@ -304,17 +305,9 @@ export default {
     }
   },
   methods: {
-    updateData() {
-            this.dialogTableVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-    },
-    handleDelete(index,row) {
-      row.splice(index,1);
+
+    handleDelete (index, row) {
+      row.splice(index, 1);
     },
     handleDetail (row) {
       this.temp = Object.assign({}, row) // copy obj
@@ -324,14 +317,7 @@ export default {
         this.$refs['dataForm']
       })
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      console.log('测试删除');
-      row.status = status
-    },
+
     handleFilter () {
       querySaleOrder(this.listQuery).then(response => {
         this.listData = response.data.items

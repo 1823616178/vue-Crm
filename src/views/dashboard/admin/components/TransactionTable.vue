@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/transaction'
+import { fetchListS } from '@/api/transaction'
 
 export default {
   filters: {
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     fetchData () {
-      fetchList().then(response => {
+      fetchListS().then(response => {
         console.log(response)
         this.list = response.data.items.slice(0, 8)
       })

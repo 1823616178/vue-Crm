@@ -29,3 +29,10 @@ export function querySaleOrder(query) {
     params: query
   })
 }
+export function queryOneFormula(query) {
+  return request({
+    url: '/queryOneFormula',
+    method: 'get',
+    params: query
+  })
+}

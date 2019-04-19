@@ -16,6 +16,7 @@ import treeTableRouter from './modules/tree-table'
 import production from './modules/production'
 import nestedRouter from './modules/nested'
 import saleTableRouter from './modules/sale-table'
+import stockManage from './modules/stock-manage.js'
 // import TextContent from "@/views/TextContent/Index.vue"
 
 /** note: sub-menu only appear when children.length>=1
@@ -161,6 +162,7 @@ export const asyncRoutes = [
   jurisdiction,
   saleTableRouter,
   production,
+  stockManage,
   // componentsRouter,
   // chartsRouter,
   // nestedRouter,
