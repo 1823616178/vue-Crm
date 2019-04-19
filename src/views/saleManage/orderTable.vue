@@ -337,12 +337,10 @@ export default {
       getOrderList().then(response => {
         if (response) {
           this.$nextTick(() => {
-            console.log("=================>")
             this.listData = response.data.data
             this.totalData = response.data.data
             this.importanceOptions = response.data.data.items
             this.calendarTypeOptions = response.data.data.items
-            console.log(response.data.data)
           })
         }
       })
@@ -350,4 +348,3 @@ export default {
   }
 };
 </script>
-
