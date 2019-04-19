@@ -1,11 +1,13 @@
 <template>
-  <vueDragInfinite :json="abc"
+  <vueDragInfinite :json="add"
                    :name="name"
                    @save="saveJson" />
 </template>
 
 <script>
 import vueDragInfinite from 'vue-drag-infinite/src/lib/vue-drag-infinite.vue'
+import indexVue from '../login/index.vue';
+import { constants } from 'fs';
 export default {
   components: { vueDragInfinite },
   data: function () {
@@ -14,27 +16,43 @@ export default {
       abc: [
         {
           style: {
-            width: "150px",
-            height: "150px",
+            width: "350px",
+            height: "300px",
             fontSize: "14px",
             color: "#fff",
-            left: "50px",
             backgroundColor: "#999"
           },
           text: '这是第一个'
         },
         {
           style: {
-            width: "100px",
-            height: "100px",
+            width: "350px",
+            height: "300px",
             fontSize: "14px",
             color: "#fff",
-            backgroundColor: "#333"
+            top:"0",
+            backgroundColor: "#999"
           },
           text: '这是第二个'
         }
-      ]
+      ],
+      add: []
     }
+  },
+  created () {
+    this.$nextTick((res) => {
+      this.add = []
+      for (let i in this.abc) {
+        for (let j = 0; j < 3; j++) {
+          var b = 300 * j
+          this.abc[i].style.top = b + 'px'
+          let arr = this.abc[i]
+          this.add.slice(arr)
+        }
+        console.log(this.add)
+      }
+      console.log(this.add)
+    })
   },
   methods: {
     saveJson: function (data) {

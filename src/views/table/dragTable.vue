@@ -1,53 +1,78 @@
 <template>
   <div class="app-container">
     <!-- Note that row-key is necessary to get a correct row order. -->
-    <el-table ref="dragTable" v-loading="listLoading" :data="list" row-key="id" border fit highlight-current-row style="width: 100%">
+    <el-table ref="dragTable"
+              v-loading="listLoading"
+              :data="list"
+              row-key="id"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%">
 
-      <el-table-column align="center" label="ID" width="65">
+      <el-table-column align="center"
+                       label="ID"
+                       width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="Date">
+      <el-table-column width="180px"
+                       align="center"
+                       label="Date">
         <template slot-scope="scope">
           <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="Title">
+      <el-table-column min-width="300px"
+                       label="Title">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" align="center" label="Author">
+      <el-table-column width="110px"
+                       align="center"
+                       label="Author">
         <template slot-scope="scope">
           <span>{{ scope.row.author }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="100px" label="Importance">
+      <el-table-column width="100px"
+                       label="Importance">
         <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="icon-star" />
+          <svg-icon v-for="n in +scope.row.importance"
+                    :key="n"
+                    icon-class="star"
+                    class="icon-star" />
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Readings" width="95">
+      <el-table-column align="center"
+                       label="Readings"
+                       width="95">
         <template slot-scope="scope">
           <span>{{ scope.row.pageviews }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="Status" width="110">
+      <el-table-column class-name="status-col"
+                       label="Status"
+                       width="110">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Drag" width="80">
+      <el-table-column align="center"
+                       label="Drag"
+                       width="80">
         <template slot-scope="{}">
-          <svg-icon class="drag-handler" icon-class="drag" />
+          <svg-icon class="drag-handler"
+                    icon-class="drag" />
         </template>
       </el-table-column>
 
@@ -60,13 +85,13 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { fetchListS } from '@/api/article'
 import Sortable from 'sortablejs'
 
 export default {
   name: 'DragTable',
   filters: {
-    statusFilter(status) {
+    statusFilter (status) {
       const statusMap = {
         published: 'success',
         draft: 'info',
@@ -75,7 +100,7 @@ export default {
       return statusMap[status]
     }
   },
-  data() {
+  data () {
     return {
       list: null,
       total: null,
@@ -89,13 +114,13 @@ export default {
       newList: []
     }
   },
-  created() {
+  created () {
     this.getList()
   },
   methods: {
-    getList() {
+    getList () {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchListS(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         this.listLoading = false
@@ -106,11 +131,11 @@ export default {
         })
       })
     },
-    setSort() {
+    setSort () {
       const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
       this.sortable = Sortable.create(el, {
         ghostClass: 'sortable-ghost', // Class name for the drop placeholder,
-        setData: function(dataTransfer) {
+        setData: function (dataTransfer) {
           dataTransfer.setData('Text', '')
           // to avoid Firefox bug
           // Detail see : https://github.com/RubaXa/Sortable/issues/1012
@@ -130,23 +155,23 @@ export default {
 </script>
 
 <style>
-.sortable-ghost{
-  opacity: .8;
-  color: #fff!important;
-  background: #42b983!important;
+.sortable-ghost {
+  opacity: 0.8;
+  color: #fff !important;
+  background: #42b983 !important;
 }
 </style>
 
 <style scoped>
-.icon-star{
-  margin-right:2px;
+.icon-star {
+  margin-right: 2px;
 }
-.drag-handler{
+.drag-handler {
   width: 20px;
   height: 20px;
   cursor: pointer;
 }
-.show-d{
+.show-d {
   margin-top: 15px;
 }
 </style>

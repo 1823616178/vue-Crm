@@ -8,13 +8,13 @@
                  autoplay
                  loop
                  v-on:canplay="canplay">
-            <source src="@/MP4/ofo.mp4"
+            <source src="../../../src/MP4/ofo.mp4"
                     type="video/mp4" />
           </video>
           <div class="poster hidden"
                v-if="!vedioCanPlay">
             <img :style="fixStyle"
-                 src="@/MP4/ofo.png"
+                 src="../../../src/MP4/ofo.png"
                  alt="">
           </div>
           <div class="login-container">
@@ -155,7 +155,7 @@ export default {
   destroyed () {
     // window.removeEventListener('hashchange', this.afterQRScan)
   },
-  mounted: function () {
+  mounted () {
     window.onresize = () => {
       const windowWidth = document.body.clientWidth
       const windowHeight = document.body.clientHeight
@@ -186,7 +186,6 @@ export default {
   },
   methods: {
     canplay (val) {
-      console.log(val)
       this.vedioCanPlay = true
     },
     showPwd () {
@@ -235,11 +234,6 @@ export default {
 }
 </script>
 
-<style>
-.OnvideoLogin {
-  position: absolute;
-}
-</style>
 
 
 <style scoped>

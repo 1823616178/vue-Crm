@@ -9,10 +9,10 @@
       <el-table-column align="center"
                        label="权限"
                        width="220">
-        <template slot-scope="scope">{{ scope.row.key }}</template>
+        <template slot-scope="scope">{{ scope.row.roles }}</template>
       </el-table-column>
       <el-table-column align="center"
-                       label="员工"
+                       label="姓名"
                        width="220">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
@@ -38,24 +38,34 @@
       <el-form :model="role"
                label-width="80px"
                label-position="left">
-        <el-form-item label="Name">
+        <el-form-item label="姓名">
           <el-input v-model="role.name"
-                    placeholder="Role Name" />
+                    placeholder="输入姓名" />
         </el-form-item>
-        <el-form-item label="Desc">
+        <el-form-item label="权限">
+          <el-select v-model="role.roles"
+                     placeholder="选择权限">
+            <el-option v-for="(item,index) in selectRole"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="描述">
           <el-input v-model="role.description"
                     :autosize="{ minRows: 2, maxRows: 4}"
                     type="textarea"
-                    placeholder="Role Description" />
+                    placeholder="权限描述" />
         </el-form-item>
-        <el-form-item label="Menus">
+        <el-form-item label="路由">
           <el-tree ref="tree"
                    :check-strictly="checkStrictly"
                    :data="routesData"
                    :props="defaultProps"
                    show-checkbox
                    node-key="path"
-                   class="permission-tree" />
+                   class="选择路由" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -72,11 +82,12 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutesTest, getRoutes, addRole, deleteRole, updateRole } from '@/api/role'
+import { getRoutesTest, getRoutes, addRolelocalHost, upDataRoleLocalHost, deleteRoleslocalHost } from '@/api/role'
 import i18n from '@/lang'
+import { type } from 'os';
 
 const defaultRole = {
-  key: '',
+  roles: '',
   name: '',
   description: '',
   routes: []
@@ -85,6 +96,10 @@ const defaultRole = {
 export default {
   data () {
     return {
+      selectRole: [
+        { label: 'admin', value: "admin" },
+        { label: 'editor', value: "editor" },
+      ],
       role: Object.assign({}, defaultRole),
       routes: [],
       rolesList: [],
@@ -116,7 +131,6 @@ export default {
     },
     async getRoles () {
       const res = await getRoutesTest()
-      // console.log(res)
       this.rolesList = res.data
     },
     i18n (routes) {
@@ -191,17 +205,18 @@ export default {
       })
     },
     handleDelete ({ $index, row }) {
-      this.$confirm('Confirm to remove the role?', 'Warning', {
-        confirmButtonText: 'Confirm',
-        cancelButtonText: 'Cancel',
+      console.log(row)
+      this.$confirm('确定删除?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning'
       })
         .then(async () => {
-          await deleteRole(row.id)
+          await deleteRoleslocalHost({ id: row.id })
           this.rolesList.splice($index, 1)
           this.$message({
             type: 'success',
-            message: 'Delete succed!'
+            message: '删除成功!'
           })
         })
         .catch(err => { window.console.error(err) })
@@ -228,26 +243,26 @@ export default {
       const checkedKeys = this.$refs.tree.getCheckedKeys()
       this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
       if (isEdit) {
-        await updateRole(this.role.key, this.role)
+        await upDataRoleLocalHost(this.role)
         for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
+          if (this.rolesList[index].roles === this.role.roles) {
             this.rolesList.splice(index, 1, Object.assign({}, this.role))
             break
           }
         }
       } else {
-        const { data } = await addRole(this.role)
-        this.role.key = data
+        await addRolelocalHost(this.role)
+        // this.role.key = data
         this.rolesList.push(this.role)
       }
 
-      const { description, key, name } = this.role
+      const { description, roles, name } = this.role
       this.dialogVisible = false
       this.$notify({
         title: 'Success',
         dangerouslyUseHTMLString: true,
         message: `
-            <div>Role Key: ${key}</div>
+            <div>Role Key: ${roles}</div>
             <div>Role Nmae: ${name}</div>
             <div>Description: ${description}</div>
           `,

@@ -211,7 +211,7 @@
 </template>
 
 <script>
-import { productionList, fetchList, fetPeopleList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { productionList, fetchListS, fetPeopleList, fetchPv, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -300,7 +300,7 @@ export default {
     },
     getList () {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      fetchListS(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
         // Just to simulate the time of the request

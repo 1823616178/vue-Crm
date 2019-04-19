@@ -16,7 +16,7 @@
                    :label="item.id"
                    :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.type"
+      <el-select v-model="listQuery.code"
                  :placeholder="$t('production.code')"
                  clearable
                  class="filter-item"
@@ -196,6 +196,7 @@
                :visible.sync="dialogFormVisible">
       <el-form ref="dataForm"
                :model="temp"
+               :rules="rules"
                label-position="left"
                label-width="70px"
                style="width: 400px; margin-left:50px;">
@@ -283,10 +284,11 @@
 </template>
 
 <script>
-import { productionList, fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { productionList, fetchListS, createArticle, updateArticle } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { constants } from 'fs';
 
 export default {
   name: 'ComplexTable',
@@ -318,10 +320,10 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
+        serial: '',
+        // importance: undefined,
         type: undefined,
-        sort: '+id'
+        sort: 'id'
       },
       importanceOptions: [],
       calendarTypeOptions: [],
@@ -330,14 +332,12 @@ export default {
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
-        id: undefined,
-        PinName: '21312312312',
+        PinName: '',
         stage: '',
         remark: '',
         require: '',
         timestamp: new Date(),
         serial: '',
-        type: '',
         status: 'published'
       },
       dialogFormVisible: false,
@@ -349,31 +349,17 @@ export default {
       dialogPvVisible: false,
       pvData: [],
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        PinName: [{ required: true, message: "请输入品名", trigger: "change" }],
       },
       downloadLoading: false
     }
   },
   created () {
-    this.getList()
     this.getListTwo()
   },
   methods: {
     handleSelectionChange (val) {
       this.multipleSelection = val
-    },
-    getList () {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
-      })
     },
     getListTwo () {
       this.listLoading = true
@@ -441,7 +427,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
+          // this.temp.author = 'admin'
           createArticle(this.temp).then(() => {
             this.list.unshift(this.temp)
             this.dialogFormVisible = false

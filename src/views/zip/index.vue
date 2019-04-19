@@ -1,10 +1,24 @@
 <template>
   <div class="app-container">
     <!-- $t is vue-i18n global function to translate lang -->
-    <el-input v-model="filename" :placeholder="$t('zip.placeholder')" style="width:300px;" prefix-icon="el-icon-document" />
-    <el-button :loading="downloadLoading" style="margin-bottom:20px;" type="primary" icon="document" @click="handleDownload">{{ $t('zip.export') }} zip</el-button>
-    <el-table v-loading="listLoading" :data="list" element-loading-text="拼命加载中" border fit highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
+    <el-input v-model="filename"
+              :placeholder="$t('zip.placeholder')"
+              style="width:300px;"
+              prefix-icon="el-icon-document" />
+    <el-button :loading="downloadLoading"
+               style="margin-bottom:20px;"
+               type="primary"
+               icon="document"
+               @click="handleDownload">{{ $t('zip.export') }} zip</el-button>
+    <el-table v-loading="listLoading"
+              :data="list"
+              element-loading-text="拼命加载中"
+              border
+              fit
+              highlight-current-row>
+      <el-table-column align="center"
+                       label="ID"
+                       width="95">
         <template slot-scope="scope">
           {{ scope.$index }}
         </template>
@@ -14,17 +28,23 @@
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="95" align="center">
+      <el-table-column label="Author"
+                       width="95"
+                       align="center">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.author }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Readings" width="115" align="center">
+      <el-table-column label="Readings"
+                       width="115"
+                       align="center">
         <template slot-scope="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Date" width="220">
+      <el-table-column align="center"
+                       label="Date"
+                       width="220">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.display_time }}</span>
@@ -35,11 +55,11 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { fetchListS } from '@/api/article'
 
 export default {
   name: 'ExportZip',
-  data() {
+  data () {
     return {
       list: null,
       listLoading: true,
@@ -47,18 +67,18 @@ export default {
       filename: ''
     }
   },
-  created() {
+  created () {
     this.fetchData()
   },
   methods: {
-    fetchData() {
+    fetchData () {
       this.listLoading = true
-      fetchList().then(response => {
+      fetchListS().then(response => {
         this.list = response.data.items
         this.listLoading = false
       })
     },
-    handleDownload() {
+    handleDownload () {
       this.downloadLoading = true
       import('@/vendor/Export2Zip').then(zip => {
         const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
@@ -69,7 +89,7 @@ export default {
         this.downloadLoading = false
       })
     },
-    formatJson(filterVal, jsonData) {
+    formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]))
     }
   }

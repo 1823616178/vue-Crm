@@ -7,6 +7,17 @@ export function getRoutes () {
   })
 }
 
+/*
+模拟数据
+*/
+
+export function deleteRoleslocalHost (data) {
+  return request({
+    url: '/RRoute/delerole',
+    method: "post",
+    data
+  })
+}
 
 export function getRoutesTest () {
   return request({
@@ -15,39 +26,25 @@ export function getRoutesTest () {
   })
 }
 
-export function getRoles () {
-  return request({
-    url: '/roles',
-    method: 'get'
-  })
-}
-
-export function deleteRole (id) {
-  return request({
-    url: `/roles/${id}`,
-    method: 'delete'
-  })
-}
-
-export function addRole (data) {
-  return request({
-    url: '/roles',
-    method: 'post',
-    data
-  })
-}
-
-export function updateRole (key, data) {
-  return request({
-    url: `/roles/${key}`,
-    method: 'put',
-    data
-  })
-}
-
 export function getEditor () {
   return request({
     url: '/RRoute/editorrouter',
     method: 'get'
+  })
+}
+
+export function addRolelocalHost (data) {
+  return request({
+    url: '/RRoute/addRoles',
+    method: "post",
+    data
+  })
+}
+
+export function upDataRoleLocalHost (data) {
+  return request({
+    url: "RRoute/updata",
+    method: "post",
+    data
   })
 }

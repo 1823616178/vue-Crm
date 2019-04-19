@@ -1,4 +1,4 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
+import { getUserInfoLocalHost, loginByusernameLocalHost, LoginOutLocalHost } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -10,7 +10,7 @@ const user = {
     name: '',
     avatar: '',
     introduction: '',
-    roles: [],
+    roles: '',
     setting: {
       articlePlatform: []
     }
@@ -48,12 +48,10 @@ const user = {
     LoginByUsername ({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          window.console.log(response.data)
-          // window.console.log(response.data)
+        loginByusernameLocalHost(username, userInfo.password).then(response => {
           const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
+          commit('SET_TOKEN', data)
+          setToken(response.data)
           resolve()
         }).catch(error => {
           reject(error)
@@ -88,18 +86,16 @@ const user = {
     // 获取用户信息
     GetUserInfo ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
-          window.console.log(response.data)
+        getUserInfoLocalHost(state.token).then(response => {
           // 由于mockjs 不支持自定义状态码只能这样hack
           if (!response.data) {
-            reject('Verification failed, please login again.')
+            reject('密码错误')
           }
           const data = response.data
-
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+          if (data.roles !== undefined) { // 验证返回的roles是否是一个非空
             commit('SET_ROLES', data.roles)
           } else {
-            reject('getInfo: roles must be a non-null array!')
+            reject('error:联系工作人员')
           }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
@@ -128,9 +124,9 @@ const user = {
     // 登出
     LogOut ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
+        LoginOutLocalHost(state.token).then((res) => {
           commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
+          commit('SET_ROLES', '')
           removeToken()
           resolve()
         }).catch(error => {
@@ -153,7 +149,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)
         setToken(role)
-        getUserInfo(role).then(response => {
+        getUserInfoLocalHost(role).then(response => {
           const data = response.data
           commit('SET_ROLES', data.roles)
           commit('SET_NAME', data.name)

@@ -1,14 +1,6 @@
 import request from '@/utils/request'
 import production from '../router/modules/production'
 
-export function fetchList (query) {
-  return request({
-    url: '/article/list',
-    method: 'get',
-    params: query
-  })
-}
-
 export function GetLiuYanList () {
   return request({
     url: '/production/getliuyanList',

@@ -57,6 +57,16 @@ export default {
         disabled: false
       },
       list1: [
+        { name: '张三', tesk: "分切", role: '管理管理管理管理管理管理管理管理管理管理管理管理管理管理管理管理管理', id: 1 },
+        { name: '李四', tesk: "分切", role: '管理', id: 2 },
+        { name: '王五', tesk: "分切", role: '管理', id: 3 },
+        { name: '赵六', tesk: "分切", role: '管理', id: 4 },
+        { name: '牛七', tesk: "分切", role: '管理', id: 5 },
+        { name: '牛七', tesk: "分切", role: '管理', id: 6 },
+        { name: '牛七', tesk: "分切", role: '管理', id: 7 },
+        { name: '牛七', tesk: "分切", role: '管理', id: 8 },
+        { name: '牛七', tesk: "分切", role: '管理', id: 9 },
+        { name: '牛七', tesk: "分切", role: '管理', id: 10 },
         { name: '张三', tesk: "分切", role: '管理', id: 1 },
         { name: '李四', tesk: "分切", role: '管理', id: 2 },
         { name: '王五', tesk: "分切", role: '管理', id: 3 },
