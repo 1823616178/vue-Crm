@@ -57,40 +57,30 @@ const permission = {
           resolve(accessedRoutes)
         }
         else {
-          // accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-          // console.log("================>")
-          // console.log(asyncRoutes)
-          // console.log('==================>')
           getEditor().then((res) => {
             if (res) {
               var Routers = res.data
               accessedRoutes = filterAsyncRoutes(Routers, roles)
-              console.log(accessedRoutes)
-
               for (let i in asyncRoutes) {
                 for (let j in accessedRoutes) {
                   if (accessedRoutes[j].path === asyncRoutes[i].path) {
                     accessedRoutes[j].component = asyncRoutes[i].component
                     // accessedRoutes[j].children = asyncRoutes[i].children
-                    console.log(i)
                     for (let o in asyncRoutes[i].children) {
                       for (let u in accessedRoutes[j].children) {
                         if (accessedRoutes[j].children[u].path === asyncRoutes[i].children[o].path) {
                           accessedRoutes[j].children[u].component = asyncRoutes[i].children[o].component
-                          console.log(o)
                         }
                       }
                     }
                   }
                 }
               }
-              console.log(asyncRoutes)
-              console.log(accessedRoutes)
               commit('SET_ROUTES', accessedRoutes)
               resolve(accessedRoutes)
             }
             else {
-              console.log('没有数据')
+              alert('没有数据')
             }
           })
           // commit('SET_ROUTES', accessedRoutes)

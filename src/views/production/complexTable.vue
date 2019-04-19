@@ -323,7 +323,7 @@ export default {
         serial: '',
         // importance: undefined,
         type: undefined,
-        sort: '+id'
+        sort: 'id'
       },
       importanceOptions: [],
       calendarTypeOptions: [],
