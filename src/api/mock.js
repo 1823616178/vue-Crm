@@ -21,7 +21,13 @@ export function getSaleOrderList() {
   })
 }
 
-
+export function querySaleOrderDetail(query) {
+  return request({
+    url: '/querySaleOrderDetail',
+    method: 'post',
+    data: query,
+  })
+}
 
 export function querySaleOrder(query) {
   return request({
