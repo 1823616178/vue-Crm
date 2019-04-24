@@ -1,12 +1,6 @@
 import request from '@/utils/request'
 import production from '../router/modules/production'
 
-export function GetLiuYanList () {
-  return request({
-    url: '/production/getliuyanList',
-    method: 'get'
-  })
-}
 
 export function fetchListS () {
   return request({
@@ -103,6 +97,50 @@ export function fetPeopleList (data) {
   return request({
     url: "/jurisdiction/gavePeopleList",
     method: "post",
+    data
+  })
+}
+
+
+/**
+ * 模拟数据
+ */
+
+export function updataListlocalHost (data) {
+  return request({
+    url: '/production/lyUpList',
+    method: "post",
+    data
+  })
+}
+
+export function GetLiuYanList (data) {
+  return request({
+    url: '/production/getliuyanList',
+    method: 'post',
+    data
+  })
+}
+
+export function GetTreeList () {
+  return request({
+    url: '/production/getTreeList',
+    method: 'get'
+  })
+}
+
+export function updateArticlelocalHost (data) {
+  return request({
+    url: '/production/getUpdataArtic',
+    method: 'post',
+    data
+  })
+}
+
+export function createArticlelocalHost (data) {
+  return request({
+    url: '/production/getCreateArtic',
+    method: 'post',
     data
   })
 }

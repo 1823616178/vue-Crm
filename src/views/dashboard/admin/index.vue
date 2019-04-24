@@ -99,7 +99,6 @@ export default {
   },
   created () {
     getIndexData().then(res => {
-      console.log(res)
       this.lineDD = res.data
       this.lineChartData = res.data.newVisitis
     })

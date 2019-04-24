@@ -185,7 +185,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    <el-pagination background layout="prev,pager,next" :total="100" ></el-pagination>
     <pagination v-show="total>0"
                 :total="total"
                 :page.sync="listQuery.page"
@@ -284,7 +284,7 @@
 </template>
 
 <script>
-import { productionList, fetchListS, createArticle, updateArticle } from '@/api/article'
+import { productionList, fetchListS, createArticle, updataListlocalHost } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -370,11 +370,7 @@ export default {
             this.totalData = response.data.total
             this.importanceOptions = response.data.items
             this.calendarTypeOptions = response.data.items
-            console.log(response)
-            // Just to simulate the time of the request
-            setTimeout(() => {
-              this.listLoading = false
-            }, 1.5 * 1000)
+            this.listLoading = false
           })
         }
       })
@@ -455,7 +451,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then(() => {
+          updataListlocalHost(tempData).then((RES) => {
+            console.log(RES)
             for (const v of this.listData) {
               if (v.id === this.temp.id) {
                 const index = this.listData.indexOf(v)

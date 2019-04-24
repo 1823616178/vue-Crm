@@ -53,7 +53,6 @@ export default {
   methods: {
     fetchData () {
       fetchListS().then(response => {
-        console.log(response)
         this.list = response.data.items.slice(0, 8)
       })
     }
