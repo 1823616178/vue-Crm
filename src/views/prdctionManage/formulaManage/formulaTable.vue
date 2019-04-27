@@ -156,7 +156,7 @@
           <el-row type="flex"
                   justify="end">
             <el-col :span="8">
-              <el-button @click="cancelUpdate()">{{$t('permission.cancel')}}</el-button>
+              <el-button @click="cancelUpdate(editData.index)">{{$t('permission.cancel')}}</el-button>
               <el-button type="primary"
                          @click="updateData('formulaForm')">{{$t('permission.confirm')}}</el-button>
             </el-col>
@@ -175,6 +175,7 @@ import { querySaleOrder, getOrderList, getFormulaList, getOneFormula, updateForm
 import splitPane from 'vue-splitpane'
 import Kanban from '@/components/Kanban'
 import Pagination from '@/components/Pagination'
+import { constants } from 'fs';
 
 export default {
   components: { Pagination, SectionPan, splitPane, Kanban },
@@ -251,7 +252,7 @@ export default {
         "updatePeop": "-----",
         "level": "-----",
         "defaultVal": "-----",
-        "remark": "-----"
+        "remark": "-----",
       },
       editData: {},
       options: {
@@ -271,6 +272,11 @@ export default {
     };
   },
 
+computed:{
+  test(){
+    return 1;
+  }
+},
   watch: {
     checkboxVal (valArr) {
       this.formThead = this.formTheadOptions.filter(
@@ -283,10 +289,11 @@ export default {
     this.getData();
   },
   methods: {
-
-    cancelUpdate() {
+    cancelUpdate(index) {
+      
       this.dialogTableVisible = false;
-      this.editData = this.showData;
+      var temp = this.formulaList[index];
+      Object.assign(this.editData,temp);
     },
     updateData (formName) {
       this.$refs[formName].validate((valid) => {
@@ -294,6 +301,8 @@ export default {
           updateFormula(this.editData).then(response => {
 
             this.dialogTableVisible = false;
+            this.getData();
+            this.formulaDetail(this.editData.index);
             this.$notify({
               title: '成功',
               message: '更新成功',
@@ -307,25 +316,24 @@ export default {
         }
       });
 
-
     },
     editFormula () {
+      console.log(this.editData);
       this.dialogTableVisible = true;
     },
     resize () {
       console.log('resize')
     },
     formulaDetail (index) {
-        
-        this.editData = this.list1[index];
-        this.showData = this.formulaList[index];
-        this.canEdit = false;
-
+      this.editData = this.list1[index];
+      this.showData = this.formulaList[index];
+      this.editData.index = index;
+      this.canEdit = false;
     },
     getData () {
       getFormulaList().then(response => {
         this.formulaList = response.data.data;
-        this.total = response.data.data.length
+        this.total = response.data.data.length;
       });
       getFormulaList().then(response => {
         this.list1 = response.data.data;

@@ -3,9 +3,29 @@
     <div class="filter-container">
       <el-input v-model="listQuery.customerName"
                 :placeholder="$t('orderTable.customerName')"
-                style="width: 600px;"
+                style="width: 300px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter" />
+                <el-select v-model="listQuery.customerFaith"
+                 :placeholder="$t('orderTable.customerFaith')"
+                 clearable
+                 style="width: 120px"
+                 class="filter-item">
+                 <el-option v-for="item in faithOptions"
+                   :key="item"
+                   :label="item"
+                   :value="item" />
+                   </el-select>
+      <el-select v-model="listQuery.sendExpress"
+                 :placeholder="$t('orderTable.sendExpress')"
+                 clearable
+                 style="width: 120px"
+                 class="filter-item">
+                 <el-option v-for="item in expressOptions"
+                   :key="item"
+                   :label="item"
+                   :value="item" />
+                   </el-select>
       <el-button class="filter-item"
                  type="primary"
                  icon="el-icon-search"
@@ -219,6 +239,8 @@ export default {
       { prop: "type", label: "规格" }
     ];
     return {
+      expressOptions: ['申通','顺丰'],
+      faithOptions: [1,2,3,4],
       importanceOptions: [],
       calendarTypeOptions: [],
       totalData: 0,
