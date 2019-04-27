@@ -35,6 +35,8 @@
 <script>
 import SectionPan from './components/sectionPanle.vue'
 import Panle from './components/Peoplesurface.vue'
+import { GetTreeList } from '@/api/article.js'
+import { connect } from 'net';
 export default {
   components: { SectionPan, Panle },
   data () {
@@ -46,6 +48,7 @@ export default {
       }
     }
     return {
+      Treeda: {},
       batch: false,
       batch2: true,
       chartData: {
@@ -53,7 +56,7 @@ export default {
         rows: [
           {
             name: 'tree1',
-            value: [treeData],
+            value: [],
           }
         ]
       },
@@ -96,7 +99,15 @@ export default {
       }
     }
   },
+  created () {
+    this.getTreeList()
+  },
   methods: {
+    getTreeList () {
+      GetTreeList().then((res) => {
+        this.chartData.rows[0].value = [res.data]
+      })
+    },
     Onchange (value) {
       if (value === true) {
         this.batch2 = false
@@ -110,221 +121,6 @@ export default {
       ].join('<br>')
     }
   }
-}
-const treeData = {
-  name: 'BOSS',
-  value: 1,
-  children: [
-    {
-      name: '平台开发部',
-      value: 1,
-      children: [
-        {
-          name: '平台开发部',
-          value: 2,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2,
-              children: [
-                {
-                  name: '平台开发部',
-                  value: 2,
-                  children: [
-                    {
-                      name: '平台开发部',
-                      value: 2,
-                      children: [
-                        {
-                          name: '平台开发部',
-                          value: 2,
-                          children: [
-                            {
-                              name: '平台开发部',
-                              value: 2
-                            },
-                            {
-                              name: '平台开发部',
-                              value: 2
-                            }
-                          ]
-                        },
-                        {
-                          name: '平台开发部',
-                          value: 2
-                        }
-                      ]
-                    },
-                    {
-                      name: '平台开发部',
-                      value: 2
-                    }
-                  ]
-                },
-                {
-                  name: '平台开发部',
-                  value: 2
-                }
-              ]
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        },
-        {
-          name: '平台开发部',
-          value: 2,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }, {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: '平台开发部',
-      value: 1,
-
-      children: [
-        {
-          name: '平台开发部',
-          value: 2,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        },
-        {
-          name: '平台开发部',
-          value: 2,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: '平台开发部',
-      value: 3,
-
-      children: [
-        {
-          name: '平台开发部',
-          value: 4,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        },
-        {
-          name: '平台开发部',
-          value: 2,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        }
-      ]
-    },
-    {
-      name: '平台开发部',
-      value: 3,
-      children: [
-        {
-          name: '平台开发部',
-          value: 4,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        },
-        {
-          name: '平台开发部',
-          value: 2,
-          children: [
-            {
-              name: '平台开发部',
-              value: 2
-            },
-            {
-              name: '平台开发部',
-              value: 2
-            }
-          ]
-        }
-      ]
-    }
-  ]
 }
 </script>
 <style>

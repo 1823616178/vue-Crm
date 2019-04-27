@@ -47,6 +47,10 @@ export default {
       console.log('resize')
     }
   },
+  render: {},
+
+  created () { },
+  methods: {},
   data () {
     return {
       options: {

@@ -211,7 +211,7 @@
 </template>
 
 <script>
-import { productionList, fetchListS, fetPeopleList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { productionList, fetchListS, fetPeopleList, fetchPv, createArticlelocalHost, updateArticlelocalHost } from '@/api/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -247,15 +247,16 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        id: undefined,
+        Jobnumber: undefined,
+        Phone: ''
       },
       importanceOptions: [],
       calendarTypeOptions: [],
-      sortOptions: [{ label: 'ID Ascending', key: '+id' },
-      { label: 'ID Descending', key: '-id' }],
+      sortOptions: [
+        { label: 'ID Ascending', key: '+id' },
+        { label: 'ID Descending', key: '-id' }
+      ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
@@ -383,9 +384,8 @@ export default {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
           // this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            console.log(this.temp)
-            this.list.unshift(this.temp)
+          createArticlelocalHost(this.temp).then(() => {
+            this.listData.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -411,8 +411,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateArticle(tempData).then((res) => {
-            console.log(tempData)
+          updateArticlelocalHost(tempData).then((res) => {
+            console.log(res)
             for (const v of this.listData) {
               if (v.id === this.temp.id) {
                 const index = this.listData.indexOf(v)
