@@ -9,7 +9,7 @@ const saleTableRouter = {
   name: 'saleManage',
   meta: {
     title: 'saleManage',
-    icon: 'table'
+    icon: 'list'
   },
   children: [
     {

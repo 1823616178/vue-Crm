@@ -8,7 +8,7 @@
       <template slot="paneL">
         <div class="left-container verticaloverflow">
           <div style="text-align: center;font-size: 150%;margin-top: 15px"><label>配方列表</label></div>
-          <div v-for="(item,index) in oneDetailData"
+          <div v-for="(item,index) in formulaList"
                :key="index"
                style="margin-top: 5px;text-align: center;">
             <el-row type="flex"
@@ -26,51 +26,51 @@
       <!-- <el-dialog visible.sync="true"> -->
       <template slot="paneR">
         <div class="right-container verticaloverflow demo-dynamic">
-          <el-form :model="this.temp"
+          <el-form :model="showData"
                    style="width: 70%; padding:20px">
             <el-row :gutter="150">
               <el-col :span="11">
                 <el-form-item :label="$t('formulaTable.formulaName')">:
-                  {{temp.formulaName}}
+                  {{showData.formulaName}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.formulaId')">:
-                  {{temp.formulaId}}
+                  {{showData.formulaId}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.goods')">:
-                  {{temp.goods}}
+                  {{showData.goods}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.createTime')">:
-                  {{temp.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+                  {{showData.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.createPeop')">:
-                  {{temp.createPeop}}
+                  {{showData.createPeop}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.stopTime')">:
-                  {{temp.stopTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+                  {{showData.stopTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
                 </el-form-item>
               </el-col>
               <el-col :span="11">
                 <el-form-item :label="$t('formulaTable.stopPeop')">:
-                  {{temp.stopPeop}}
+                  {{showData.stopPeop}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.updateTime')">:
-                  {{temp.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+                  {{showData.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.updatePeop')">:
-                  {{temp.updatePeop}}
+                  {{showData.updatePeop}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.level')">:
-                  {{temp.level}}
+                  {{showData.level}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.defaultVal')">:
-                  {{temp.defaultVal}}
+                  {{showData.defaultVal}}
                 </el-form-item>
                 <el-form-item :label="$t('formulaTable.remark')">:
-                  {{temp.remark}}
+                  {{showData.remark}}
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary"
-                             @click="editFormula(temp)"
+                             @click="editFormula()"
                              :disabled="canEdit">{{$t('table.edit')}}</el-button>
 
                 </el-form-item>
@@ -87,76 +87,76 @@
                  :visible.sync="dialogTableVisible"
                  label-width="50%">
         <!-- <div class="grid-content bg-purple"> -->
-        <el-form :model="temp"
+        <el-form :model="editData"
                  ref="formulaForm"
                  :rules="rules"
                  style="width: 100%;">
           <el-form-item :label="$t('formulaTable.formulaName')"
                         prop="formulaName"
                         :label-width="formLabelWidth">
-            <el-input :value="temp.formulaName" />
+            <el-input v-model="editData.formulaName" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.formulaId')"
                         prop="formulaId"
                         :label-width="formLabelWidth">
 
-            {{temp.formulaId}}
+            {{editData.formulaId}}
           </el-form-item>
           <el-form-item :label="$t('formulaTable.goods')"
                         prop="goods"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.goods" />
+            <el-input v-model="editData.goods" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.createTime')"
                         prop="createTime"
                         :label-width="formLabelWidth">
-            {{temp.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+            {{editData.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
           <el-form-item :label="$t('formulaTable.createPeop')"
                         prop="createPeop"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.createPeop" />
+            <el-input v-model="editData.createPeop" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.stopTime')"
                         prop="stopTime"
                         :label-width="formLabelWidth">
-            {{temp.stopTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+            {{editData.stopTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
           <el-form-item :label="$t('formulaTable.stopPeop')"
                         prop="stopPeop"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.stopPeop" />
+            <el-input v-model="editData.stopPeop" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.updateTime')"
                         prop="updateTime"
                         :label-width="formLabelWidth">
-                        {{temp.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+                        {{editData.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
           <!-- <el-form-item :label=""> -->
           <el-form-item :label="$t('formulaTable.updatePeop')"
                         prop="updatePeop"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.updatePeop" />
+            <el-input v-model="editData.updatePeop" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.defaultVal')"
                         prop="defaultVal"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.defaultVal" />
+            <el-input v-model="editData.defaultVal" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.level')"
                         prop="level"
                         :label-width="formLabelWidth">
-            <el-input v-model.number="temp.level" />
+            <el-input v-model.number="editData.level" />
           </el-form-item>
           <el-form-item :label="$t('formulaTable.remark')"
                         prop="remark"
                         :label-width="formLabelWidth">
-            <el-input v-model="temp.remark" />
+            <el-input v-model="editData.remark" />
           </el-form-item>
           <el-row type="flex"
                   justify="end">
             <el-col :span="8">
-              <el-button @click="dialogTableVisible = false">{{$t('permission.cancel')}}</el-button>
+              <el-button @click="cancelUpdate(editData.index)">{{$t('permission.cancel')}}</el-button>
               <el-button type="primary"
                          @click="updateData('formulaForm')">{{$t('permission.confirm')}}</el-button>
             </el-col>
@@ -175,6 +175,7 @@ import { querySaleOrder, getOrderList, getFormulaList, getOneFormula, updateForm
 import splitPane from 'vue-splitpane'
 import Kanban from '@/components/Kanban'
 import Pagination from '@/components/Pagination'
+import { constants } from 'fs';
 
 export default {
   components: { Pagination, SectionPan, splitPane, Kanban },
@@ -238,7 +239,8 @@ export default {
         // sort: '+id',
         formulaId: undefined,
       },
-      temp: {
+      temp: {},
+      showData: {
         "formulaName": "-----",
         "formulaId": "-----",
         "goods": "-----",
@@ -250,8 +252,9 @@ export default {
         "updatePeop": "-----",
         "level": "-----",
         "defaultVal": "-----",
-        "remark": "-----"
+        "remark": "-----",
       },
+      editData: {},
       options: {
         group: 'mission',
         animation: 300,
@@ -260,17 +263,20 @@ export default {
         disabled: false
       },
       list1: [],
-      list2: [
-      ],
-      list3: [
-      ],
-      oneDetailData: [],
+      list2: [],
+      list3: [],
+      formulaList: [],
       dialogTableVisible: false,
       canEdit: true,
       formLabelWidth: "120px",
     };
   },
 
+computed:{
+  test(){
+    return 1;
+  }
+},
   watch: {
     checkboxVal (valArr) {
       this.formThead = this.formTheadOptions.filter(
@@ -283,14 +289,20 @@ export default {
     this.getData();
   },
   methods: {
-
+    cancelUpdate(index) {
+      
+      this.dialogTableVisible = false;
+      var temp = this.formulaList[index];
+      Object.assign(this.editData,temp);
+    },
     updateData (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.temp.req);
-          updateFormula(this.temp).then(response => {
+          updateFormula(this.editData).then(response => {
 
             this.dialogTableVisible = false;
+            this.getData();
+            this.formulaDetail(this.editData.index);
             this.$notify({
               title: '成功',
               message: '更新成功',
@@ -304,30 +316,28 @@ export default {
         }
       });
 
-
     },
-    editFormula (temp) {
-      // this.temp = temp;
-      console.log("外部"+this.temp.formulaId+","+this.temp.updateTime);
+    editFormula () {
+      console.log(this.editData);
       this.dialogTableVisible = true;
     },
     resize () {
       console.log('resize')
     },
     formulaDetail (index) {
-        
-        this.temp = this.oneDetailData[index];
-        this.canEdit = false;
-
+      this.editData = this.list1[index];
+      this.showData = this.formulaList[index];
+      this.editData.index = index;
+      this.canEdit = false;
     },
     getData () {
       getFormulaList().then(response => {
-        this.oneDetailData = response.data.data;
-        this.total = response.data.data.length
-        console.log(response);
-        console.log("test" + this.oneDetailData.length);
-      })
-      console.log("test");
+        this.formulaList = response.data.data;
+        this.total = response.data.data.length;
+      });
+      getFormulaList().then(response => {
+        this.list1 = response.data.data;
+      });
     },
     Onchange (value) {
       if (value === true) {

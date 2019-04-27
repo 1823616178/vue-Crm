@@ -77,6 +77,7 @@ export default {
     formulaTable: '配方管理',
     saleManage: '销售管理',
     saleOrderManage: '销售订单管理',
+    stockManage: '采购管理',
     stockOrderManage: '采购订单管理',
   },
   navbar: {

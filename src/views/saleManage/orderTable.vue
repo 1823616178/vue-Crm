@@ -3,9 +3,29 @@
     <div class="filter-container">
       <el-input v-model="listQuery.customerName"
                 :placeholder="$t('orderTable.customerName')"
-                style="width: 600px;"
+                style="width: 300px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter" />
+                <el-select v-model="listQuery.customerFaith"
+                 :placeholder="$t('orderTable.customerFaith')"
+                 clearable
+                 style="width: 120px"
+                 class="filter-item">
+                 <el-option v-for="item in faithOptions"
+                   :key="item"
+                   :label="item"
+                   :value="item" />
+                   </el-select>
+      <el-select v-model="listQuery.sendExpress"
+                 :placeholder="$t('orderTable.sendExpress')"
+                 clearable
+                 style="width: 120px"
+                 class="filter-item">
+                 <el-option v-for="item in expressOptions"
+                   :key="item"
+                   :label="item"
+                   :value="item" />
+                   </el-select>
       <el-button class="filter-item"
                  type="primary"
                  icon="el-icon-search"
@@ -187,7 +207,7 @@
 
 <script>
 import { fetchList } from '@/api/article'
-import { querySaleOrder, getSaleOrderList, deleteSaleOrder } from '@/api/mock'
+import { querySaleOrder, getSaleOrderList, deleteSaleOrder, querySaleOrderDetail } from '@/api/mock'
 import Pagination from '@/components/Pagination'
 export default {
   components: { Pagination },
@@ -219,59 +239,15 @@ export default {
       { prop: "type", label: "规格" }
     ];
     return {
+      expressOptions: ['申通','顺丰'],
+      faithOptions: [1,2,3,4],
       importanceOptions: [],
       calendarTypeOptions: [],
       totalData: 0,
       listData: null,
       total: 0,
       tableData: [],
-      orderDetailData: [
-        {
-          goodsName: "DCPP(低温制袋)",
-          goodsType: "50",
-          width: "927",
-          number: "1000.00",
-          long: "50",
-          pieces: "5",
-          priceOfTax: "12.200",
-          priceNoTax: "10.7965",
-          askGoodsDate: "2019-04-08",
-          remark: "备注",
-          sendDate: "2019-05-12",
-          name: "DCPP低温制袋",
-          type: "50"
-        },
-        {
-          goodsName: "DCPP(低温制袋)",
-          goodsType: "50",
-          width: "927",
-          number: "160.00",
-          long: "50",
-          pieces: "5",
-          priceOfTax: "12.200",
-          priceNoTax: "10.7964",
-          askGoodsDate: "2019-04-08",
-          remark: "备注",
-          sendDate: "2019-05-12",
-          name: "DCPP低温制袋",
-          type: "50"
-        },
-        {
-          goodsName: "JCPP(高摩擦充气)",
-          goodsType: "47",
-          width: "705",
-          number: "1600.00",
-          long: "50",
-          pieces: "5",
-          priceOfTax: "12.200",
-          priceNoTax: "10.7965",
-          askGoodsDate: "2019-04-08",
-          remark: "备注",
-          sendDate: "2019-05-12",
-          name: "JCPP(高摩擦充气)",
-          type: "47"
-        },
-      ],
+      orderDetailData: [],
       deleteParam: {
         orderId: undefined,
       },
@@ -298,7 +274,7 @@ export default {
   },
   created () {
     this.getData()
-    this.getListTwo()
+    // this.getListTwo()
   },
   watch: {
     checkboxVal (valArr) {
@@ -318,8 +294,11 @@ export default {
     },
     handleDetail (row) {
       this.temp = Object.assign({}, row) // copy obj
-      console.log(row.orderId);
-      this.dialogTableVisible = true
+      this.dialogTableVisible = true;
+      this.listQuery.orderId = row.orderId;
+      querySaleOrderDetail(this.listQuery).then(response => {
+        this.orderDetailData = response.data.data;
+      })
       this.$nextTick(() => {
         this.$refs['dataForm']
       })

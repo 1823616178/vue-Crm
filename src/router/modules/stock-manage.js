@@ -9,7 +9,7 @@ const stockManageRouter = {
   name: 'stockManage',
   meta: {
     title: 'stockManage',
-    icon: 'table'
+    icon: 'nested'
   },
   children: [
     {
