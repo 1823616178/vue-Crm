@@ -7,6 +7,7 @@
         <div v-for="(item,index) in abc"
              :key="index">
           <el-row type="flex"
+                  v-loading="PostLoding"
                   justify="center"
                   style="text-align: center;">
             <div style="height: 100px;width: 50px;background: #0a76a4;line-height: 100px">{{index}}</div>
@@ -182,6 +183,7 @@ export default {
   components: { vueDragInfinite, Axios },
   data: function () {
     return {
+      PostLoding: true,
       dele: true,
       loading: false,
       heig: undefined,
@@ -247,10 +249,12 @@ export default {
       })
     },
     GetListData () {
+      this.PostLoding = true;
       Axios.post('http://192.168.2.116/production/GetPaixuListData').then((res) => {
         this.abc = res.data.arr;
         this.ListVal = res.data.data;
         this.arrList = res.data.List;
+        this.PostLoding = false;
         console.log(res.data)
         // console.log(res.data)
         // var ListData={
