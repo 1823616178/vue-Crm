@@ -16,7 +16,7 @@ const jurisdiction = {
     {
       path: 'section',
       component: () => import('@/views/jurisdiction/section'),
-      name: 'PagePermission',
+      name: 'PesonPermission',
       meta: {
         title: ' divisional_management ',
         roles: ['admin', 'editor'] // or you can only set roles in sub nav

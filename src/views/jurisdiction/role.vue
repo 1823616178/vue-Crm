@@ -12,7 +12,7 @@
         <template slot-scope="scope">{{ scope.row.roles }}</template>
       </el-table-column>
       <el-table-column align="center"
-                       label="姓名"
+                       label="角色"
                        width="220">
         <template slot-scope="scope">{{ scope.row.name }}</template>
       </el-table-column>
@@ -38,7 +38,7 @@
       <el-form :model="role"
                label-width="80px"
                label-position="left">
-        <el-form-item label="姓名">
+        <el-form-item label="角色">
           <el-input v-model="role.name"
                     placeholder="输入姓名" />
         </el-form-item>
@@ -262,9 +262,9 @@ export default {
         title: 'Success',
         dangerouslyUseHTMLString: true,
         message: `
-            <div>Role Key: ${roles}</div>
-            <div>Role Nmae: ${name}</div>
-            <div>Description: ${description}</div>
+            <div>权限: ${roles}</div>
+            <div>角色: ${name}</div>
+            <div>描述: ${description}</div>
           `,
         type: 'success'
       })

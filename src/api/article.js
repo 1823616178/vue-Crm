@@ -124,7 +124,7 @@ export function GetLiuYanList (data) {
 
 export function GetTreeList () {
   return request({
-    url: '/production/getTreeList',
+    url: '/article/production/getTreeList',
     method: 'get'
   })
 }

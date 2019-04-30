@@ -67,7 +67,7 @@ export default {
           fontWeight: 'bold',
         },
         series: {
-          symbolSize: 10,
+          // symbolSize: 10,
           symbol: 'roundRect',
           symbolSize: [70, 50],
           itemStyle: {
