@@ -20,8 +20,10 @@ import './permission' // permission control
 import './mock' // simulation data/
 import * as filters from './filters' // global filters
 import VCharts from 'v-charts'
+import infiniteScroll from 'vue-infinite-scroll'
 
 Vue.use(VCharts)
+Vue.use(infiniteScroll)
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)

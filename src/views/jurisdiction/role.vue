@@ -40,17 +40,7 @@
                label-position="left">
         <el-form-item label="角色">
           <el-input v-model="role.name"
-                    placeholder="输入姓名" />
-        </el-form-item>
-        <el-form-item label="权限">
-          <el-select v-model="role.roles"
-                     placeholder="选择权限">
-            <el-option v-for="(item,index) in selectRole"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
-            </el-option>
-          </el-select>
+                    placeholder="输入角色名" />
         </el-form-item>
         <el-form-item label="描述">
           <el-input v-model="role.description"
