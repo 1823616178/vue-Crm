@@ -180,7 +180,6 @@
                     onEnd: evt => {
                         const targetRow = this.list.splice(evt.oldIndex, 1)[0]
                         this.list.splice(evt.newIndex, 0, targetRow)
-
                         // for show the changes, you can delete in you code
                         const tempIndex = this.newList.splice(evt.oldIndex, 1)[0]
                         this.newList.splice(evt.newIndex, 0, tempIndex)

@@ -2,30 +2,30 @@ import request from '@/utils/request'
 import production from '../router/modules/production'
 
 
-export function fetchListS () {
+export function fetchListS() {
   return request({
     url: '/content/getContentList',
     method: 'get'
   })
 }
 
-export function fetchArticle (id) {
+export function fetchArticle(id) {
   return request({
     url: '/article/detail',
     method: 'get',
-    params: { id }
+    params: {id}
   })
 }
 
-export function fetchPv (pv) {
+export function fetchPv(pv) {
   return request({
     url: '/article/pv',
     method: 'get',
-    params: { pv }
+    params: {pv}
   })
 }
 
-export function createArticle (data) {
+export function createArticle(data) {
   return request({
     url: '/article/create',
     method: 'post',
@@ -33,7 +33,7 @@ export function createArticle (data) {
   })
 }
 
-export function updateArticle (data) {
+export function updateArticle(data) {
   return request({
     url: '/article/update',
     method: 'post',
@@ -41,7 +41,7 @@ export function updateArticle (data) {
   })
 }
 
-export function getIndexData () {
+export function getIndexData() {
   return request({
     url: '/article/indexData',
     method: 'get'
@@ -49,35 +49,35 @@ export function getIndexData () {
   })
 }
 
-export function getIndexpiedata () {
+export function getIndexpiedata() {
   return request({
     url: '/article/piedata',
     method: 'get'
   })
 }
 
-export function defalutList () {
+export function defalutList() {
   return request({
     url: '/article/defalutList',
     method: 'get'
   })
 }
 
-export function contts () {
+export function contts() {
   return request({
     url: '/article/contts',
     method: 'get'
   })
 }
 
-export function IndexArr () {
+export function IndexArr() {
   return request({
     url: '/article/arrfuse',
     method: 'get'
   })
 }
 
-export function gaveContent (data) {
+export function gaveContent(data) {
   return request({
     url: '/content/getcontent',
     method: 'post',
@@ -85,7 +85,7 @@ export function gaveContent (data) {
   })
 }
 
-export function productionList (data) {
+export function productionList(data) {
   return request({
     url: '/production/getListData',
     method: 'post',
@@ -93,7 +93,7 @@ export function productionList (data) {
   })
 }
 
-export function fetPeopleList (data) {
+export function fetPeopleList(data) {
   return request({
     url: "/jurisdiction/gavePeopleList",
     method: "post",
@@ -106,7 +106,7 @@ export function fetPeopleList (data) {
  * 模拟数据
  */
 
-export function updataListlocalHost (data) {
+export function updataListlocalHost(data) {
   return request({
     url: '/production/lyUpList',
     method: "post",
@@ -114,7 +114,7 @@ export function updataListlocalHost (data) {
   })
 }
 
-export function GetLiuYanList (data) {
+export function GetLiuYanList(data) {
   return request({
     url: '/production/getliuyanList',
     method: 'post',
@@ -122,14 +122,14 @@ export function GetLiuYanList (data) {
   })
 }
 
-export function GetTreeList () {
+export function GetTreeList() {
   return request({
     url: '/article/production/getTreeList',
     method: 'get'
   })
 }
 
-export function updateArticlelocalHost (data) {
+export function updateArticlelocalHost(data) {
   return request({
     url: '/production/getUpdataArtic',
     method: 'post',
@@ -137,10 +137,18 @@ export function updateArticlelocalHost (data) {
   })
 }
 
-export function createArticlelocalHost (data) {
+export function createArticlelocalHost(data) {
   return request({
     url: '/production/getCreateArtic',
     method: 'post',
+    data
+  })
+}
+
+export function GetComposeList(data) {
+  return request({
+    url:"/production/ComponseFromData",
+    method:"post",
     data
   })
 }

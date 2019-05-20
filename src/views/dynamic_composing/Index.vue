@@ -1,28 +1,42 @@
 <template>
-  <div>
+  <div style="user-select: none">
     <el-row type="flex"
             justify="center"
             v-loading.fullscreen.lock="loading" v-infinite-scroll="localMore" style="height: 100%;"
             infinite-scroll-disabled="busy" infinite-scroll-distance="5">
-      <div class="BackQie2">
-        <div v-for="(item,index) in abc"
-             :key="index">
-          <el-row type="flex"
-                  v-loading="PostLoding"
-                  justify="center"
-                  style="text-align: center;">
-            <div style="height: 100px;width: 50px;background: #0a76a4;line-height: 100px">{{index}}</div>
-            <vueDragInfinite :json="item"
-                             :name="name"
-                             @save="saveJson"
-                             ref="dragContain"
-                             :borderWidth='QieBianVal'
-                             :FenQieLength="FenQieLengthCav"/>
-          </el-row>
-          <div v-show="(index+1)%3===0" style="background: #4AB7BD;width: 100%;height: 10px;"></div>
+      <el-col :span="4">
+        <div @dblclick="showIndentLeft" style="width: 100%;height: 100%"></div>
+      </el-col>
+      <el-col :span="15">
+        <div class="BackQie2">
+          <div v-for="(item,index) in abc"
+               :key="index">
+            <el-row type="flex"
+
+                    justify="center"
+                    style="text-align: center;">
+              <div style="height: 100px;width: 50px;background: #0a76a4;line-height: 100px">{{index}}</div>
+              <vueDragInfinite :json="item"
+                               :name="name"
+                               @save="saveJson"
+                               ref="dragContain"
+                               :borderWidth='QieBianVal'
+                               :FenQieLength="FenQieLengthCav"
+                               :isColorStop="isColorStop"
+                               @isColorStopfunc="isColorStopSync"
+                               @mouseenter.native="IsMouseUp(index)"
+                               @click.native="IsClickCtrl($event,index)"
+                               @mouseout.native="isMouseOut(index)"
+              />
+            </el-row>
+            <div v-show="(index+1)%3===0" style="background: #4AB7BD;width: 100%;height: 10px;"></div>
+          </div>
+          <!--  -->
         </div>
-        <!--  -->
-      </div>
+      </el-col>
+      <el-col :span="5">
+        <div @dblclick="showIndentRight" style="height: 100%;width: 100%"></div>
+      </el-col>
     </el-row>
 
     <div>
@@ -88,13 +102,13 @@
                 </div>
               </div>
             </el-form-item>
-            <el-form-item label="行分切数">
-              <el-input v-model="FenQieVal"></el-input>
-            </el-form-item>
+            <!--            <el-form-item label="行分切数">-->
+            <!--              <el-input v-model="FenQieVal"></el-input>-->
+            <!--            </el-form-item>-->
             <el-form-item label="分切长度">
               <el-input v-model="FenQieLength"></el-input>
             </el-form-item>
-            <el-form-item label="刀数">
+            <el-form-item label="行分切数">
               <div class="block">
                 <span class="demonstration">刀数</span>
                 <el-select v-model="cutVal"
@@ -164,20 +178,23 @@
         <!--随机数代码提示-->
       </div>
     </div>
-
+    <!--    <el-tree :props="props" :load="loadNodel" @node-contextmenu="AddJsonArr" lazy show-checkbox></el-tree>-->
     <div class="Menucontrol"
          v-drag="contain"
-         v-show="dele">
+         v-show="dele2">
       <div style="line-height:30px;background:#409EFF;cursor:move;color:#fff;text-indent:15px;">
         订单列表
         <el-button type="danger"
                    class="del"
-                   @click="deel(index,$event)"
+                   @click="deel2(index,$event)"
                    circle></el-button>
       </div>
       <div style="padding:7px;"
            @mousedown="mouseDown($event,false)">
-        <el-tree :props="props" :load="loadNodel" lazy show-checkbox></el-tree>
+        <div @contextmenu.prevent="PostNewMakerArr">
+          <TreeTable :data="TreeData" :columns="columns" ref="isReload" @AddDivWidth="AddDivWidth($event)"
+                     border/>
+        </div>
         <!--随机数代码提示-->
       </div>
     </div>
@@ -187,16 +204,27 @@
 <script>
   import Axios from 'axios'
   import vueDragInfinite from 'vue-drag-infinite/src/lib/vue-drag-infinite.vue'
+  import TreeTable from '@/components/TreeTable'
   import indexVue from '../login/index.vue';
   import {constants} from 'fs';
   import {setTimeout} from 'timers';
 
   export default {
     mounted() {
-      // this.contain.xx = this.$refs.dragContain.offsetWidth;
-      // this.contain.yy = this.$refs.dragContain.offsetHeight;
+      let sUserAgent = navigator.userAgent;
+      let isWin = (navigator.platform == "Win32") || (navigator.platform == "Windows");
+      let isMac = (navigator.platform == "Mac68K") || (navigator.platform == "MacPPC") || (navigator.platform == "Macintosh") || (navigator.platform == "MacIntel");
+      document.addEventListener('keydown', e => {
+        if ((e.keyCode === 17 && isWin) || (e.keyCode === 91 && isMac)) {
+          this.isCtrl = true
+        }
+      })
+      document.addEventListener('keyup', e => {
+        if ((e.keyCode === 17 && isWin) || (e.keyCode === 91 && isMac)) {
+          this.isCtrl = false
+        }
+      })
     },
-
     computed: {
       ListHeight() {
         return 650;
@@ -223,9 +251,131 @@
         return parseInt(this.FenQieLength)
       }
     },
-    components: {vueDragInfinite, Axios},
+    components: {vueDragInfinite, Axios, TreeTable},
     data: function () {
       return {
+        dele2: true,
+        divindexData: undefined,
+        addWidthDataSon: undefined,
+        isColorStop: false,
+        TreeData: [
+          {
+            coding: 123,
+            name: '高摩擦充气',
+            event: 'event1',
+            id: "123123",
+            count: 36000,
+            spec: "30|50|80|90",
+            children: [
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 30,
+                count: 50,
+              },
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 50,
+                count: 50,
+              },
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 80,
+                count: 50,
+              },
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 90,
+                count: 50,
+              }
+            ]
+          },
+          {
+            coding: 123,
+            name: '高摩擦充气',
+            event: 'event1',
+            id: "123123",
+            spec: 30,
+            count: 36000,
+            children: [
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 90,
+                count: 50,
+              },
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 90,
+                count: 50,
+              }
+            ]
+          },
+          {
+            coding: 123,
+            name: '高摩擦充气',
+            event: 'event1',
+            id: "123123",
+            spec: 30,
+            count: 36000,
+            children: [
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 90,
+                count: 50,
+              },
+              {
+                coding: 123,
+                name: '高摩擦充气',
+                event: 'event1',
+                id: "21231231",
+                spec: 90,
+                count: 50,
+              }
+            ]
+          },
+
+        ],
+        columns: [
+          {
+            label: "产品编码",
+            key: "coding",
+            width: 200,
+            checkbox: true,
+            expand: true
+          },
+          {
+            label: "产品名称",
+            key: "name",
+          },
+          {
+            label: "规格",
+            key: "spec",
+          },
+          {
+            label: "数量",
+            key: "count",
+          }
+        ],
         props: {
           label: 'name',
           children: 'zones',
@@ -248,6 +398,7 @@
         cutVal: 3,
         arrList: undefined,
         ListVal: undefined,
+        MenuList: [],
         cutSelect: [
           {
             label: 1,
@@ -290,57 +441,164 @@
         abccope: [],
         add: [],
         busy: false,
+        tableData1: [{
+          id: 1,
+
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          id: 2,
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        }, {
+          id: 3,
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄',
+          hasChildren: true
+        }, {
+          id: 4,
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }]
       }
     },
     created() {
       this.heig = window.innerHeight;
-      this.GetListData();
+      // this.GetListData();
       this.groupMaker();
     },
     methods: {
-      loadNodel(node, resolve) {
-        console.log(node);
-        if (node.level === 0) {
-          return resolve(
-            [
-              {name: 'region'},
-              {name: 'region'},
-              {name: 'region'},
-              {name: 'region'}
-            ]
-          );
+      showIndentLeft(){
+        this.dele2 = true;
+      },
+      showIndentRight(){
+        this.dele = true;
+      },
+      PostNewMakerArr() {
+        console.log(this.TreeData)
+        let arr = [];
+        for (let i in this.TreeData) {
+          for (let j in this.TreeData[i].children) {
+            if (this.TreeData[i].children[j]._select === true) {
+              let arr2 = {
+                count: this.TreeData[i].children[j].count,
+                coding: this.TreeData[i].children[j].coding,
+                width: this.TreeData[i].children[j].spec,
+              };
+              arr.push(arr2)
+            }
+          }
         }
-        if (node.level > 1) return resolve([]);
-
-        setTimeout(() => {
-          const data =
-            [
-              {
-                name: 'leaf',
-                leaf: true
+        this.GetListData();
+        this.$refs.isReload.RestartData();
+        console.log(arr)
+      },
+      isMouseOut(index) {
+        let re = document.querySelectorAll('.contain');
+        re[index].style.background = "#ddd"
+      },
+      IsMouseUp(value) {
+        var re = document.querySelectorAll('.contain');
+        re[value].style.background = "rgb(110, 110, 200)"
+      },
+      IsClickCtrl(e, index) {
+        e.preventDefault();
+        if (e.button === 0 && this.isCtrl) {
+          this.divindexData = index;
+          let re = document.querySelector('.Menucontrol');
+          re.style.left = e.x - 300 + "px";
+          re.style.top = e.y + 'px';
+        }
+      },
+      isColorStopSync(value) {
+        this.isColorStop = value
+      },
+      AddDivWidth(data) {
+        this.addWidthDataSon = data;
+        if (this.divindexData || this.divindexData === 0) {
+          if (data) {
+            let wid = data + 'px';
+            let addjson = {
+              style: {
+                float: 'left',
+                width: wid,
+                height: '100px',
+                fontSize: "14px",
+                color: "#ffffff",
+                left: 0,
+                backgroundColor: "#333333",
+                top: '0px'
               },
-              {
-                name: 'zone',
-                leaf: true
-              }
-            ];
-
-          resolve(data);
-        }, 500);
+              text: '新的div'
+            };
+            let le = 0;
+            for (let i in this.abc[this.divindexData]) {
+              let num = this.abc[this.divindexData][i].style.width;
+              let val1 = num.indexOf('p');
+              let val2 = num.slice(0, val1);
+              le += parseInt(val2)
+            }
+            addjson.style.left = le + 'px';
+            this.abc[this.divindexData].push(addjson)
+          }
+        } else {
+          this.$message("请按Ctrl+鼠标左键选择你想要编辑的行")
+        }
+      },
+      load(tree, treeNode, resolve) {
+        resolve([
+          {
+            id: 31,
+            date: '2016-05-01',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1519 弄'
+          }, {
+            id: 32,
+            date: '2016-05-01',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1519 弄'
+          }
+        ])
+      },
+      AddJsonArr(MouseData, ListData, DataData) {
+        console.log(DataData)
+      },
+      loadNodel(node, resolve) {
+        var data = [];
+        if (node.level === 0) {
+          Axios.get('http://118.24.131.216/production/GetComposList').then((res) => {
+            this.MenuList = res.data;
+            return resolve(
+              this.MenuList
+            )
+          });
+        }
+        if (node.level === 1) {
+          let DataId = node.data.id
+          Axios.post('http://118.24.131.216/production/ComSonPoseList', {id: DataId}).then((res) => {
+            data = res.data.data;
+            return resolve(data)
+          })
+        }
       },
       localMore() {
-        this.isDataLoad++;
-        console.log(this.isDataLoad);
-        this.busy = true;
-        Axios.post('http://127.0.0.1/production/GetPaixuListData').then((res) => {
-          var data = res.data.arr;
-          setTimeout(() => {
-            for (let i in data) {
-              this.abc.push(data[i])
-            }
-          }, 500)
-        })
-        this.busy = false
+        if (this.abc.length !== 0) {
+          this.isDataLoad++;
+          this.busy = true;
+          Axios.post('http://118.24.131.216/production/GetPaixuListData').then((res) => {
+            var data = res.data.arr;
+            setTimeout(() => {
+              for (let i in data) {
+                this.abc.push(data[i])
+              }
+            }, 500)
+          })
+          this.busy = false
+        }
       },
       changWdthOrQie(values) {
         let data = values;
@@ -348,7 +606,6 @@
         this.wid = parseInt(data2[0]);
         this.MinWid = parseInt(data2[0]);
         this.MaxWid = parseInt(data2[1]);
-        console.log(data2);
         // this.wid = values.MinWidth;
         // this.MinWid = values.MinWidth;
         // this.MaxWid = values.MaxWidth;
@@ -361,19 +618,18 @@
         if (parseInt(this.wid2) < this.MinWid) {
           alert("请输入大于" + this.MinWid + "的数")
         }
-        console.log(this.wid)
       },
       sendData() {
         var that = this;
-        var json = that.abc
+        var json = that.abc;
         var arr2 = [];
         var diff = [];
         for (var i in json) {
-          var arr1 = []
+          var arr1 = [];
           for (var j in json[i]) {
-            var val1 = json[i][j].style.width
-            var val2 = val1.indexOf('p')
-            var wid = parseInt(val1.slice(0, val2))
+            var val1 = json[i][j].style.width;
+            var val2 = val1.indexOf('p');
+            var wid = parseInt(val1.slice(0, val2));
             arr1.push(wid)
           }
           arr2.push(arr1)
@@ -402,10 +658,12 @@
             diff.push(diffval2)
           }
         }
-        console.log(diff)
       },
       deel(val1, val2) {
         this.dele = false;
+      },
+      deel2() {
+        this.dele2 = false
       },
       fetchData() {
         import('./content.js').then(data => {
@@ -419,21 +677,21 @@
       },
       GetListData() {
         this.PostLoding = true;
-        Axios.post('http://127.0.0.1/production/GetPaixuListData').then((res) => {
+        Axios.post('http://118.24.131.216/production/GetPaixuListData').then((res) => {
           this.abc = res.data.arr;
           var arr2 = [];
           for (var i in res.data.arr) {
-            var arr1 = []
+            var arr1 = [];
             for (var j in res.data[i]) {
-              var val1 = res.data[i][j].style.width
-              var val2 = val1.indexOf('p')
-              var wid = parseFloat(val1.slice(0, val2))
+              var val1 = res.data[i][j].style.width;
+              var val2 = val1.indexOf('p');
+              var wid = parseFloat(val1.slice(0, val2));
               arr1.push(wid)
             }
             arr2.push(arr1)
           }
-          this.abccope = arr2
-          console.log(this.abccope)
+          this.abccope = arr2;
+          console.log(this.abccope);
           // this.ListVal = res.data.data;
           // this.arrList = res.data.List;
           this.PostLoding = false;
@@ -473,9 +731,8 @@
             fqs: "分切数"
           }
         }
-        console.log(this.FenQieLength)
         // "http://192.168.2.118/Spb/testsf?n="+this.enumVal+"&kw="+this.wid+'&bj='+this.QieVal+"&hfqs="+this.blackVal+"&fqs="+this.FenQieVal
-        Axios.post("http://127.0.0.1:6604/home", {data}).then((ress) => {
+        Axios.post("http://118.24.131.216/production/GetPaixuListData", {data}).then((ress) => {
           this.$nextTick(() => {
             this.abc = [];
             this.abccope = [];
@@ -535,7 +792,6 @@
       },
       mouseDown(e, type) {
         if (type) {
-
           let that = this;
           let oldX = e.pageX, oldY = e.pageY;
           that.movejson.moveWidth = that.json[that.divindex].style.width;
@@ -555,7 +811,6 @@
         e.stopPropagation();
       }
     },
-
     directives: {
       drag: {
         bind: function (el, binding, vnode) {
@@ -602,7 +857,7 @@
   }
 
   .Menucontrol {
-    width: 250px;
+    width: 600px;
     border-radius: 5px;
     overflow: hidden;
     background-color: #b3c0d1;

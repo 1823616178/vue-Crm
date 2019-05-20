@@ -36,7 +36,7 @@
 ```js
 const data = [
   {
-    name:'1'
+    name:'1',
     children: [
       {
         name: '1-1'
