@@ -9,11 +9,9 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 // permission judge function
 function hasPermission (roles, permissionRoles) {
-  console.log(permissionRoles)
-  console.log(roles)
   if (roles.includes('admin')) return true
   if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
+  return true
 }
 
 const whiteList = ['/login', '/auth-redirect']
@@ -35,6 +33,7 @@ router.beforeEach((to, from, next) => {
           .then(res => {
             // 拉取user_info
             const roles = res.data.roles
+            console.log(roles)
             store.dispatch('GenerateRoutes', { roles }).then(accessRoutes => {
               // 根据roles权限生成可访问的路由表
               router.addRoutes(accessRoutes) // 动态添加可访问路由表

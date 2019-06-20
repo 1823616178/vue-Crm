@@ -10,7 +10,7 @@ const jurisdiction = {
   meta: {
     title: 'jurisdiction',
     icon: 'lock',
-    roles: ['admin', 'editor'] // you can set roles in root nav
+    // you can set roles in root nav
   },
   children: [
     {
@@ -18,8 +18,8 @@ const jurisdiction = {
       component: () => import('@/views/jurisdiction/section'),
       name: 'PagePermission',
       meta: {
-        title: ' PesonPermission ',
-        roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        title: 'divisionalManage ',
+       // or you can only set roles in sub nav
       }
     },
 
@@ -28,8 +28,8 @@ const jurisdiction = {
       component: () => import('@/views/jurisdiction/Department'),
       name: 'divisional_management',
       meta: {
-        title: ' divisional_management ',
-        roles: ['admin', 'editor'] // or you can only set roles in sub nav
+        title: ' PesonPermission ',
+         // or you can only set roles in sub nav
       }
     },
     {
@@ -38,7 +38,7 @@ const jurisdiction = {
       name: 'RolePermission',
       meta: {
         title: 'rolePermission',
-        roles: ['admin', 'editor']
+
       }
     }
   ]

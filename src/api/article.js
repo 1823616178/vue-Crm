@@ -2,10 +2,11 @@ import request from '@/utils/request'
 import production from '../router/modules/production'
 
 
-export function fetchListS() {
+export function fetchListS(data) {
   return request({
-    url: '/content/getContentList',
-    method: 'get'
+    url: '/role/personRole',
+    method: 'post',
+    data
   })
 }
 
@@ -95,8 +96,8 @@ export function productionList(data) {
 
 export function fetPeopleList(data) {
   return request({
-    url: "/jurisdiction/gavePeopleList",
-    method: "post",
+    url: '/role/personRole',
+    method: 'post',
     data
   })
 }
@@ -124,7 +125,7 @@ export function GetLiuYanList(data) {
 
 export function GetTreeList() {
   return request({
-    url: '/article/production/getTreeList',
+    url: '/role/TeamGroup',
     method: 'get'
   })
 }

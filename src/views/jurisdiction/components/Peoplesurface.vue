@@ -37,7 +37,7 @@
                  icon="el-icon-search"
                  @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button v-waves
-                 :loading="downloadLoading"
+
                  class="filter-item"
                  type="primary"
                  icon="el-icon-download"
@@ -46,7 +46,7 @@
 
     <el-table :key="tableKey"
               ref="multipleTable"
-              v-loading="listLoading"
+
               :data="listData"
               border
               fit
@@ -62,44 +62,44 @@
                        align="center"
                        width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.ROW_NUMBER }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.Jobnumber')"
                        min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.Jobnumber}}</span>
+                @click="handleUpdate(scope.row)">{{ scope.row.cPersonCode}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.name')"
                        min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.name }}</span>
+                @click="handleUpdate(scope.row)">{{ scope.row.cPersonName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.Phone')"
                        min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.Phone }}</span>
+                @click="handleUpdate(scope.row)">{{ scope.row.cPersonPhone }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.unit')"
                        width="150px"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.unit }}</span>
+          <span>{{ scope.row.cDepName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('Peole.role')"
-                       width="150px"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.role }}</span>
-        </template>
-      </el-table-column>
+<!--      <el-table-column :label="$t('Peole.role')"-->
+<!--                       width="150px"-->
+<!--                       align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <span>{{ scope.row.role }}</span>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column :label="$t('production.actions')"
                        align="center"
                        width="230"
@@ -128,15 +128,15 @@
                style="width: 400px; margin-left:50px;">
         <el-form-item :label="$t('production.id')"
                       prop="id">
-          {{temp.id}}
+          {{temp.cPersonCode}}
         </el-form-item>
         <el-form-item :label="$t('Peole.Jobnumber')"
                       prop="stage">
-          <el-input v-model="temp.Jobnumber" />
+          <el-input v-model="temp.cPersonCode" />
         </el-form-item>
         <el-form-item :label="$t('Peole.Phone')"
                       prop="PinName">
-          <el-input v-model="temp.Phone" />
+          <el-input v-model="temp.cPersonPhone" />
         </el-form-item>
 
         <el-form-item :label="$t('Peole.unit')">
@@ -291,7 +291,7 @@ export default {
     }
   },
   created () {
-    this.getList()
+    // this.getList()
     this.getListTwo()
   },
   methods: {
@@ -302,29 +302,24 @@ export default {
     getList () {
       this.listLoading = true
       fetchListS(this.listQuery).then(response => {
+        console.log(response)
         this.list = response.data.items
         this.total = response.data.total
+        this.listLoading = false;
         // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
       })
     },
     getListTwo () {
       this.listLoading = true
       fetPeopleList(this.listQuery).then(response => {
+        console.log(response)
         if (response) {
-          this.$nextTick(() => {
             this.listData = response.data.items
             this.totalData = response.data.total
             this.importanceOptions = response.data.items
             this.calendarTypeOptions = response.data.items
-            console.log(response)
+            this.listLoading = false;
             // Just to simulate the time of the request
-            setTimeout(() => {
-              this.listLoading = false
-            }, 1.5 * 1000)
-          })
         }
       })
     },

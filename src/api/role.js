@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getRoutes () {
+export function getRoutes() {
   return request({
     url: '/routes',
     method: 'get'
@@ -11,7 +11,7 @@ export function getRoutes () {
 模拟数据
 */
 
-export function deleteRoleslocalHost (data) {
+export function deleteRoleslocalHost(data) {
   return request({
     url: '/RRoute/delerole',
     method: "post",
@@ -19,32 +19,81 @@ export function deleteRoleslocalHost (data) {
   })
 }
 
-export function getRoutesTest () {
+export function getRoutesTest() {
   return request({
-    url: '/RRoute/ssTEST',
+    url: '/login/getRole',
     method: 'get'
   })
 }
 
-export function getEditor () {
+export function GetRoleRUle(data) {
+  data = {
+    data
+  };
   return request({
-    url: '/RRoute/editorrouter',
-    method: 'get'
+    url: '/login/pageRule',
+    method: 'post',
+    data
   })
 }
 
-export function addRolelocalHost (data) {
+export function getEditor(roles) {
+  const data = {
+    user: roles
+  }
   return request({
-    url: '/RRoute/addRoles',
+    url: '/login/editorrouter',
+    method: 'post',
+    data
+  })
+}
+
+export function addNewRole(data) {
+  return request({
+    url: '/login/newRole',
     method: "post",
     data
   })
 }
 
-export function upDataRoleLocalHost (data) {
+export function addRolelocalHost(data) {
   return request({
-    url: "RRoute/updata",
+    url: '/login/newRole',
     method: "post",
+    data
+  })
+}
+
+export function upDataRoleLocalHost(data) {
+  return request({
+    url: "login/updata",
+    method: "post",
+    data
+  })
+}
+
+export function GetUserInfogroup() {
+  return request({
+    url: "login/getgroupinfo",
+    method: "get",
+  })
+}
+
+export function getUserPeopleInfo(id) {
+  const data = {
+    data: id
+  }
+  return request({
+    url: 'login/getPeopleInfo',
+    method: "post",
+    data
+  })
+}
+
+export function UpUserEditorRole(data) {
+  return request({
+    url: "login/UpUserEditorRole",
+    method: 'post',
     data
   })
 }

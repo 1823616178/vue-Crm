@@ -17,7 +17,8 @@
               <el-col :span="22"
                       class="text-center">
                 <div class="pan-btn blue-btn PeiFCss"
-                     @click="formulaDetail(index)">{{item.formulaName}}</div>
+                     @click="formulaDetail(index)">{{item.formulaName}}
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -71,7 +72,8 @@
                 <el-form-item>
                   <el-button type="primary"
                              @click="editFormula()"
-                             :disabled="canEdit">{{$t('table.edit')}}</el-button>
+                             :disabled="canEdit">{{$t('table.edit')}}
+                  </el-button>
 
                 </el-form-item>
               </el-col>
@@ -94,7 +96,7 @@
           <el-form-item :label="$t('formulaTable.formulaName')"
                         prop="formulaName"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.formulaName" />
+            <el-input v-model="editData.formulaName"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.formulaId')"
                         prop="formulaId"
@@ -105,7 +107,7 @@
           <el-form-item :label="$t('formulaTable.goods')"
                         prop="goods"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.goods" />
+            <el-input v-model="editData.goods"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.createTime')"
                         prop="createTime"
@@ -115,7 +117,7 @@
           <el-form-item :label="$t('formulaTable.createPeop')"
                         prop="createPeop"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.createPeop" />
+            <el-input v-model="editData.createPeop"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.stopTime')"
                         prop="stopTime"
@@ -125,40 +127,41 @@
           <el-form-item :label="$t('formulaTable.stopPeop')"
                         prop="stopPeop"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.stopPeop" />
+            <el-input v-model="editData.stopPeop"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.updateTime')"
                         prop="updateTime"
                         :label-width="formLabelWidth">
-                        {{editData.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
+            {{editData.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}
           </el-form-item>
           <!-- <el-form-item :label=""> -->
           <el-form-item :label="$t('formulaTable.updatePeop')"
                         prop="updatePeop"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.updatePeop" />
+            <el-input v-model="editData.updatePeop"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.defaultVal')"
                         prop="defaultVal"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.defaultVal" />
+            <el-input v-model="editData.defaultVal"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.level')"
                         prop="level"
                         :label-width="formLabelWidth">
-            <el-input v-model.number="editData.level" />
+            <el-input v-model.number="editData.level"/>
           </el-form-item>
           <el-form-item :label="$t('formulaTable.remark')"
                         prop="remark"
                         :label-width="formLabelWidth">
-            <el-input v-model="editData.remark" />
+            <el-input v-model="editData.remark"/>
           </el-form-item>
           <el-row type="flex"
                   justify="end">
             <el-col :span="8">
               <el-button @click="cancelUpdate(editData.index)">{{$t('permission.cancel')}}</el-button>
               <el-button type="primary"
-                         @click="updateData('formulaForm')">{{$t('permission.confirm')}}</el-button>
+                         @click="updateData('formulaForm')">{{$t('permission.confirm')}}
+              </el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -169,225 +172,225 @@
 </template>
 
 <script>
-import SectionPan from './components/sectionPanle.vue'
-// import { fetchList } from '@/api/article'
-import { querySaleOrder, getOrderList, getFormulaList, getOneFormula, updateFormula } from '@/api/mock'
-import splitPane from 'vue-splitpane'
-import Kanban from '@/components/Kanban'
-import Pagination from '@/components/Pagination'
-import { constants } from 'fs';
+  import SectionPan from './components/sectionPanle.vue'
+  // import { fetchList } from '@/api/article'
+  import {querySaleOrder, getOrderList, getFormulaList, getOneFormula, updateFormula} from '@/api/mock'
+  import splitPane from 'vue-splitpane'
+  import Kanban from '@/components/Kanban'
+  import Pagination from '@/components/Pagination'
+  import {constants} from 'fs';
 
-export default {
-  components: { Pagination, SectionPan, splitPane, Kanban },
-  data () {
-    this.colConfigs = [
-      { prop: "formulaName", label: "配方名称" },
-      { prop: "formulaId", label: "配方编号" },
-      { prop: "goods", label: "对应产品" },
-      { prop: "createTime", label: "创建时间" },
-      { prop: "createPeop", label: "创建者" },
-      { prop: "stopTime", label: "停止时间" },
-      { prop: "stopPeop", label: "停止人" },
-      { prop: "updateTime", label: "修改时间" },
-      { prop: "updatePeop", label: "修改人" },
-      // { prop: "level", label: "配方等级" },
-      { prop: "defaultVal", label: "默认选用值" },
-      { prop: "remark", label: "备注" }
-    ];
-    return {
-      batch2: true,
-      totalData: 0,
-      listData: null,
-      total: 0,
-      tableData: [],
+  export default {
+    components: {Pagination, SectionPan, splitPane, Kanban},
+    data() {
+      this.colConfigs = [
+        {prop: "formulaName", label: "配方名称"},
+        {prop: "formulaId", label: "配方编号"},
+        {prop: "goods", label: "对应产品"},
+        {prop: "createTime", label: "创建时间"},
+        {prop: "createPeop", label: "创建者"},
+        {prop: "stopTime", label: "停止时间"},
+        {prop: "stopPeop", label: "停止人"},
+        {prop: "updateTime", label: "修改时间"},
+        {prop: "updatePeop", label: "修改人"},
+        // { prop: "level", label: "配方等级" },
+        {prop: "defaultVal", label: "默认选用值"},
+        {prop: "remark", label: "备注"}
+      ];
+      return {
+        batch2: true,
+        totalData: 0,
+        listData: null,
+        total: 0,
+        tableData: [],
 
-      // key: 1, // table key
-      // formTheadOptions: ['apple', 'banana', 'orange'],
-      // checkboxVal: defaultFormThead, // checkboxVal
-      // formThead: defaultFormThead // 默认表头 Default header
-      rules: {
-        formulaName: [
-          { required: true, message: '请输入配方名称', trigger: 'blur' },
-        ],
-        goods: [
-          { required: true, message: '请选择对应产品', trigger: 'change' }
-        ],
-        createPeop: [
-          { required: true, message: '请输入创建人', trigger: 'change' }
-        ],
-        stopPeop: [
-          { required: true, message: '请输入停止人', trigger: 'change' }
-        ],
-        updatePeop: [
-          { required: true, message: '请输入更新人', trigger: 'change' }
-        ],
-        defaultVal: [
-          { required: true, message: '请输入默认选用值', trigger: 'change' }
-        ],
-        level: [
-          { type: 'number', required: true, message: '请输入配方等级', trigger: 'change' }
-        ],
-      },
-      listQuery: {
-        page: 1,
-        limit: 10,
-        // customerServ: undefined,
-        // customerName: undefined,
-        // payCondition: undefined,
-        // sendExpress: undefined,
-        // customerFaith: undefined,
-        // sort: '+id',
-        formulaId: undefined,
-      },
-      temp: {},
-      showData: {
-        "formulaName": "-----",
-        "formulaId": "-----",
-        "goods": "-----",
-        "createTime": "-----",
-        "createPeop": "-----",
-        "stopTime": "-----",
-        "stopPeop": "-----",
-        "updateTime": "-----",
-        "updatePeop": "-----",
-        "level": "-----",
-        "defaultVal": "-----",
-        "remark": "-----",
-      },
-      editData: {},
-      options: {
-        group: 'mission',
-        animation: 300,
-        dragClass: "oNdragClass",
-        sort: true,
-        disabled: false
-      },
-      list1: [],
-      list2: [],
-      list3: [],
-      formulaList: [],
-      dialogTableVisible: false,
-      canEdit: true,
-      formLabelWidth: "120px",
-    };
-  },
+        // key: 1, // table key
+        // formTheadOptions: ['apple', 'banana', 'orange'],
+        // checkboxVal: defaultFormThead, // checkboxVal
+        // formThead: defaultFormThead // 默认表头 Default header
+        rules: {
+          formulaName: [
+            {required: true, message: '请输入配方名称', trigger: 'blur'},
+          ],
+          goods: [
+            {required: true, message: '请选择对应产品', trigger: 'change'}
+          ],
+          createPeop: [
+            {required: true, message: '请输入创建人', trigger: 'change'}
+          ],
+          stopPeop: [
+            {required: true, message: '请输入停止人', trigger: 'change'}
+          ],
+          updatePeop: [
+            {required: true, message: '请输入更新人', trigger: 'change'}
+          ],
+          defaultVal: [
+            {required: true, message: '请输入默认选用值', trigger: 'change'}
+          ],
+          level: [
+            {type: 'number', required: true, message: '请输入配方等级', trigger: 'change'}
+          ],
+        },
+        listQuery: {
+          page: 1,
+          limit: 10,
+          // customerServ: undefined,
+          // customerName: undefined,
+          // payCondition: undefined,
+          // sendExpress: undefined,
+          // customerFaith: undefined,
+          // sort: '+id',
+          formulaId: undefined,
+        },
+        temp: {},
+        showData: {
+          "formulaName": "-----",
+          "formulaId": "-----",
+          "goods": "-----",
+          "createTime": "-----",
+          "createPeop": "-----",
+          "stopTime": "-----",
+          "stopPeop": "-----",
+          "updateTime": "-----",
+          "updatePeop": "-----",
+          "level": "-----",
+          "defaultVal": "-----",
+          "remark": "-----",
+        },
+        editData: {},
+        options: {
+          group: 'mission',
+          animation: 300,
+          dragClass: "oNdragClass",
+          sort: true,
+          disabled: false
+        },
+        list1: [],
+        list2: [],
+        list3: [],
+        formulaList: [],
+        dialogTableVisible: false,
+        canEdit: true,
+        formLabelWidth: "120px",
+      };
+    },
 
-computed:{
-  test(){
-    return 1;
-  }
-},
-  watch: {
-    checkboxVal (valArr) {
-      this.formThead = this.formTheadOptions.filter(
-        i => valArr.indexOf(i) >= 0
-      );
-      this.key = this.key + 1; // 为了保证table 每次都会重渲 In order to ensure the table will be re-rendered each time
-    }
-  },
-  created () {
-    this.getData();
-  },
-  methods: {
-    cancelUpdate(index) {
-      
-      this.dialogTableVisible = false;
-      var temp = this.formulaList[index];
-      Object.assign(this.editData,temp);
-    },
-    updateData (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          updateFormula(this.editData).then(response => {
-
-            this.dialogTableVisible = false;
-            this.getData();
-            this.formulaDetail(this.editData.index);
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-
-    },
-    editFormula () {
-      console.log(this.editData);
-      this.dialogTableVisible = true;
-    },
-    resize () {
-      console.log('resize')
-    },
-    formulaDetail (index) {
-      this.editData = this.list1[index];
-      this.showData = this.formulaList[index];
-      this.editData.index = index;
-      this.canEdit = false;
-    },
-    getData () {
-      getFormulaList().then(response => {
-        this.formulaList = response.data.data;
-        this.total = response.data.data.length;
-      });
-      getFormulaList().then(response => {
-        this.list1 = response.data.data;
-      });
-    },
-    Onchange (value) {
-      if (value === true) {
-        this.batch2 = false
-      } else {
-        this.batch2 = true
+    computed: {
+      test() {
+        return 1;
       }
     },
-    handleDelete (index, row) {
-      row.splice(index, 1);
+    watch: {
+      checkboxVal(valArr) {
+        this.formThead = this.formTheadOptions.filter(
+          i => valArr.indexOf(i) >= 0
+        );
+        this.key = this.key + 1; // 为了保证table 每次都会重渲 In order to ensure the table will be re-rendered each time
+      }
     },
-    handleDetail (row) {
-      this.temp = Object.assign({}, row) // copy obj
-      console.log(row.orderId);
-      this.dialogTableVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm']
-      })
+    created() {
+      this.getData();
     },
+    methods: {
+      cancelUpdate(index) {
 
-    handleFilter () {
-      querySaleOrder(this.listQuery).then(response => {
-        this.listData = response.data.items
-        this.total = this.listData.length
-        console.log(this.tableData)
-      })
-    },
-    getListTwo () {
-      this.listLoading = true
-      getSaleOrderList().then(response => {
-        if (response) {
-          this.$nextTick(() => {
-            console.log("=================>")
-            this.listData = response.data.data
-            this.totalData = response.data.data
-            this.importanceOptions = response.data.data.items
-            this.calendarTypeOptions = response.data.data.items
-            console.log(response.data.data)
-          })
+        this.dialogTableVisible = false;
+        var temp = this.formulaList[index];
+        Object.assign(this.editData, temp);
+      },
+      updateData(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            updateFormula(this.editData).then(response => {
+
+              this.dialogTableVisible = false;
+              this.getData();
+              this.formulaDetail(this.editData.index);
+              this.$notify({
+                title: '成功',
+                message: '更新成功',
+                type: 'success',
+                duration: 2000
+              })
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
+      },
+      editFormula() {
+        console.log(this.editData);
+        this.dialogTableVisible = true;
+      },
+      resize() {
+        console.log('resize')
+      },
+      formulaDetail(index) {
+        this.editData = this.list1[index];
+        this.showData = this.formulaList[index];
+        this.editData.index = index;
+        this.canEdit = false;
+      },
+      getData() {
+        getFormulaList().then(response => {
+          this.formulaList = response.data.data;
+          this.total = response.data.data.length;
+        });
+        getFormulaList().then(response => {
+          this.list1 = response.data.data;
+        });
+      },
+      Onchange(value) {
+        if (value === true) {
+          this.batch2 = false
+        } else {
+          this.batch2 = true
         }
-      })
-    },
-  }
-};
+      },
+      handleDelete(index, row) {
+        row.splice(index, 1);
+      },
+      handleDetail(row) {
+        this.temp = Object.assign({}, row) // copy obj
+        console.log(row.orderId);
+        this.dialogTableVisible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm']
+        })
+      },
+
+      handleFilter() {
+        querySaleOrder(this.listQuery).then(response => {
+          this.listData = response.data.items
+          this.total = this.listData.length
+          console.log(this.tableData)
+        })
+      },
+      getListTwo() {
+        this.listLoading = true
+        getSaleOrderList().then(response => {
+          if (response) {
+            this.$nextTick(() => {
+              console.log("=================>")
+              this.listData = response.data.data
+              this.totalData = response.data.data
+              this.importanceOptions = response.data.data.items
+              this.calendarTypeOptions = response.data.data.items
+              console.log(response.data.data)
+            })
+          }
+        })
+      },
+    }
+  };
 </script>
 <style>
-.pan-btn {
-  position: relative;
-  float: left;
-  width: 100%;
-}
+  .pan-btn {
+    position: relative;
+    float: left;
+    width: 100%;
+  }
 </style>
 

@@ -381,6 +381,7 @@
           children: 'zones',
           isLeaf: 'leaf'
         },
+        menudata:[],
         isDataLoad: 0,
         FenQieLength: 100,//分切长度
         FenQieVal: undefined,//分切数
@@ -398,7 +399,6 @@
         cutVal: 3,
         arrList: undefined,
         ListVal: undefined,
-        MenuList: [],
         cutSelect: [
           {
             label: 1,
@@ -479,7 +479,6 @@
         this.dele = true;
       },
       PostNewMakerArr() {
-        console.log(this.TreeData)
         let arr = [];
         for (let i in this.TreeData) {
           for (let j in this.TreeData[i].children) {
@@ -493,7 +492,8 @@
             }
           }
         }
-        this.GetListData();
+        this.menudata = arr
+        this.$message("菜单选择完成，请生产派工")
         this.$refs.isReload.RestartData();
         console.log(arr)
       },
@@ -567,24 +567,9 @@
       AddJsonArr(MouseData, ListData, DataData) {
         console.log(DataData)
       },
-      loadNodel(node, resolve) {
-        var data = [];
-        if (node.level === 0) {
-          Axios.get('http://118.24.131.216/production/GetComposList').then((res) => {
-            this.MenuList = res.data;
-            return resolve(
-              this.MenuList
-            )
-          });
-        }
-        if (node.level === 1) {
-          let DataId = node.data.id
-          Axios.post('http://118.24.131.216/production/ComSonPoseList', {id: DataId}).then((res) => {
-            data = res.data.data;
-            return resolve(data)
-          })
-        }
-      },
+      /*
+      * 触底刷新
+      * */
       localMore() {
         if (this.abc.length !== 0) {
           this.isDataLoad++;
@@ -619,6 +604,9 @@
           alert("请输入大于" + this.MinWid + "的数")
         }
       },
+      /*
+      * 发送请求（用于测试接口功能）
+      * */
       sendData() {
         var that = this;
         var json = that.abc;
@@ -675,6 +663,11 @@
           });
         })
       },
+
+      /*
+
+      /测试请求（废弃）
+       */
       GetListData() {
         this.PostLoding = true;
         Axios.post('http://118.24.131.216/production/GetPaixuListData').then((res) => {
@@ -712,23 +705,30 @@
           // this.abc = res.data
         })
       },
+      /*
+      /生产班组
+       */
       groupMaker() {
         Axios.post(this.HttpUrl + '/production/groupMaker').then((res) => {
           this.MakeGroup = res.data
-          console.log(this.MakeGroup)
         })
       },
+      /*
+      * 生产派工
+      * */
       onSave() {
         let data = {
           kw: this.wid,
           bj: this.QieVal,
           hfqs: this.blackVal,
           fqs: this.FenQieVal,
+          menuwid:this.menudata,
           remark: {
             kw: '宽度',
             bj: "切边距",
             hfqs: "行分切数",
-            fqs: "分切数"
+            fqs: "分切数",
+            menuwid:"选择的宽度"
           }
         }
         // "http://192.168.2.118/Spb/testsf?n="+this.enumVal+"&kw="+this.wid+'&bj='+this.QieVal+"&hfqs="+this.blackVal+"&fqs="+this.FenQieVal

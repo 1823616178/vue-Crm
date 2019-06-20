@@ -25,20 +25,20 @@ const production = {
     //   meta: { title: 'productionTable' }
     // },
     {
-      path: 'formula-table',
+      path: '/formula-table',
       component: () =>
         import('@/views/prdctionManage/formulaManage/formulaTable'),
       name: 'FormulaTable',
       meta: { title: 'formulaTable' }
     },
     {
-      path: 'production-table',
+      path: '/production-table',
       component: () => import('@/views/production/complexTable'),
       name: 'production',
       meta: { title: 'curtain_coating' }
     },
     {
-      path: 'liuyan-dispatching',
+      path: '/liuyan-dispatching',
       name: 'DragTable',
       component: () => import('@/views/production/dragTable.vue'),
       meta: { title: 'Ly_dispatching' }
@@ -51,7 +51,7 @@ const production = {
     //   meta: { title: 'slitting_management' }
     // },
     {
-      path: 'dycoms',
+      path: '/dycoms',
       component: () => import('@/views/dynamic_composing/Index'),
       name: 'dycoms',
       meta: { title: 'dycoms' }

@@ -8,13 +8,13 @@
             justify="center"
             align="middle">
       <el-col :span="8">
-        <el-switch v-model="batch"
-                   active-color="#13ce66"
-                   inactive-color="#ff4949"
-                   inactive-text='如果需要大批量处理员工权限，点击'
-                   :width="200"
-                   @change="Onchange">
-        </el-switch>
+<!--        <el-switch v-model="batch"-->
+<!--                   active-color="#13ce66"-->
+<!--                   inactive-color="#ff4949"-->
+<!--                   inactive-text='如果需要大批量处理员工权限，点击'-->
+<!--                   :width="200"-->
+<!--                   @change="Onchange">-->
+<!--        </el-switch>-->
       </el-col>
       <transition name="el-zoom-in-center">
         <el-col :span="3"

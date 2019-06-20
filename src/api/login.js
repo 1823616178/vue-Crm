@@ -45,17 +45,31 @@ export function loginByusernameLocalHost (username, password) {
   })
 }
 
-export function getUserInfoLocalHost (token) {
+export function getUserInfoLocalHostdev (token) {
+  const data = {
+    token:token
+  }
   return request({
     url: '/user/info',
-    method: "get",
-    params: { token }
+    method: 'post',
+    data
   })
 }
 
+// export function getUserInfoLocalHost (token) {
+//   const data = {
+//     token
+//   }
+//   return request({
+//     url: '/user/info',
+//     method: "post",
+//     data
+//   })
+// }
+
 export function LoginOutLocalHost () {
   return request({
-    url: "/user/loginout",
+    url: "/login/loginout",
     method: "get"
   })
 }

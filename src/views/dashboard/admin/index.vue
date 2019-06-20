@@ -99,7 +99,7 @@ export default {
   },
   created () {
     getIndexData().then(res => {
-      this.lineDD = res.data
+      this.lineDD = res.data;
       this.lineChartData = res.data.newVisitis
     })
   },

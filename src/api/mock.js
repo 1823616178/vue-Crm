@@ -1,4 +1,4 @@
-import request from '@/utils/mockRequest'
+import request from '@/utils/request'
 
 export function getFormulaList() {
   return request({
@@ -16,14 +16,14 @@ export function getOneFormula(query) {
 
 export function getSaleOrderList() {
   return request({
-    url: '/getSaleOrderList',
+    url: '/OrderInfo/info',
     method: 'post'
   })
 }
 
 export function querySaleOrderDetail(query) {
   return request({
-    url: '/querySaleOrderDetail',
+    url: '/OrderInfo/quertDetailInfo',
     method: 'post',
     data: query,
   })

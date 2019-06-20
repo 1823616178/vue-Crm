@@ -62,12 +62,12 @@ export const constantRoutes = [
         hidden: true
     },
     {
-        path: '',
+        path: '/',
         component: Layout,
         redirect: 'dashboard',
         children: [
             {
-                path: 'dashboard',
+                path: '/dashboard',
                 component: () => import('@/views/dashboard/index'),
                 name: 'Dashboard',
                 meta: {

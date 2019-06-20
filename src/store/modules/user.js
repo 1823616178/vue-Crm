@@ -1,4 +1,4 @@
-import { getUserInfoLocalHost, loginByusernameLocalHost, LoginOutLocalHost } from '@/api/login'
+import { getUserInfoLocalHostdev, loginByusernameLocalHost, LoginOutLocalHost } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -46,10 +46,11 @@ const user = {
   actions: {
     // 用户名登录
     LoginByUsername ({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const username = userInfo.username.trim();
       return new Promise((resolve, reject) => {
         loginByusernameLocalHost(username, userInfo.password).then(response => {
-          const data = response.data
+          const data = response.data.jwt
+          console.log(data)
           commit('SET_TOKEN', data)
           setToken(response.data)
           resolve()
@@ -86,8 +87,7 @@ const user = {
     // 获取用户信息
     GetUserInfo ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfoLocalHost(state.token).then(response => {
-          // 由于mockjs 不支持自定义状态码只能这样hack
+        getUserInfoLocalHostdev(state.token).then(response => {
           if (!response.data) {
             reject('密码错误')
           }

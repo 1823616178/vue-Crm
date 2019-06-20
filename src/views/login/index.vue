@@ -161,8 +161,8 @@ export default {
       const windowWidth = document.body.clientWidth
       const windowHeight = document.body.clientHeight
       const windowAspectRatio = windowHeight / windowWidth
-      let videoWidth
-      let videoHeight
+      let videoWidth;
+      let videoHeight;
       if (windowAspectRatio < 0.5625) {
         videoWidth = windowWidth
         videoHeight = videoWidth * 0.5625
@@ -200,15 +200,15 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           // window.console.log(valid)
-          this.loading = true
+          this.loading = true;
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
+            this.loading = false;
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
+          console.log('error submit!!');
           return false
         }
       })
