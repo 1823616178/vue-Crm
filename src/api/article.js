@@ -102,6 +102,21 @@ export function fetPeopleList(data) {
   })
 }
 
+export function ProductClass() {
+  return request({
+    url:"/product/ProductClass",
+    method:'get',
+  })
+}
+export function QueyProduct(data) {
+  return request({
+    url:"/product/QueyProduct",
+    method:'post',
+    data
+  })
+}
+
+
 
 /**
  * 模拟数据
