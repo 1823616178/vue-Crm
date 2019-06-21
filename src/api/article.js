@@ -104,18 +104,61 @@ export function fetPeopleList(data) {
 
 export function ProductClass() {
   return request({
-    url:"/product/ProductClass",
-    method:'get',
+    url: "/product/ProductClass",
+    method: 'get',
   })
 }
+
 export function QueyProduct(data) {
   return request({
-    url:"/product/QueyProduct",
-    method:'post',
+    url: "/product/QueyProduct",
+    method: 'post',
     data
   })
 }
 
+export function getRecipeDetail(data) {
+  return request({
+    url:"/product/getRecipeDetail",
+    method:"post",
+    data
+  })
+}
+
+export function QueryRepicList(data) {
+  return request({
+    url: "/product/QueryRepicList",
+    method: 'post',
+    data: data
+  })
+}
+
+export function upRepicList(product,data,isDelete) {
+  var query = {
+    product,
+    data,
+    isDelete
+  }
+  return request({
+    url: "/product/upRepicList",
+    method: "post",
+    data:query
+  })
+}
+export function newDiageAdd(index,data,isDelete,productData,formulaList) {
+  var reques = {
+    index,
+    data,
+    isDelete,
+    productData,
+    formulaList
+  }
+  return request({
+    url:"/product/newDiageAdd",
+    method:"post",
+    data:reques
+  })
+}
 
 
 /**
@@ -163,8 +206,8 @@ export function createArticlelocalHost(data) {
 
 export function GetComposeList(data) {
   return request({
-    url:"/production/ComponseFromData",
-    method:"post",
+    url: "/production/ComponseFromData",
+    method: "post",
     data
   })
 }

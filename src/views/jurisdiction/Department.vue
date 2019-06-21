@@ -192,7 +192,6 @@
         }
         if (isEdit) {
           await UpUserEditorRole(data).then((res) => {
-
             console.log(res)
           })
           // for (let index = 0; index < this.rolesList.length; index++) {

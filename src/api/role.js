@@ -36,7 +36,13 @@ export function GetRoleRUle(data) {
     data
   })
 }
-
+export function addRole(data) {
+  return request({
+    url:"/login/addRole",
+    method:'post',
+    data
+  })
+}
 export function getEditor(roles) {
   const data = {
     user: roles

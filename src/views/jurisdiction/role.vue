@@ -81,6 +81,7 @@
   import {
     getRoutesTest,
     getRoutes,
+    addRole,
     addRolelocalHost,
     upDataRoleLocalHost,
     deleteRoleslocalHost,
@@ -200,6 +201,7 @@
         }
         this.dialogType = 'new'
         this.dialogVisible = true
+
       },
       handleEdit(scope) {
         this.dialogType = 'edit'
@@ -265,7 +267,6 @@
         return res
       },
       async confirmRole() {
-
         const isEdit = this.dialogType === 'edit'
         const checkedKeys = this.$refs.tree.getCheckedKeys()
         this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
