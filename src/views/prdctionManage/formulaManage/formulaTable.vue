@@ -34,62 +34,62 @@
         <!-- <el-dialog visible.sync="true"> -->
         <template slot="paneR">
           <div class="right-container verticaloverflow demo-dynamic">
-              <el-row :gutter="150" type="flex" align="middle" justify="center">
-                <el-col :span="24">
-                  <el-row type="flex" align="middle" justify="center">
-                    <h1 style="line-height: 2px">配方管理</h1>
-                  </el-row>
-                  <el-button type="primary" style="margin-bottom: 20px;" v-show="isAddRecipe" @click="addRecipe">添加配方
-                  </el-button>
-                  <el-table
-                    @row-dblclick="GetDetail($event)"
-                    :data="tableData"
-                    height="250"
-                    border
-                    :row-class-name="tableRowClassName"
-                    style="width: 100%">
-                    <el-table-column
-                      prop="id"
-                      label="序号"
-                      width="180">
-                    </el-table-column>
-                    <el-table-column
-                      prop="number"
-                      label="编号"
-                      width="180">
-                    </el-table-column>
-                    <el-table-column
-                      prop="Name"
-                      label="名称"
-                      width="180">
-                    </el-table-column>
-                    <el-table-column
-                      prop="CreatDate"
-                      label="启用时间">
-                    </el-table-column>
-                    <el-table-column
-                      prop="StopDate"
-                      label="停用时间">
-                    </el-table-column>
-                    <el-table-column
-                      label="默认">
-                      <template slot-scope="scope">
-                        <el-tag v-if="scope.row.default == 0" type="success">以关联</el-tag>
-                        <el-tag v-if="scope.row.default == 1" type="danger">未关联</el-tag>
-                      </template>
-                    </el-table-column>
-                    <el-table-column
-                      fixed="right"
-                      label="操作"
-                      width="100">
-                      <template slot-scope="scope">
-                        <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                  <Formula style="margin-top: 20px;"></Formula>
-                </el-col>
-              </el-row>
+            <el-row :gutter="150" type="flex" align="middle" justify="center">
+              <el-col :span="24">
+                <el-row type="flex" align="middle" justify="center">
+                  <h1 style="line-height: 2px">配方管理</h1>
+                </el-row>
+                <el-button type="primary" style="margin-bottom: 20px;" v-show="isAddRecipe" @click="addRecipe">添加配方</el-button>
+                <el-table
+                  @row-dblclick="GetDetail($event)"
+                  :data="tableData"
+                  height="250"
+                  border
+                  :row-class-name="tableRowClassName"
+                  style="width: 100%">
+                  <el-table-column
+                    prop="id"
+                    label="序号"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="number"
+                    label="编号"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="Name"
+                    label="名称"
+                    width="180">
+                  </el-table-column>
+                  <el-table-column
+                    prop="CreatDate"
+                    label="启用时间">
+                  </el-table-column>
+                  <el-table-column
+                    prop="StopDate"
+                    label="停用时间">
+                  </el-table-column>
+                  <el-table-column
+                    fixed="right"
+                    label="操作"
+                    width="100">
+                    <template slot-scope="scope">
+                      <el-button @click="handleClick(scope.row)" type="text" size="small">编辑</el-button>
+                      <el-button @click="delateClick(scope.row)" type="text" size="small">删除</el-button>
+                    </template>
+                  </el-table-column>
+<!--                  <el-table-column-->
+<!--                    label="默认">-->
+<!--                    <template slot-scope="scope">-->
+<!--                      <el-tag v-if="scope.row.default == '0'" type="success">以关联</el-tag>-->
+<!--                      <el-tag v-if="scope.row.default == '1'" type="danger">未关联</el-tag>-->
+<!--                    </template>-->
+<!--                  </el-table-column>-->
+                </el-table>
+                <Formula @channgeDataList="channgeDataList"  style="margin-top: 20px;" :DataList="DataList" :formulaList="formulaList"  :tableDataIndex="tableDataIndex" :isSelect="isSelect" :productIndex="productIndex"></Formula>
+              </el-col>
+            </el-row>
           </div>
         </template>
         <!-- </el-dialog> -->
@@ -185,9 +185,18 @@
 <script>
   import SectionPan from './components/sectionPanle.vue'
   import Formula from './components/formula.vue'
+  import {parseTime} from '@/utils/index.js'
   // import { fetchList } from '@/api/article'
   import {querySaleOrder, getOrderList, getFormulaList, getOneFormula, updateFormula} from '@/api/mock'
-  import {ProductClass, QueyProduct, QueryRepicList, upRepicList, newDiageAdd} from '@/api/article'
+  import {
+    ProductClass,
+    QueyProduct,
+    QueryRepicList,
+    upRepicList,
+    newDiageAdd,
+    getRecipeDetail,
+    delateClick
+  } from '@/api/article'
   import splitPane from 'vue-splitpane'
   import Kanban from '@/components/Kanban'
   import Pagination from '@/components/Pagination'
@@ -195,7 +204,7 @@
   import {GetTreeList} from '@/api/article.js'
 
   export default {
-    components: {Pagination, SectionPan, splitPane, Kanban,Formula},
+    components: {Pagination, SectionPan, splitPane, Kanban, Formula},
 
     data() {
       var self = this
@@ -215,7 +224,7 @@
         }
       }
       return {
-        ListData:'',
+        DataList: [],
         newDiageAdd: {
           id: "",
           CreatDate: null,
@@ -248,7 +257,7 @@
         },
         isAddRecipe: false,
         isDelete: false,
-        productIndex: undefined,
+        productIndex: {},
         amendFormData: [],
         dialogVisible: false,
         Pageswitch: undefined,
@@ -304,7 +313,8 @@
         listData: null,
         total: 0,
         tableData: [],
-
+        tableDataIndex:{},
+        isSelect:false,
         // key: 1, // table key
         // formTheadOptions: ['apple', 'banana', 'orange'],
         // checkboxVal: defaultFormThead, // checkboxVal
@@ -372,13 +382,33 @@
       this.getTreeList();
     },
     methods: {
-      GetDetail(data){
+      channgeDataList(){
+        getRecipeDetail(this.tableDataIndex).then((res) => {
+          console.log(res.data)
+          this.DataList = res.data
+        })
+      },
+      delateClick(data) {
+        delateClick(data).then((res) => {
+          if (res) {
+            QueryRepicList(this.formulaList[this.productIndex]).then((ress) => {
+              this.tableData = ress.data
+            })
+          }
 
+        })
+      },
+      GetDetail(data) {
+        this.tableDataIndex = data
+        this.isSelect = true
+        getRecipeDetail(data).then((res) => {
+          this.DataList = res.data
+        })
       },
       addNewReciptData() {
         this.$refs['newDiageAdd'].validate((valid) => {
           if (valid) {
-            newDiageAdd(this.productIndex, this.newDiageAdd,this.isDelete,this.formulaList[this.productIndex],this.ListData).then(ress => {
+            newDiageAdd(this.productIndex, this.newDiageAdd, this.isDelete, this.formulaList[this.productIndex], this.ListData).then(ress => {
               this.newAddDialog = false;
               this.$refs['newDiageAdd'].resetFields()
               QueryRepicList(this.formulaList[this.productIndex]).then((res) => {
@@ -400,7 +430,10 @@
         this.$refs['amendFormData'].validate((valid) => {
           if (valid) {
             upRepicList(this.formulaList[this.productIndex], data, this.isDelete).then((res) => {
-              console.log(res)
+              this.dialogVisible = false
+              QueryRepicList(this.formulaList[this.productIndex]).then((ress) => {
+                this.tableData = ress.data
+              })
             })
           }
         })
@@ -420,11 +453,9 @@
         return '';
       },
       ClickProubectData(e) {
-
         let data = {
           id: e.data.value
         }
-
         this.ListData = e.data.value
         QueyProduct(data).then((res) => {
           this.formulaList = res.data
@@ -471,6 +502,7 @@
         console.log('resize')
       },
       formulaDetail(index) {
+        this.isSelect = false;
         this.isAddRecipe = true
         this.productIndex = index
         QueryRepicList(this.formulaList[index]).then((res) => {

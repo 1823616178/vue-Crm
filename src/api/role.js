@@ -43,6 +43,8 @@ export function addRole(data) {
     data
   })
 }
+
+
 export function getEditor(roles) {
   const data = {
     user: roles

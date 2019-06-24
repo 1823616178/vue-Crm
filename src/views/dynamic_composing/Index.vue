@@ -88,6 +88,20 @@
               </el-select>
             </div>
           </el-form-item>
+          <el-form-item label="生产机器">
+            <div class="block">
+              <el-select v-model="MakeGroupval"
+                         @change="changWdthOrQie"
+                         placeholder="选择生产机器">
+                <el-option
+                  v-for="(item,index) in MakeGroup"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-form-item>
           <el-row>
             <el-form-item label="宽度">
               <div class="block">
@@ -147,9 +161,9 @@
                            :max="300"></el-slider>
               </div>
             </el-form-item>
-            <el-form-item label="输出数量">
-              <el-input v-model.lazy="enumVal"></el-input>
-            </el-form-item>
+            <!--            <el-form-item label="输出数量">-->
+            <!--              <el-input v-model.lazy="enumVal"></el-input>-->
+            <!--            </el-form-item>-->
 
           </el-row>
           <el-row type="flex"
@@ -178,6 +192,9 @@
         <!--随机数代码提示-->
       </div>
     </div>
+    <dialog>
+      <DropDataList></DropDataList>
+    </dialog>
     <!--    <el-tree :props="props" :load="loadNodel" @node-contextmenu="AddJsonArr" lazy show-checkbox></el-tree>-->
     <div class="Menucontrol"
          v-drag="contain"
@@ -193,7 +210,7 @@
            @mousedown="mouseDown($event,false)">
         <div @contextmenu.prevent="PostNewMakerArr">
           <TreeTable :data="TreeData" :columns="columns" ref="isReload" @AddDivWidth="AddDivWidth($event)"
-                     border/>
+                     @NextOrderData='NextOrderData' border/>
         </div>
         <!--随机数代码提示-->
       </div>
@@ -208,6 +225,9 @@
   import indexVue from '../login/index.vue';
   import {constants} from 'fs';
   import {setTimeout} from 'timers';
+  import {DynamicOrder} from '@/api/article.js'
+  import {LimitPageSellOrderData} from '@/api/remoteSearch.js'
+  import DropDataList from './DropDataList'
 
   export default {
     mounted() {
@@ -251,137 +271,54 @@
         return parseInt(this.FenQieLength)
       }
     },
-    components: {vueDragInfinite, Axios, TreeTable},
+    components: {vueDragInfinite, Axios, TreeTable,DropDataList},
     data: function () {
       return {
+        valList: 0,
         dele2: true,
         divindexData: undefined,
         addWidthDataSon: undefined,
         isColorStop: false,
-        TreeData: [
-          {
-            coding: 123,
-            name: '高摩擦充气',
-            event: 'event1',
-            id: "123123",
-            count: 36000,
-            spec: "30|50|80|90",
-            children: [
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 30,
-                count: 50,
-              },
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 50,
-                count: 50,
-              },
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 80,
-                count: 50,
-              },
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 90,
-                count: 50,
-              }
-            ]
-          },
-          {
-            coding: 123,
-            name: '高摩擦充气',
-            event: 'event1',
-            id: "123123",
-            spec: 30,
-            count: 36000,
-            children: [
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 90,
-                count: 50,
-              },
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 90,
-                count: 50,
-              }
-            ]
-          },
-          {
-            coding: 123,
-            name: '高摩擦充气',
-            event: 'event1',
-            id: "123123",
-            spec: 30,
-            count: 36000,
-            children: [
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 90,
-                count: 50,
-              },
-              {
-                coding: 123,
-                name: '高摩擦充气',
-                event: 'event1',
-                id: "21231231",
-                spec: 90,
-                count: 50,
-              }
-            ]
-          },
-
-        ],
+        TreeData: [],
         columns: [
           {
-            label: "产品编码",
-            key: "coding",
+            label: "订单编号",
+            key: "cSOCode",
             width: 200,
             checkbox: true,
             expand: true
           },
           {
-            label: "产品名称",
-            key: "name",
+            label: "订单时间",
+            key: "dDate",
           },
           {
-            label: "规格",
-            key: "spec",
+            label: "客户名称",
+            key: "cCusName",
           },
           {
-            label: "数量",
-            key: "count",
-          }
+            label: "供货时间",
+            key: "dPreDate",
+          },
+          {
+            label: "订货数量",
+            key: "iQuantity",
+          },
+          // {
+          //   label: "长度",
+          //   key: "count",
+          // },
+          {
+            label: "宽度",
+            key: "cDefine34",
+          },
         ],
         props: {
           label: 'name',
           children: 'zones',
           isLeaf: 'leaf'
         },
-        menudata:[],
+        menudata: [],
         isDataLoad: 0,
         FenQieLength: 100,//分切长度
         FenQieVal: undefined,//分切数
@@ -469,33 +406,59 @@
     created() {
       this.heig = window.innerHeight;
       // this.GetListData();
-      this.groupMaker();
+      // this.groupMaker();
+      this.OrderListData();
+
     },
     methods: {
-      showIndentLeft(){
+      NextOrderData(data) {
+        DynamicOrder(data).then((res) => {
+          this.TreeData = res.data
+        })
+      },
+      OrderListData() {
+        DynamicOrder().then((res) => {
+          this.TreeData = res.data;
+        })
+      },
+      showIndentLeft() {
         this.dele2 = true;
       },
-      showIndentRight(){
+      showIndentRight() {
         this.dele = true;
       },
       PostNewMakerArr() {
         let arr = [];
-        for (let i in this.TreeData) {
-          for (let j in this.TreeData[i].children) {
-            if (this.TreeData[i].children[j]._select === true) {
-              let arr2 = {
-                count: this.TreeData[i].children[j].count,
-                coding: this.TreeData[i].children[j].coding,
-                width: this.TreeData[i].children[j].spec,
-              };
-              arr.push(arr2)
+        var valList = 0;
+        if (this.valList > 2000) {
+          this.$message("数据总数已大于2000，请谨慎选择;总数为：" + this.valList)
+        } else {
+          for (let i in this.TreeData) {
+            for (let j in this.TreeData[i].children) {
+              if (this.TreeData[i].children[j]._select === true) {
+                let arr2 = {
+                  count: parseInt(this.TreeData[i].children[j].iQuantity),
+                  coding: parseInt(this.TreeData[i].children[j].cDefine34),
+                };
+                this.menudata.push(arr2)
+              }
             }
           }
+
+          this.$refs.isReload.RestartData();
         }
-        this.menudata = arr
-        this.$message("菜单选择完成，请生产派工")
-        this.$refs.isReload.RestartData();
-        console.log(arr)
+        for (let i in this.menudata) {
+          valList += this.menudata[i].count
+          this.valList = valList
+        }
+        if (valList > 2000) {
+          this.$message("数据总数已大于2000，请谨慎选择;总数为：" + valList)
+        }
+        this.$message("菜单选择完成，请生产派工;总数为：" + this.valList)
+        if(this.valList>3000){
+
+        }
+        console.log(valList)
       },
       isMouseOut(index) {
         let re = document.querySelectorAll('.contain');
@@ -720,53 +683,56 @@
         let data = {
           kw: this.wid,
           bj: this.QieVal,
-          hfqs: this.blackVal,
-          fqs: this.FenQieVal,
-          menuwid:this.menudata,
+          hfqs: this.cutVal,
+          menuwid: this.menudata,
           remark: {
             kw: '宽度',
             bj: "切边距",
             hfqs: "行分切数",
-            fqs: "分切数",
-            menuwid:"选择的宽度"
+            menuwid: "选择的宽度"
           }
         }
+        if (data.menuwid.length == 0) {
+          this.$message("请先选择订单")
+        } else {
+          console.log(data)
+        }
         // "http://192.168.2.118/Spb/testsf?n="+this.enumVal+"&kw="+this.wid+'&bj='+this.QieVal+"&hfqs="+this.blackVal+"&fqs="+this.FenQieVal
-        Axios.post("http://118.24.131.216/production/GetPaixuListData", {data}).then((ress) => {
-          this.$nextTick(() => {
-            this.abc = [];
-            this.abccope = [];
-            setTimeout(() => {
-              this.abc = ress.data.arr
-            }, 500);
-            console.log(this.abc.arr)
-            var arr2 = [];
-            for (var i in ress.data.arr) {
-              var arr1 = []
-              for (var j in ress.data.arr[i]) {
-                var val1 = ress.data.arr[i][j].style.width
-                var val2 = val1.indexOf('p')
-                var wid = parseInt(val1.slice(0, val2))
-                arr1.push(wid)
-              }
-              arr2.push(arr1)
-            }
-            setTimeout(() => {
-              this.abccope = arr2
-              console.log(this.abccope)
-            }, 500)
-            // var code = JSON.stringfy(ress.data.arr)
-            // this.abc.push();
-            this.PostLoding = false
-          })
-          // if (ress) {
-          //   Axios.post("http://192.168.2.118/Spb/testArr?n=" + this.enumVal).then((res) => {
-          //     // this.abc = res.data
-          //     // this.POSTDATA = ress.data,
-          //     // this.centerDialogVisible = true
-          //   })
-          // }
-        });
+        /* Axios.post("http://118.24.131.216/production/GetPaixuListData", {data}).then((ress) => {
+           this.$nextTick(() => {
+             this.abc = [];
+             this.abccope = [];
+             setTimeout(() => {
+               this.abc = ress.data.arr
+             }, 500);
+             console.log(this.abc.arr)
+             var arr2 = [];
+             for (var i in ress.data.arr) {
+               var arr1 = []
+               for (var j in ress.data.arr[i]) {
+                 var val1 = ress.data.arr[i][j].style.width
+                 var val2 = val1.indexOf('p')
+                 var wid = parseInt(val1.slice(0, val2))
+                 arr1.push(wid)
+               }
+               arr2.push(arr1)
+             }
+             setTimeout(() => {
+               this.abccope = arr2
+               console.log(this.abccope)
+             }, 500)
+             // var code = JSON.stringfy(ress.data.arr)
+             // this.abc.push();
+             this.PostLoding = false
+           })
+           // if (ress) {
+           //   Axios.post("http://192.168.2.118/Spb/testArr?n=" + this.enumVal).then((res) => {
+           //     // this.abc = res.data
+           //     // this.POSTDATA = ress.data,
+           //     // this.centerDialogVisible = true
+           //   })
+           // }
+         });*/
       },
       enumData() {
         this.enumArr = []
@@ -857,7 +823,7 @@
   }
 
   .Menucontrol {
-    width: 600px;
+    width: 800px;
     border-radius: 5px;
     overflow: hidden;
     background-color: #b3c0d1;

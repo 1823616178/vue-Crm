@@ -1,45 +1,68 @@
 <template>
-  <el-table :data="tableData" :row-style="showRow" :stripe="true" v-bind="$attrs" :highlight-current-row="true"
-            @row-dblclick="PushListDiv"
-            v-on="$listeners">
-    <slot name="selection"/>
-    <slot name="pre-column"/>
-    <el-table-column
-      v-for="item in columns"
-      :key="item.key"
-      :label="item.label"
-      :width="item.width"
-      :align="item.align||'center'"
-      :header-align="item.headerAlign">
-      <template slot-scope="scope">
-        <slot :scope="scope" :name="item.key">
-          <template v-if="item.expand">
-            <!--            <span :style="{'padding-left':+scope.row._level*indent + 'px'}" />-->
-            <span v-show="showSperadIcon(scope.row)"  class="tree-ctrl" @click="toggleExpanded(scope.$index)">
+  <div>
+    <el-row type="flex" style="margin-bottom: 5px">
+      <el-col style="margin-right: 5px" :span="10">
+        <el-input v-model="input" placeholder="查询订单号"></el-input>
+      </el-col>
+      <el-button icon="el-icon-search" circle></el-button>
+      <el-col :offset="5">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="1000"
+          @next-click="NextPage"
+          :current-page.sync="Thiscurrent"
+          @prev-click="NextPage"
+          @size-change="NextPage"
+          @current-change="NextPage">
+        </el-pagination>
+      </el-col>
+    </el-row>
+
+
+    <el-table :data="tableData" :row-style="showRow" :stripe="true" v-bind="$attrs" class="isTableOver"
+              :highlight-current-row="true"
+              @row-dblclick="PushListDiv"
+              v-on="$listeners">
+      <slot name="selection"/>
+      <slot name="pre-column"/>
+      <el-table-column
+        v-for="item in columns"
+        :key="item.key"
+        :label="item.label"
+        :width="item.width"
+        :align="item.align||'center'"
+        :header-align="item.headerAlign">
+        <template slot-scope="scope">
+          <slot :scope="scope" :name="item.key">
+            <template v-if="item.expand">
+              <!--            <span :style="{'padding-left':+scope.row._level*indent + 'px'}" />-->
+              <span v-show="showSperadIcon(scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
               <i v-if="!scope.row._expand" class="el-icon-plus"/>
               <i v-else class="el-icon-minus"/>
             </span>
-          </template>
-          <template v-if="item.checkbox">
-            <el-checkbox
-              v-if="scope.row[defaultChildren]&&scope.row[defaultChildren].length>0"
-              v-model="scope.row._select"
-              :style="{'padding-left':+scope.row._level*indent + 'px'}+'float:left'"
-              :indeterminate="scope.row._select"
-              @change="handleCheckAllChange(scope.row)"
-            />
-            <el-checkbox
-              v-else
-              v-model="scope.row._select"
-              :style="{'padding-left':+scope.row._level*indent + 'px'} "
-              @change="handleCheckAllChange(scope.row)"
-            />
-          </template>
-          {{ scope.row[item.key] }}
-        </slot>
-      </template>
-    </el-table-column>
-  </el-table>
+            </template>
+            <template v-if="item.checkbox">
+              <el-checkbox
+                v-if="scope.row[defaultChildren]&&scope.row[defaultChildren].length>0"
+                v-model="scope.row._select"
+                :style="{'padding-left':+scope.row._level*indent + 'px'}+'float:left'"
+                :indeterminate="scope.row._select"
+                @change="handleCheckAllChange(scope.row)"
+              />
+              <el-checkbox
+                v-else
+                v-model="scope.row._select"
+                :style="{'padding-left':+scope.row._level*indent + 'px'} "
+                @change="handleCheckAllChange(scope.row)"
+              />
+            </template>
+            {{ scope.row[item.key] }}
+          </slot>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -72,8 +95,13 @@
     },
     data() {
       return {
+        Thiscurrent: 1,
+        QueryData: {
+          page: 1,
+        },
+        input: "",
         guard: 1,
-        isRouterAlive:true,
+        isRouterAlive: true,
       }
     },
     computed: {
@@ -95,18 +123,25 @@
       }
     },
     methods: {
-      RestartData(){
-        for(let i in this.data){
+      NextPage() {
+        setTimeout((res) => {
+          this.QueryData.page = this.Thiscurrent
+          this.$emit('NextOrderData', this.QueryData)
+        }, 100)
+
+      },
+      RestartData() {
+        for (let i in this.data) {
           this.data[i]._select = false
-          for(let j in this.data[i].children){
+          for (let j in this.data[i].children) {
             this.data[i].children[j]._select = false
           }
         }
       },
       PushListDiv(row, column, event) {
         if (!row.hasOwnProperty('children')) {
-          this.$emit('AddDivWidth',row.spec)
-        }else {
+          this.$emit('AddDivWidth', row.spec)
+        } else {
           const h = this.$createElement;
           this.$message({
             message: h('p', null, [
@@ -211,7 +246,8 @@
   .el-table td.is-center {
     text-align: left;
   }
-  .el-table .cell{
+
+  .el-table .cell {
     user-select: none;
   }
 
@@ -219,5 +255,10 @@
     position: relative;
     cursor: pointer;
     color: #2196f3;
+  }
+
+  .isTableOver {
+    height: 500px;
+    overflow: auto;
   }
 </style>

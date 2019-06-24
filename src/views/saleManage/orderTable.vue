@@ -304,7 +304,7 @@
       handleDetail(row) {
         // this.temp = Object.assign({}, row) // copy obj
         this.dialogTableVisible = true;
-        this.listQuery.orderId = row.ID;
+        this.listQuery.orderId = row.cSOCode;
         querySaleOrderDetail(this.listQuery).then(response => {
           // this.orderDetailData = response;
           this.temp = response.data.data

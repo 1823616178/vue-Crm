@@ -119,8 +119,16 @@ export function QueyProduct(data) {
 
 export function getRecipeDetail(data) {
   return request({
-    url:"/product/getRecipeDetail",
-    method:"post",
+    url: "/product/getRecipeDetail",
+    method: "post",
+    data
+  })
+}
+
+export function DynamicOrder(data) {
+  return request({
+    url: "/Dynamic/SellOrder",
+    method: "post",
     data
   })
 }
@@ -133,7 +141,7 @@ export function QueryRepicList(data) {
   })
 }
 
-export function upRepicList(product,data,isDelete) {
+export function upRepicList(product, data, isDelete) {
   var query = {
     product,
     data,
@@ -142,10 +150,48 @@ export function upRepicList(product,data,isDelete) {
   return request({
     url: "/product/upRepicList",
     method: "post",
-    data:query
+    data: query
   })
 }
-export function newDiageAdd(index,data,isDelete,productData,formulaList) {
+
+export function delateClick(data) {
+  return request({
+    url: "/product/delateClick",
+    method: "post",
+    data
+  })
+}
+
+export function DeleteDetails(data) {
+  return request({
+    url: "/product/DeleteDetails",
+    method: "post",
+    data
+  })
+}
+
+export function UpdataNewReciptDatas(data) {
+  return request({
+    url: "/product/UpdataNewReciptDatas",
+    method: "post",
+    data
+  })
+}
+
+export function newProductDiageDetil(formList, DataList, newDiageAdd) {
+  var data = {
+    formList,
+    DataList,
+    newDiageAdd
+  };
+  return request({
+    url: "/product/newProductDiageDetil",
+    method: "post",
+    data
+  })
+}
+
+export function newDiageAdd(index, data, isDelete, productData, formulaList) {
   var reques = {
     index,
     data,
@@ -154,9 +200,9 @@ export function newDiageAdd(index,data,isDelete,productData,formulaList) {
     formulaList
   }
   return request({
-    url:"/product/newDiageAdd",
-    method:"post",
-    data:reques
+    url: "/product/newDiageAdd",
+    method: "post",
+    data: reques
   })
 }
 

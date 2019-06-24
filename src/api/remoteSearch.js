@@ -7,3 +7,11 @@ export function userSearch(name) {
     params: { name }
   })
 }
+
+export function LimitPageSellOrderData(data) {
+  return request({
+    url: '/Dynamic/LimitPageSellOrderData',
+    method: 'post',
+    data
+  })
+}
