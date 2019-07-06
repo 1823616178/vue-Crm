@@ -13,7 +13,7 @@ export function getRoutes() {
 
 export function deleteRoleslocalHost(data) {
   return request({
-    url: '/RRoute/delerole',
+    url: '/login/DelectRoleList',
     method: "post",
     data
   })

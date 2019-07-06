@@ -239,8 +239,12 @@
           type: 'warning'
         })
           .then(async () => {
-            await deleteRoleslocalHost({id: row.id})
-            this.rolesList.splice($index, 1)
+            await deleteRoleslocalHost({id: row.id}).then((res) => {
+              if (res.data.code == 1) {
+                this.getRoutes()
+                this.getRoles()
+              }
+            })
             this.$message({
               type: 'success',
               message: '删除成功!'
@@ -280,7 +284,7 @@
             console.log(res)
           })
         } else {
-          await AddRoleLocalTrue(this.role).then((res)=>{
+          await AddRoleLocalTrue(this.role).then((res) => {
             console.log(res)
           })
         }

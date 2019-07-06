@@ -37,8 +37,13 @@
               width="180">
             </el-table-column>
             <el-table-column
-              prop="cDefine34"
-              label="订货宽度"
+              prop="cInvName"
+              label="产品名称"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="cInvStd"
+              label="产品规格"
               width="180">
             </el-table-column>
             <el-table-column
@@ -47,24 +52,30 @@
               width="180">
             </el-table-column>
             <el-table-column
+              prop="cbdefine4"
+              label="订货宽度"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="cbdefine3"
+              label="订货长度"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="dPreDate"
+              label="订货件数">
+            </el-table-column>
+            <el-table-column
               prop="dPreDate"
               label="发货日期">
             </el-table-column>
             <el-table-column
-              prop="dreleasedate"
-              label="释放日期">
-            </el-table-column>
-            <el-table-column
-              prop="cSCloser"
-              label="关闭标记">
-            </el-table-column>
-            <el-table-column
-              prop="dbclosesystime"
-              label="关闭时间">
-            </el-table-column>
-            <el-table-column
               prop="dbclosedate"
               label="关闭日期">
+            </el-table-column>
+            <el-table-column
+              prop="cMemo"
+              label="备注">
             </el-table-column>
           </el-table>
         </template>
@@ -79,6 +90,7 @@
       <el-pagination :total="total"
                      :page.sync="listQuery.page"
                      :limit.sync="listQuery.limit"
+                     :current-page="PageLimit"
                      @current-change="propsClick"
                      background
                      layout="prev, pager, next"></el-pagination>
@@ -88,7 +100,7 @@
 
 <script>
   import {fetchList} from '@/api/article'
-  import {querySaleOrder, getSaleOrderList, deleteSaleOrder, querySaleOrderDetail} from '@/api/mock'
+  import {querySaleOrder, getSaleOrderList, deleteSaleOrder, querySaleOrderDetail,SearchSaleList} from '@/api/mock'
   import Pagination from '@/components/Pagination'
 
   export default {
@@ -96,13 +108,13 @@
     data() {
       this.colConfigs = [
         {prop: "cSOCode", label: "订单号"},
-        {prop: "cCusCode", label: "客户编码"},
         {prop: "dDate", label: "订单日期"},
+        {prop: "cCusCode", label: "客户编码"},
         {prop: "cPersonCode", label: "员工编码"},
         {prop: "iTaxRate", label: "税率"},
+        {prop: "dclosesystime", label: "关闭日期"},
+        {prop: "cMemo", label: "备注"},
         {prop: "cDefine1", label: "客户采购单号"},
-        {prop: "cCusName", label: "客户名称"},
-        {prop: "ccusperson", label: "客户联系人"},
       ];
 
       this.colConfigsChiled = [
@@ -135,6 +147,7 @@
         deleteParam: {
           orderId: undefined,
         },
+        PageLimit: 1,
         dialogTableVisible: false,
         // key: 1, // table key
         // formTheadOptions: ['apple', 'banana', 'orange'],
@@ -164,7 +177,7 @@
     methods: {
       propsClick(data) {
         const page = {
-          pag: data
+          pag: this.PageLimit
         }
         this.isLoading = true
         getSaleOrderList(page).then(response => {
@@ -194,14 +207,18 @@
       },
 
       handleFilter() {
-        getSaleOrderList(this.listQuery).then(response => {
+
+        SearchSaleList(this.listQuery).then(response => {
           this.listData = response.data.data;
           this.total = this.listData.total;
         })
       },
       getData() {
         this.isLoading = true
-        getSaleOrderList().then(response => {
+        var page = {
+          pag: this.PageLimit
+        }
+        getSaleOrderList(page).then(response => {
           this.listData = response.data.data;
           this.total = response.data.total;
           this.isLoading = false

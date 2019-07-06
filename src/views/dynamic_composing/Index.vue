@@ -33,7 +33,7 @@
                                :isUPload="isUPload"
               />
             </el-row>
-            <div v-show="(index+1)%3===0" style="background: #4AB7BD;width: 100%;height: 10px;"></div>
+            <div v-show="(index+1)%cutVal===0" style="background: #4AB7BD;width: 100%;height: 10px;"></div>
           </div>
           <!--  -->
         </div>
@@ -228,15 +228,6 @@
         <!--随机数代码提示-->
       </div>
     </div>
-    <el-dialog title="是否跳转到派工单界面" :visible.sync="GotoSyncDiag">
-      <el-row type="flex" align="middle" justify="center">
-        <el-col :span="5">
-          <router-link id="LiuYan" to="/production/FenQieManage">
-            <el-button>跳转到分切管理</el-button>
-          </router-link>
-        </el-col>
-      </el-row>
-    </el-dialog>
   </div>
 </template>
 
@@ -567,12 +558,14 @@
         var isPostData = [];
         console.log(arr2)
         if (this.UseHang != 0) {
-          for (let i in this.UseHang) {
-            isPostData.push(arr1[i-1])
+          for (let i=0;i<this.UseHang;i++) {
+            isPostData.push(arr1[i])
+
           }
         } else {
           isPostData = arr1
         }
+        console.log(isPostData)
         var data = {
           arr: isPostData,
           Width: this.wid,

@@ -15,14 +15,19 @@ export function getOneFormula(query) {
 }
 
 export function getSaleOrderList(data) {
-
   return request({
     url: '/OrderInfo/info',
     method: 'post',
     data
   })
 }
-
+export function SearchSaleList(data) {
+  return request({
+    url: '/OrderInfo/SearchGetOrderInfo',
+    method: 'post',
+    data
+  })
+}
 export function querySaleOrderDetail(query) {
   return request({
     url: '/OrderInfo/quertDetailInfo',
