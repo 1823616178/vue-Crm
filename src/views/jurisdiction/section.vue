@@ -6,18 +6,11 @@
              :extend='extend'
              :tooltip-formatter="tooltipFormatter"
              :events="chartEvents"
-             />
+    />
     <el-row type="flex"
             justify="center"
             align="middle">
       <el-col :span="8">
-        <!--        <el-switch v-model="batch"-->
-        <!--                   active-color="#13ce66"-->
-        <!--                   inactive-color="#ff4949"-->
-        <!--                   inactive-text='如果需要大批量处理员工权限，点击'-->
-        <!--                   :width="200"-->
-        <!--                   @change="Onchange">-->
-        <!--        </el-switch>-->
       </el-col>
       <transition name="el-zoom-in-center">
         <el-col :span="3"
@@ -27,7 +20,7 @@
       </transition>
     </el-row>
     <transition name="el-zoom-in-center">
-      <Panle v-show="batch2" :isEditSelect="isEditSelect"/>
+      <Panle v-show="batch2" :isEditSelect="isEditSelect" :SeSyncDayta="SeSyncDayta" ref="getTreeData" @getTreeList="getTreeList"/>
     </transition>
     <transition name="el-zoom-in-top">
       <SectionPan v-show="batch"/>
@@ -40,6 +33,7 @@
   import Panle from './components/Peoplesurface.vue'
   import {GetTreeList} from '@/api/article.js'
   import {connect} from 'net';
+  import {GetSectionChildren} from '@/api/role.js'
 
   export default {
     components: {SectionPan, Panle},
@@ -58,6 +52,11 @@
         }
       }
       return {
+        SeSyncDayta: {
+          data:{
+            name:''
+          }
+        },
         isEditSelect: false,
         Treeda: {},
         batch: false,
@@ -115,14 +114,29 @@
     },
     methods: {
       isClickSelect(data) {
-        console.log(data)
-        this.isEditSelect = true
-        console.log(this.isEditSelect)
+        let i = undefined;
+        this.SeSyncDayta = data
+        if (data.data.TypeID==2){
+          this.isEditSelect = false
+        }else {
+          this.isEditSelect = true
+        }
+        this.$refs.getTreeData.getListTwo(data.data)
+        GetSectionChildren(data.data).then((res) => {
+          var dataArr = this.chartData.rows[0].value[0]
+          console.log(dataArr)
+          for (i in dataArr.children) {
+            if (dataArr.children[i].value === data.data.value) {
+              dataArr.children[i]['children'] = res.data
+              this.chartData.rows[0].value = [dataArr]
+            }
+          }
+        })
       },
       getTreeList() {
         GetTreeList().then((res) => {
-          console.log(res)
           this.chartData.rows[0].value = [res.data]
+          console.log(this.chartData.rows[0].value)
         })
       },
       Onchange(value) {

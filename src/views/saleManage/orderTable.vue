@@ -1,31 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.customerName"
-                :placeholder="$t('orderTable.customerName')"
+      <el-input v-model="listQuery.cSOCode"
+                placeholder="搜索订单号"
                 style="width: 300px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.customerFaith"
-                 :placeholder="$t('orderTable.customerFaith')"
-                 clearable
-                 style="width: 120px"
-                 class="filter-item">
-        <el-option v-for="item in faithOptions"
-                   :key="item"
-                   :label="item"
-                   :value="item"/>
-      </el-select>
-      <el-select v-model="listQuery.sendExpress"
-                 :placeholder="$t('orderTable.sendExpress')"
-                 clearable
-                 style="width: 120px"
-                 class="filter-item">
-        <el-option v-for="item in expressOptions"
-                   :key="item"
-                   :label="item"
-                   :value="item"/>
-      </el-select>
       <el-button class="filter-item"
                  type="primary"
                  icon="el-icon-search"
@@ -37,179 +17,71 @@
               stripe
               high
               border
+              v-loading="isLoading"
+              element-loading-text="拼命加载中"
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.8)"
               fit
               highlight-current-row
               style="width: 100%">
-      <!--      <el-table-column align="center"-->
-      <!--                       prop="cSOCode"-->
-      <!--                       :label="$t('orderTable.orderId')"/>-->
-      <!--      <el-table-column align="center"-->
-      <!--                       prop="cSOCode"-->
-      <!--                       :label="$t('orderTable.orderDate')"-->
-      <!--                       sortable/>-->
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table
+            :data="props.row.children"
+            height="250"
+            border
+            style="width: 100%">
+            <el-table-column
+              prop="cInvCode"
+              label="产品编码"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="cDefine34"
+              label="订货宽度"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="iQuantity"
+              label="订货数量"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="dPreDate"
+              label="发货日期">
+            </el-table-column>
+            <el-table-column
+              prop="dreleasedate"
+              label="释放日期">
+            </el-table-column>
+            <el-table-column
+              prop="cSCloser"
+              label="关闭标记">
+            </el-table-column>
+            <el-table-column
+              prop="dbclosesystime"
+              label="关闭时间">
+            </el-table-column>
+            <el-table-column
+              prop="dbclosedate"
+              label="关闭日期">
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-table-column>
       <el-table-column align="center"
                        v-for="( { prop, label }) in colConfigs"
                        :key="prop"
                        :prop="prop"
                        :label="label"></el-table-column>
-
-      <el-table-column :label="$t('table.actions')"
-                       align="center"
-                       width="100">
-        <template slot-scope="scope">
-          <el-button size="mini"
-                     type="primary"
-                     @click="handleDetail(scope.row)">{{$t('orderTable.detail')}}
-          </el-button>
-          <!--          <el-button size="mini"-->
-          <!--                     @click="handleEdit( scope.row)">{{$t('table.edit')}}-->
-          <!--          </el-button>-->
-          <!--          <el-button size="mini"-->
-          <!--                     type="danger"-->
-          <!--                     @click="handleDelete(scope.$index,listData)">{{$t('table.delete')}}-->
-          <!--          </el-button>-->
-
-          <el-dialog :title="$t('orderTable.detail')"
-                     :visible.sync="dialogTableVisible"
-                     class=""
-                     fullscreen>
-            <el-form :v-model="temp"
-                     :rules="rules"
-                     ref="ruleForm"
-                     label-width="100px"
-                     class="demo-ruleForm">
-              <el-row :gutter="20">
-                <el-col :span="4">
-                  <div class="grid-content bg-purple">
-                    <el-form-item :label="$t('orderTable.orderId')"
-                                  prop="orderId">
-                      {{temp.ID}}
-                    </el-form-item>
-                    <el-form-item :label="$t('orderTable.cInvCode')"
-                                  prop="cInvCode">
-                      {{temp.cInvCode}}
-                    </el-form-item>
-                    <el-form-item :label="$t('orderTable.dPreDate')"
-                                  prop="dPreDate">
-                      {{temp.dPreDate}}
-                    </el-form-item>
-
-                  </div>
-                </el-col>
-                <el-col :span="4">
-                  <div class="grid-content bg-purple">
-                    <el-form-item :label="$t('orderTable.iSOsID')"
-                                  prop="iSOsID">
-                      {{temp.iSOsID}}
-                    </el-form-item>
-                    <el-form-item :label="$t('orderTable.AutoID')"
-                                  prop="AutoID">
-                      {{temp.AutoID}}
-                    </el-form-item>
-                    <el-form-item :label="$t('orderTable.cInvName')"
-                                  prop="cInvName">
-                      {{temp.cInvName}}
-                    </el-form-item>
-
-                  </div>
-                </el-col>
-                <el-col :span="4">
-                  <div class="grid-content bg-purple">
-                    <el-form-item :label="$t('orderTable.cDefine34')"
-                                  prop="cDefine34">
-                      {{temp.cDefine34}}
-                    </el-form-item>
-                    <el-form-item :label="$t('orderTable.dPreMoDate')"
-                                  prop="dPreMoDate">
-                      {{temp.dPreMoDate}}
-                    </el-form-item>
-<!--                    <el-form-item :label="$t('orderTable.dreleasedate')"-->
-<!--                                  prop="dreleasedate">-->
-<!--                      {{temp.dreleasedate}}-->
-<!--                    </el-form-item>-->
-
-                    <el-form-item :label="$t('orderTable.dbclosesystime')"
-                                  prop="dbclosesystime">
-                      {{temp.dbclosesystime}}
-                    </el-form-item>
-
-                  </div>
-                </el-col>
-                <el-col :span="4">
-                  <div class="grid-content bg-purple">
-                    <el-form-item :label="$t('orderTable.iQuantity')"
-                                  prop="iQuantity">
-                      {{parseInt(temp.iQuantity)}}
-                    </el-form-item>
-                    <el-form-item :label="$t('orderTable.cSCloser')"
-                                  prop="cSCloser">
-                      {{temp.cSCloser}}
-                    </el-form-item>
-<!--                    <el-form-item :label="$t('orderTable.sendExpress')"-->
-<!--                                  prop="sendExpress">-->
-<!--                      {{temp.sendExpress}}-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item :label="$t('orderTable.sendExpress')"-->
-<!--                                  prop="sendExpress">-->
-<!--                      {{temp.sendExpress}}-->
-<!--                    </el-form-item>-->
-                  </div>
-                </el-col>
-                <el-col :span="4">
-                  <el-form-item :label="$t('orderTable.iTaxRate')"
-                                prop="iTaxRate">
-                    {{temp.iTaxRate}}
-                  </el-form-item>
-                  <el-form-item :label="$t('orderTable.dbclosedate')"
-                                prop="dbclosedate">
-                    {{temp.dbclosedate}}
-                  </el-form-item>
-<!--                  <div class="grid-content bg-purple">-->
-<!--                    <el-form-item :label="$t('orderTable.expressPhone')"-->
-<!--                                  prop="expressPhone">-->
-<!--                      {{temp.expressPhone}}-->
-<!--                    </el-form-item>-->
-<!--                    <el-form-item :label="$t('orderTable.customerOrder')"-->
-<!--                                  prop="customerOrder">-->
-<!--                      {{temp.customerOrder }}-->
-<!--                    </el-form-item>-->
-<!--                  </div>-->
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-table :data="orderDetailData"
-                          stripe
-                          high
-                          border
-                          fit
-                          highlight-current-row
-                          style="width: 100%">
-                  <el-table-column align="center"
-                                   v-for="({ prop, label }) in orderDetailConfigs"
-                                   :key="prop"
-                                   :prop="prop"
-                                   :label="label">
-                  </el-table-column>
-                </el-table>
-              </el-row>
-            </el-form>
-            <div slot="footer"
-                 class="dialog-footer">
-              <el-button type="primary"
-                         @click="dialogTableVisible = false">{{ $t('tagsView.close') }}
-              </el-button>
-            </div>
-          </el-dialog>
-        </template>
-      </el-table-column>
     </el-table>
-    <div class="block">
-      <span class="demonstration"></span>
-      <pagination v-show="total>0"
-                  :total="total"
-                  :page.sync="listQuery.page"
-                  :limit.sync="listQuery.limit"
-                  @pagination="getListTwo"/>
+    <div style="margin-top: 20px">
+      <el-pagination :total="total"
+                     :page.sync="listQuery.page"
+                     :limit.sync="listQuery.limit"
+                     @current-change="propsClick"
+                     background
+                     layout="prev, pager, next"></el-pagination>
     </div>
   </div>
 </template>
@@ -250,6 +122,7 @@
             cCusCode: 1231231
           },
         ],
+        isLoading: false,
         expressOptions: ['申通', '顺丰'],
         faithOptions: [1, 2, 3, 4],
         importanceOptions: [],
@@ -269,15 +142,9 @@
         // formThead: defaultFormThead // 默认表头 Default header
         rules: {},
         listQuery: {
-          page: 1,
+          pag: 1,
           limit: 10,
-          customerServ: undefined,
-          customerName: undefined,
-          payCondition: undefined,
-          sendExpress: undefined,
-          customerFaith: undefined,
-          orderId: undefined,
-          sort: '+id',
+          cSOCode: undefined,
         },
         temp: [],
       };
@@ -295,6 +162,17 @@
       }
     },
     methods: {
+      propsClick(data) {
+        const page = {
+          pag: data
+        }
+        this.isLoading = true
+        getSaleOrderList(page).then(response => {
+          this.listData = response.data.data;
+          this.total = response.data.total;
+          this.isLoading = false
+        })
+      },
       handleDelete(index, listData) {
         this.deleteParam.orderId = listData[index].orderId;
         deleteSaleOrder(this.deleteParam).then(response => {
@@ -316,30 +194,17 @@
       },
 
       handleFilter() {
-        querySaleOrder(this.listQuery).then(response => {
+        getSaleOrderList(this.listQuery).then(response => {
           this.listData = response.data.data;
-          this.total = this.listData.length;
+          this.total = this.listData.total;
         })
       },
       getData() {
+        this.isLoading = true
         getSaleOrderList().then(response => {
-          this.listData = response.data;
-          this.total = response.data.length;
-        })
-      },
-      getListTwo() {
-        this.listLoading = true
-        getSaleOrderList().then(response => {
-          if (response) {
-            this.$nextTick(() => {
-              console.log("=================>")
-              this.listData = response.data.data
-              this.totalData = response.data.data
-              this.importanceOptions = response.data.data.items
-              this.calendarTypeOptions = response.data.data.items
-              console.log(response.data.data)
-            })
-          }
+          this.listData = response.data.data;
+          this.total = response.data.total;
+          this.isLoading = false
         })
       },
     }

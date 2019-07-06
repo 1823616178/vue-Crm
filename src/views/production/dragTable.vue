@@ -29,9 +29,6 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-
-      <!-- | parseTime('{y}-{m}-{d} {h}:{i}')  -->
-
       <el-table-column width="180px"
                        align="center"
                        label="机台">

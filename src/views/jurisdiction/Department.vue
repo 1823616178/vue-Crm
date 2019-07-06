@@ -9,12 +9,14 @@
               border>
       <el-table-column align="center"
                        label="用户id"
-                       width="220">
+                       width="220"
+      >
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
       <el-table-column align="center"
                        label="用户名"
-                       width="220">
+                       width="220"
+      >
         <template slot-scope="scope">{{ scope.row.username }}</template>
       </el-table-column>
       <el-table-column align="header-center"
@@ -23,7 +25,7 @@
       </el-table-column>
       <el-table-column align="header-center"
                        label="个性名称">
-        <template slot-scope="scope">{{ scope.row.describe }}</template>
+        <template slot-scope="scope">{{ scope.row.introduction }}</template>
       </el-table-column>
       <el-table-column align="header-center"
                        label="权限">
@@ -42,22 +44,25 @@
 
     <el-dialog :visible.sync="dialogVisible"
                v-loading="RuleLoading"
+               width="500px"
                :title="dialogType==='edit'?'Edit Role':'New Role'">
       <el-form :model="role"
+               ref="FormData"
+               :rules="routeForm"
                label-width="80px"
                label-position="left">
-        <el-form-item label="用户名">
+        <el-form-item label="用户名"
+                      prop="username">
           <el-input v-model="role.username"/>
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item label="密码" prop="password">
           <el-input v-model="role.password"
-                    type="textarea"/>
+                    type="password"/>
         </el-form-item>
-        <el-form-item label="个性名称">
-          <el-input v-model="role.describe"
-                    type="textarea"/>
+        <el-form-item label="个性名称" prop="describe">
+          <el-input v-model="role.describe"/>
         </el-form-item>
-        <el-form-item label="选择权限">
+        <el-form-item label="选择权限" prop="rolevalue">
           <el-select v-model="rolevalue" placeholder="请选择">
             <el-option
               v-for="(item,index) in roleOption"
@@ -94,16 +99,16 @@
     GetUserInfogroup,
     getUserPeopleInfo,
     UpUserEditorRole,
-    addNewRole
+    addNewRole,
+    AddRoleLocalTrue
   } from '@/api/role'
   import i18n from '@/lang'
   import {type} from 'os';
 
   const defaultRole = {
-    roles: '',
-    describe: '',
-    description: '',
-    routes: []
+    username: "",
+    password: "",
+    introduction: "",
   }
 
   export default {
@@ -114,11 +119,19 @@
           {label: 'admin', value: "admin"},
           {label: 'editor', value: "editor"},
         ],
-        rolevalue: '',
+        rolevalue: [],
         roleOption: [],
         Userid: undefined,
-        role: Object.assign({}, defaultRole),
-        routes: [],
+        role: {
+          username: "",
+          password: "",
+          describe: "",
+        },
+        routeForm: {
+          username: [{required: true, message: '必填项', trigger: 'blur'}],
+          password: [{required: true, message: '必填项', trigger: 'blur'}],
+          describe: [{required: true, message: '必填项', trigger: 'blur'}],
+        },
         rolesList: [],
         dialogVisible: false,
         dialogType: 'new',
@@ -137,7 +150,8 @@
     methods: {
       async getRoles() {
         const res = await GetUserInfogroup()
-        this.rolesList = res.data
+        this.rolesList = res.data.data
+        this.roleOption = res.data.role
       },
       // Reshape the routes structure so that it looks the same as the sidebar
       handleAddRole() {
@@ -187,25 +201,29 @@
       async confirmRole() {
         const isEdit = this.dialogType === 'edit'
         var data = {
+          info: this.role,
           role: this.rolevalue,
           id: this.Userid
         }
         if (isEdit) {
           await UpUserEditorRole(data).then((res) => {
-            console.log(res)
+            this.getRoles()
           })
-          // for (let index = 0; index < this.rolesList.length; index++) {
-          //   if (this.rolesList[index].roles === this.role.roles) {
-          //     this.rolesList.splice(index, 1, Object.assign({}, this.role))
-          //     break
-          //   }
-          // }
           this.dialogVisible = false
-          window.reload()
         } else {
-          await addRolelocalHost(this.role)
-          // this.role.key = data
-          this.rolesList.push(this.role)
+          this.$refs['FormData'].validate((valid) => {
+            if (valid) {
+              AddRoleLocalTrue(this.role, this.rolevalue).then((res) => {
+                if (res.data.code == 1001) {
+                  this.$message("账号重复")
+                } else {
+                  this.dialogVisible = false
+                  this.getRoles()
+                }
+
+              })
+            }
+          })
         }
       },
       // reference: src/view/layout/components/Sidebar/SidebarItem.vue

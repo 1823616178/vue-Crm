@@ -17,7 +17,13 @@ const stockManageRouter = {
       component: () => import('@/views/stockManage/stockOrder'),
       name: 'stockOrderManage',
       meta: { title: 'stockOrderManage' }
-    }
+    },
+    {
+      path: '/stock-PurchaseAnalyze',
+      component: () => import('@/views/stockManage/PurchaseAnalyze'),
+      name: 'PurchaseAnalyze',
+      meta: { title: 'PurchaseAnalyze' }
+    },
   ]
 }
 export default stockManageRouter

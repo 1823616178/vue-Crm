@@ -19,7 +19,7 @@ const jurisdiction = {
       name: 'PagePermission',
       meta: {
         title: 'divisionalManage ',
-       // or you can only set roles in sub nav
+        // or you can only set roles in sub nav
       }
     },
 
@@ -29,7 +29,7 @@ const jurisdiction = {
       name: 'divisional_management',
       meta: {
         title: ' PesonPermission ',
-         // or you can only set roles in sub nav
+        // or you can only set roles in sub nav
       }
     },
     {
@@ -38,7 +38,14 @@ const jurisdiction = {
       name: 'RolePermission',
       meta: {
         title: 'rolePermission',
-
+      }
+    },
+    {
+      path: 'TeamGroupManage',
+      component: () => import('@/views/jurisdiction/TeamGroupManage'),
+      name: 'TeamGroupManage',
+      meta: {
+        title: 'TeamGroupManage',
       }
     }
   ]

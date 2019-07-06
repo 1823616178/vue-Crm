@@ -9,7 +9,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <screenfull class="right-menu-item hover-effect" />
-        <lang-select class="right-menu-item hover-effect" />
+<!--        <lang-select class="right-menu-item hover-effect" />-->
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect"
@@ -25,7 +25,6 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
-          </a>
           <el-dropdown-item divided>
             <span style="display:block;"
                   @click="logout">{{ $t('navbar.logOut') }}</span>

@@ -17,10 +17,10 @@
                        width="220">
         <template slot-scope="scope">{{ scope.row.describe }}</template>
       </el-table-column>
-<!--      <el-table-column align="header-center"-->
-<!--                       label="描述">-->
-<!--        <template slot-scope="scope">{{ scope.row.describe }}</template>-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column align="header-center"-->
+      <!--                       label="描述">-->
+      <!--        <template slot-scope="scope">{{ scope.row.describe }}</template>-->
+      <!--      </el-table-column>-->
       <el-table-column align="center"
                        label="操作">
         <template slot-scope="scope">
@@ -86,6 +86,7 @@
     upDataRoleLocalHost,
     deleteRoleslocalHost,
     GetRoleRUle,
+    AddRoleLocalTrue,
     addNewRole
   } from '@/api/role'
   import i18n from '@/lang'
@@ -271,35 +272,24 @@
         const checkedKeys = this.$refs.tree.getCheckedKeys()
         this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
         var data = {
-          role:this.role,
-          id:this.Userid
+          role: this.role,
+          id: this.Userid
         }
         if (isEdit) {
           await upDataRoleLocalHost(data).then((res) => {
             console.log(res)
           })
-          // for (let index = 0; index < this.rolesList.length; index++) {
-          //   if (this.rolesList[index].roles === this.role.roles) {
-          //     this.rolesList.splice(index, 1, Object.assign({}, this.role))
-          //     break
-          //   }
-          // }
         } else {
-          await addRolelocalHost(this.role)
-          // this.role.key = data
-          this.rolesList.push(this.role)
+          await AddRoleLocalTrue(this.role).then((res)=>{
+            console.log(res)
+          })
         }
 
         const {description, roles, name} = this.role
         this.dialogVisible = false
         this.$notify({
-          title: 'Success',
+          title: '成功',
           dangerouslyUseHTMLString: true,
-          message: `
-            <div>权限: ${roles}</div>
-            <div>角色: ${name}</div>
-            <div>描述: ${description}</div>
-          `,
           type: 'success'
         })
       },

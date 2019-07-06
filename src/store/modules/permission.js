@@ -30,16 +30,23 @@ const data = {}
  */
 export function filterAsyncRoutes(routes, roles) {
   const res = []
-  routes.forEach(route => {
-    const tmp = {...route}
+  // routes.forEach(route => {
+  //   const tmp = {...route}
+  //   if (hasPermission(roles, tmp)) {
+  //     if (tmp.children) {
+  //       tmp.children = filterAsyncRoutes(tmp.children, roles)
+  //     }
+  //     res.push(tmp)
+  //   }
+  for (let i in routes) {
+    const tmp = {...routes[i]}
     if (hasPermission(roles, tmp)) {
       if (tmp.children) {
         tmp.children = filterAsyncRoutes(tmp.children, roles)
       }
       res.push(tmp)
     }
-  })
-
+  }
   return res
 }
 

@@ -9,7 +9,7 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="1000"
+          :total="HangTotal"
           @next-click="NextPage"
           :current-page.sync="Thiscurrent"
           @prev-click="NextPage"
@@ -71,6 +71,9 @@
   export default {
     name: 'TreeTable',
     props: {
+      HangTotal: {
+        type: Number,
+      },
       data: {
         type: Array,
         required: true,
@@ -139,8 +142,9 @@
         }
       },
       PushListDiv(row, column, event) {
+        console.log(row)
         if (!row.hasOwnProperty('children')) {
-          this.$emit('AddDivWidth', row.spec)
+          this.$emit('AddDivWidth', row.cDefine34)
         } else {
           const h = this.$createElement;
           this.$message({

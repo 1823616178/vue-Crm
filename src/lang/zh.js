@@ -1,5 +1,8 @@
 export default {
   route: {
+    FenQieManage: "分切派工任务列表",
+    TeamGroupManage: "班组管理",
+    PurchaseAnalyze: "采购分析报表",
     divisional_management: "部门管理",
     jurisdiction: "系统管理",
     Ly_dispatching: '流延生产任务派工',
@@ -12,8 +15,8 @@ export default {
     documentation: '文档',
     guide: '引导页',
     permission: '权限测试页',
-    divisionalManage:"部门管理",
-    PesonPermission:"用户管理",
+    divisionalManage: "部门管理",
+    PesonPermission: "用户管理",
     rolePermission: '角色权限',
     pagePermission: '页面权限',
     directivePermission: '指令权限',
@@ -104,7 +107,7 @@ export default {
     github: 'Github 地址'
   },
   permission: {
-    editUser:"编辑用户",
+    editUser: "编辑用户",
     addRole: '新增角色',
     editPermission: '编辑权限',
     roles: '你的权限',
@@ -167,7 +170,7 @@ export default {
     type: '类型',
     remark: '点评',
     search: '搜索',
-    add: '添加',
+    add: '添加成员',
     export: '导出',
     reviewer: '审核人',
     id: '序号',

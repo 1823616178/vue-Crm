@@ -14,10 +14,12 @@ export function getOneFormula(query) {
   })
 }
 
-export function getSaleOrderList() {
+export function getSaleOrderList(data) {
+
   return request({
     url: '/OrderInfo/info',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 

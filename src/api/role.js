@@ -36,10 +36,11 @@ export function GetRoleRUle(data) {
     data
   })
 }
+
 export function addRole(data) {
   return request({
-    url:"/login/addRole",
-    method:'post',
+    url: "/login/addRole",
+    method: 'post',
     data
   })
 }
@@ -64,11 +65,14 @@ export function addNewRole(data) {
   })
 }
 
-export function addRolelocalHost(data) {
+export function addRolelocalHost(data1, role) {
+  const val = {
+    data1, role
+  };
   return request({
-    url: '/login/newRole',
+    url: '/login/addRolelocalHost',
     method: "post",
-    data
+    data: val
   })
 }
 
@@ -105,3 +109,64 @@ export function UpUserEditorRole(data) {
     data
   })
 }
+
+export function GetDepartData(da1, da2) {
+  const val = {
+    section: da1,
+    sedata: da2
+  }
+  return request({
+    url: '/role/GetDepartData',
+    method: "post",
+    data: val
+  })
+}
+
+export function GetSectionChildren(data) {
+  return request({
+    url: "/role/GetSectionChildren",
+    method: "post",
+    data
+  })
+}
+
+export function DeleteSectionData(data) {
+  return request({
+    url: "/role/DeleteSectionData",
+    method: "post",
+    data: data
+  })
+}
+
+export function addNewPeople(da1, da2) {
+  const val = {
+    section: da1,
+    other: da2
+  };
+  return request({
+    url: "/role/addNewPeople",
+    method: "post",
+    data: val
+  })
+}
+
+export function UpGroupPeople(data) {
+  return request({
+    url: '/role/updateGroupData',
+    method: "post",
+    data
+  })
+}
+
+export function AddRoleLocalTrue(data1, data2) {
+  var da = {
+    data1,
+    data2
+  };
+  return request({
+    url: '/login/AddRoleLocalTrue',
+    method: "post",
+    data:da
+  })
+}
+

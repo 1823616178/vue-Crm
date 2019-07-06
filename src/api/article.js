@@ -88,7 +88,7 @@ export function gaveContent(data) {
 
 export function productionList(data) {
   return request({
-    url: '/production/getListData',
+    url: '/product/GetProductList',
     method: 'post',
     data
   })
@@ -128,6 +128,14 @@ export function getRecipeDetail(data) {
 export function DynamicOrder(data) {
   return request({
     url: "/Dynamic/SellOrder",
+    method: "post",
+    data
+  })
+}
+
+export function HangData(data) {
+  return request({
+    url: "/Dynamic/HangData",
     method: "post",
     data
   })
@@ -206,7 +214,6 @@ export function newDiageAdd(index, data, isDelete, productData, formulaList) {
   })
 }
 
-
 /**
  * 模拟数据
  */
@@ -251,8 +258,82 @@ export function createArticlelocalHost(data) {
 }
 
 export function GetComposeList(data) {
+  const val = {
+    data
+  }
   return request({
     url: "/production/ComponseFromData",
+    method: "post",
+    data: val
+  })
+}
+
+export function CompeleterSync(data) {
+  return request({
+    url: "/product/CompeleterSync",
+    method: "post",
+    data: data
+  })
+}
+
+export function UpdataComplexTables(data) {
+  return request({
+    url: "/product/UpdataComplexTables",
+    method: "post",
+    data
+  })
+}
+
+export function SearchIdComplexData(data) {
+  return request({
+    url: "/product/SearchIdComplexData",
+    method: "post",
+    data: data
+  })
+}
+
+export function AddNewGroup(data) {
+  return request({
+    url: '/TeamGroupManage/AddTeam',
+    method: 'post',
+    data
+  })
+}
+
+export function GetGroupManage(val) {
+  return request({
+    url: '/TeamGroupManage/GetGroupManage',
+    method: 'post',
+    data: val
+  })
+}
+
+export function GroupTeamSelectData() {
+  return request({
+    url: '/Dynamic/GroupTeamSelectData',
+    method: 'post',
+  })
+}
+
+export function DeleteGroupList(data) {
+  return request({
+    url: '/role/DeleteGroupList',
+    method: 'post',
+    data: data
+  })
+}
+
+export function DiagSelectSwitchDataList(data) {
+  return request({
+    url: '/product/DiagSelectSwitchDataList',
+    method: "post",
+    data
+  })
+}
+
+export function innerVisibleClickFunc(data) {
+  return request({
+    url: '/product/innerVisibleClickFunc',
     method: "post",
     data
   })

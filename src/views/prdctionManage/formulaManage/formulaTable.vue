@@ -31,7 +31,6 @@
             </div>
           </div>
         </template>
-        <!-- <el-dialog visible.sync="true"> -->
         <template slot="paneR">
           <div class="right-container verticaloverflow demo-dynamic">
             <el-row :gutter="150" type="flex" align="middle" justify="center">
@@ -39,7 +38,8 @@
                 <el-row type="flex" align="middle" justify="center">
                   <h1 style="line-height: 2px">配方管理</h1>
                 </el-row>
-                <el-button type="primary" style="margin-bottom: 20px;" v-show="isAddRecipe" @click="addRecipe">添加配方</el-button>
+                <el-button type="primary" style="margin-bottom: 20px;" v-show="isAddRecipe" @click="addRecipe">添加配方
+                </el-button>
                 <el-table
                   @row-dblclick="GetDetail($event)"
                   :data="tableData"
@@ -65,10 +65,16 @@
                   <el-table-column
                     prop="CreatDate"
                     label="启用时间">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.CreatDate | parseTime('{y}-{m}-{d}') }}</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     prop="StopDate"
                     label="停用时间">
+                    <template slot-scope="scope">
+                      <span>{{ scope.row.StopDate | parseTime('{y}-{m}-{d}') }}</span>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     fixed="right"
@@ -79,15 +85,10 @@
                       <el-button @click="delateClick(scope.row)" type="text" size="small">删除</el-button>
                     </template>
                   </el-table-column>
-<!--                  <el-table-column-->
-<!--                    label="默认">-->
-<!--                    <template slot-scope="scope">-->
-<!--                      <el-tag v-if="scope.row.default == '0'" type="success">以关联</el-tag>-->
-<!--                      <el-tag v-if="scope.row.default == '1'" type="danger">未关联</el-tag>-->
-<!--                    </template>-->
-<!--                  </el-table-column>-->
                 </el-table>
-                <Formula @channgeDataList="channgeDataList"  style="margin-top: 20px;" :DataList="DataList" :formulaList="formulaList"  :tableDataIndex="tableDataIndex" :isSelect="isSelect" :productIndex="productIndex"></Formula>
+                <Formula @channgeDataList="channgeDataList" style="margin-top: 20px;" :DataList="DataList"
+                         :formulaList="formulaList" :tableDataIndex="tableDataIndex" :isSelect="isSelect"
+                         :productIndex="productIndex"></Formula>
               </el-col>
             </el-row>
           </div>
@@ -107,12 +108,15 @@
         label-width="80px"
         label-position="left">
         <el-form-item label="启用时间" prop="CreatDate">
-          <el-date-picker type="date" value-format="yyyy-MM-DD" v-model="newDiageAdd.CreatDate"
+          <el-date-picker type="date" v-model="newDiageAdd.CreatDate"
                           placeholder="启用时间"
+                          value-format="yyyy-MM-dd"
                           style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="停用时间" prop="StopDate">
-          <el-date-picker type="date" value-format="yyyy-MM-DD" v-model="newDiageAdd.StopDate" placeholder="启用时间"
+          <el-date-picker type="date" v-model="newDiageAdd.StopDate"
+                          placeholder="启用时间"
+                          value-format="yyyy-MM-dd"
                           style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="名称" prop="Name">
@@ -153,8 +157,8 @@
         <el-form-item label="编号">
           {{amendFormData.number}}
         </el-form-item>
-        <el-form-item label="启用时间" prop="a">
-          <el-date-picker type="date" value-format="yyyy:MM:dd" v-model="amendFormData.a" placeholder="启用时间"
+        <el-form-item label="启用时间" :prop="NewDateTime">
+          <el-date-picker type="date" value-format="yyyy:MM:dd" v-model="NewDateTime" placeholder="启用时间"
                           style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="名称">
@@ -224,14 +228,17 @@
         }
       }
       return {
+        NewRepiceStopTimeDate: undefined,
+        NewRepicCreatDate: undefined,
         DataList: [],
         newDiageAdd: {
           id: "",
-          CreatDate: null,
-          StopDate: null,
+          CreatDate: new Date(),
+          StopDate: new Date(),
           Name: '',
           isDefault: false
         },
+        NewDateTime: undefined,
         newAddDialog: false,
         amendFormData: {
           id: "",
@@ -258,10 +265,8 @@
         isAddRecipe: false,
         isDelete: false,
         productIndex: {},
-        amendFormData: [],
         dialogVisible: false,
         Pageswitch: undefined,
-        tableData: [],
         chartData: {
           columns: ['name', 'value'],
           rows: [
@@ -313,8 +318,8 @@
         listData: null,
         total: 0,
         tableData: [],
-        tableDataIndex:{},
-        isSelect:false,
+        tableDataIndex: {},
+        isSelect: false,
         // key: 1, // table key
         // formTheadOptions: ['apple', 'banana', 'orange'],
         // checkboxVal: defaultFormThead, // checkboxVal
@@ -382,10 +387,12 @@
       this.getTreeList();
     },
     methods: {
-      channgeDataList(){
+      channgeDataList() {
         getRecipeDetail(this.tableDataIndex).then((res) => {
-          console.log(res.data)
           this.DataList = res.data
+          this.$notify({
+            message:"添加成功"
+          })
         })
       },
       delateClick(data) {
@@ -405,7 +412,7 @@
           this.DataList = res.data
         })
       },
-      addNewReciptData() {
+      addNewReciptData(data) {
         this.$refs['newDiageAdd'].validate((valid) => {
           if (valid) {
             newDiageAdd(this.productIndex, this.newDiageAdd, this.isDelete, this.formulaList[this.productIndex], this.ListData).then(ress => {
@@ -413,6 +420,10 @@
               this.$refs['newDiageAdd'].resetFields()
               QueryRepicList(this.formulaList[this.productIndex]).then((res) => {
                 this.tableData = res.data
+                this.$notify({
+                  message:"添加成功",
+                  type:"success"
+                })
               })
             })
           } else {
@@ -429,20 +440,31 @@
       confirmRole(data) {
         this.$refs['amendFormData'].validate((valid) => {
           if (valid) {
+            this.amendFormData.a = this.NewDateTime
             upRepicList(this.formulaList[this.productIndex], data, this.isDelete).then((res) => {
               this.dialogVisible = false
               QueryRepicList(this.formulaList[this.productIndex]).then((ress) => {
                 this.tableData = ress.data
+                this.$notify({
+                  message: '更新成功',
+                  type: 'success'
+                })
               })
             })
           }
         })
       },
       handleClick(data) {
+        var time = +data.CreatDate
+        var date = new Date(time * 1000)
+        var tim = parseTime(time)
+        var arr = tim.slice(0, 10)
+        console.log(arr)
         this.dialogVisible = true
         this.amendFormData = data
-
+        this.NewDateTime = arr
         this.isDelete = !data.isDelete
+
       },
       tableRowClassName({row, rowIndex}) {
         if (rowIndex === 1) {

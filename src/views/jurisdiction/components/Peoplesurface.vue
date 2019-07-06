@@ -2,108 +2,62 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row type="flex" align="middle" justify="center">
-        <el-col :span="6" :offset="1" v-show="isEditSelect">
+        <el-col :span="6" :offset="1">
           <el-button class="filter-item"
                      style="margin-left: 10px;"
                      type="primary"
-                     @click="AddSection">添加部门
+                     @click="AddSection"
+                     v-show="isEditSelect">添加部门
           </el-button>
           <el-button class="filter-item"
                      style="margin-left: 10px;"
                      type="primary"
-                     @click="handleCreate">编辑部门
+                     @click="DeleteSection">删除部门
           </el-button>
         </el-col>
-        <el-col :span="15" :offset="6">
-          <el-input v-model="listQuery.serial"
-                    :placeholder="$t('Peole.id')"
-                    style="width: 200px;"
-                    class="filter-item"
-                    @keyup.enter.native="handleFilter"/>
-          <el-select v-model="listQuery.id"
-                     :placeholder="$t('Peole.Jobnumber')"
-                     clearable
-                     style="width: 90px"
-                     class="filter-item">
-            <el-option v-for="(item,index) in importanceOptions"
-                       :key="index"
-                       :label="item.id"
-                       :value="item.id"/>
-          </el-select>
-          <el-select v-model="listQuery.type"
-                     :placeholder="$t('Peole.Phone')"
-                     clearable
-                     class="filter-item"
-                     style="width: 130px">
-            <el-option v-for="(item,index) in calendarTypeOptions"
-                       :key="index"
-                       :label="item.code"
-                       :value="item.code"/>
-          </el-select>
+        <el-col :span="24" :offset="6">
           <el-button class="filter-item"
                      style="margin-left: 10px;"
                      type="primary"
                      icon="el-icon-edit"
                      @click="handleCreate">{{ $t('table.add') }}
           </el-button>
-          <el-button v-waves
-                     class="filter-item"
-                     type="primary"
-                     icon="el-icon-search"
-                     @click="handleFilter">{{ $t('table.search') }}
-          </el-button>
-          <el-button v-waves
+<!--          <el-button v-waves-->
 
-                     class="filter-item"
-                     type="primary"
-                     icon="el-icon-download"
-                     @click="handleDownload">{{ $t('table.export') }}
-          </el-button>
+<!--                     class="filter-item"-->
+<!--                     type="primary"-->
+<!--                     icon="el-icon-download"-->
+<!--                     @click="handleDownload">{{ $t('table.export') }}-->
+<!--          </el-button>-->
         </el-col>
       </el-row>
     </div>
 
     <el-dialog title="增加部门"
                :visible.sync="isAddSection"
-    width="600px">
+               width="600px">
       <el-form ref="dataForm"
                :model="SectinData"
                label-position="left"
                label-width="70px"
                style="margin-left:50px;">
-        <el-form-item :label="$t('Peole.unit')">
-          <el-input v-model="temp.unit"/>
-        </el-form-item>
 
         <el-form-item label="部门名称">
-          <el-input v-model="temp.duty"/>
+          <el-input v-model="SectinData.duty"/>
         </el-form-item>
 
-        <el-form-item  label="上级部门">
-          <el-select v-model="temp.role"
-                     :placeholder="$t('Peole.role')"
-                     clearable
-                     style="width: 90px"
-                     class="filter-item">
-            <el-option v-for="(item,index) in ReloName"
-                       :key="index"
-                       :label="item"
-                       :value="item"/>
-          </el-select>
-        </el-form-item>
       </el-form>
       <div slot="footer"
            class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
+        <el-button @click="isAddSection = false">{{ $t('table.cancel') }}</el-button>
         <el-button type="primary"
-                   @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}
+                   @click="AddSectionButton">{{ $t('table.confirm') }}
         </el-button>
       </div>
     </el-dialog>
 
     <el-table :key="tableKey"
               ref="multipleTable"
-
               :data="listData"
               border
               fit
@@ -119,35 +73,34 @@
                        align="center"
                        width="150px">
         <template slot-scope="scope">
-          <span>{{ scope.row.ROW_NUMBER }}</span>
+          <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.Jobnumber')"
                        min-width="150px">
         <template slot-scope="scope">
-          <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.cPersonCode}}</span>
+          <span class="link-type">{{ scope.row.Jobnumber}}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.name')"
                        min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.cPersonName }}</span>
+          >{{ scope.row.Name }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.Phone')"
                        min-width="150px">
         <template slot-scope="scope">
           <span class="link-type"
-                @click="handleUpdate(scope.row)">{{ scope.row.cPersonPhone }}</span>
+          >{{ scope.row.Phone }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('Peole.unit')"
                        width="150px"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.cDepName }}</span>
+          <span>{{ scope.row.SectionName }}</span>
         </template>
       </el-table-column>
       <!--      <el-table-column :label="$t('Peole.role')"-->
@@ -180,62 +133,25 @@
                :visible.sync="dialogFormVisible">
       <el-form ref="dataForm"
                :model="temp"
+               :rules='rules'
                label-position="left"
                label-width="70px"
                style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('production.id')"
-                      prop="id">
-          {{temp.cPersonCode}}
-        </el-form-item>
         <el-form-item :label="$t('Peole.Jobnumber')"
-                      prop="stage">
-          <el-input v-model="temp.cPersonCode"/>
+                      prop="Jobnumber">
+          <el-input v-model="temp.Jobnumber"/>
+        </el-form-item>
+        <el-form-item label="姓名"
+                      prop="Name">
+          <el-input v-model="temp.Name"/>
         </el-form-item>
         <el-form-item :label="$t('Peole.Phone')"
-                      prop="PinName">
-          <el-input v-model="temp.cPersonPhone"/>
+                      prop="Phone">
+          <el-input v-model="temp.Phone"/>
         </el-form-item>
 
         <el-form-item :label="$t('Peole.unit')">
-          <el-input v-model="temp.unit"/>
-        </el-form-item>
-
-        <el-form-item :label="$t('Peole.duty')">
-          <el-input v-model="temp.duty"/>
-        </el-form-item>
-
-        <el-form-item :label="$t('Peole.role')">
-          <el-select v-model="temp.role"
-                     :placeholder="$t('Peole.role')"
-                     clearable
-                     style="width: 90px"
-                     class="filter-item">
-            <el-option v-for="(item,index) in ReloName"
-                       :key="index"
-                       :label="item"
-                       :value="item"/>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item :label="$t('Peole.user')">
-          <el-input v-model="temp.user"/>
-        </el-form-item>
-
-        <el-form-item :label="$t('Peole.CardId')">
-          <el-input v-model="temp.CardId"/>
-        </el-form-item>
-        <el-form-item :label="$t('Peole.birthday')">
-          <el-input v-model="temp.birthday"/>
-        </el-form-item>
-
-        <el-form-item :label="$t('Peole.sex')">
-          <el-input v-model="temp.sex"/>
-        </el-form-item>
-        <el-form-item :label="$t('Peole.site')">
-          <el-input v-model="temp.site"/>
-        </el-form-item>
-        <el-form-item :label="$t('Peole.timestamp')">
-          <el-input v-model="temp.timestamp"/>
+          <el-input v-model="temp.unit" :disabled="true"/>
         </el-form-item>
       </el-form>
       <div slot="footer"
@@ -275,8 +191,9 @@
     fetPeopleList,
     fetchPv,
     createArticlelocalHost,
-    updateArticlelocalHost
+    updateArticlelocalHost,
   } from '@/api/article'
+  import {GetDepartData, DeleteSectionData, addNewPeople, UpGroupPeople} from '@/api/role.js'
   import waves from '@/directive/waves' // Waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -286,6 +203,11 @@
     components: {Pagination},
     directives: {waves},
     props: {
+      SeSyncDayta: {
+        type: Object,
+        default: {},
+        required: true
+      },
       isEditSelect: {
         type: Boolean,
         default: false,
@@ -307,7 +229,11 @@
     },
     data() {
       return {
-        SectinData:{},
+        DeparOption: [],
+        loading: false,
+        SectinData: {
+          duty: ""
+        },
         isAddSection: false,
         multipleSelection: [],
         StageName: ['机台1', '机台2', '机台3', '机台4'],
@@ -336,17 +262,9 @@
         temp: {
           id: undefined,
           Jobnumber: undefined,
-          name: '',
-          timestamp: new Date().getTime(),
-          Phone: undefined,
+          Name: '',
+          phone: undefined,
           unit: '',
-          role: '',
-          user: "",
-          CardId: "",
-          birthday: undefined,
-          duty: "",
-          sex: "",
-          site: "",
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -357,9 +275,10 @@
         dialogPvVisible: false,
         pvData: [],
         rules: {
-          type: [{required: true, message: 'type is required', trigger: 'change'}],
-          timestamp: [{type: 'date', required: true, message: 'timestamp is required', trigger: 'change'}],
-          title: [{required: true, message: 'title is required', trigger: 'blur'}]
+          Jobnumber: [{required: true, message: '必填项', trigger: 'change'}],
+          Name: [{required: true, message: '必填项', trigger: 'change'}],
+          Phone: [{required: true, message: '必填项', trigger: 'change'}],
+          unit: [{required: true, message: '必填项', trigger: 'change'}]
         },
         downloadLoading: false
       }
@@ -369,6 +288,24 @@
       this.getListTwo()
     },
     methods: {
+      DeleteSection() {
+        DeleteSectionData(this.SeSyncDayta.data).then((res) => {
+          if (res.data.code == 1) {
+            this.$emit('getTreeList')
+          }
+        })
+      },
+      AddSectionButton() {
+        GetDepartData(this.SectinData, this.SeSyncDayta.data).then((res) => {
+          console.log(res)
+          if (res.data.code == 1) {
+            this.$emit('getTreeList')
+            this.isAddSection = false
+          }
+        })
+      },
+      GetRemoteData() {
+      },
       AddSection() {
         this.isAddSection = true
       },
@@ -386,11 +323,11 @@
           // Just to simulate the time of the request
         })
       },
-      getListTwo() {
+      getListTwo(data) {
         this.listLoading = true
-        fetPeopleList(this.listQuery).then(response => {
-          console.log(response)
+        fetPeopleList(data).then(response => {
           if (response) {
+            console.log(data)
             this.listData = response.data.items
             this.totalData = response.data.total
             this.importanceOptions = response.data.items
@@ -429,17 +366,9 @@
         this.temp = {
           id: undefined,
           Jobnumber: undefined,
-          name: '',
-          timestamp: new Date().getTime(),
-          Phone: undefined,
+          Name: '',
+          phone: undefined,
           unit: '',
-          role: '',
-          user: "",
-          CardId: "",
-          birthday: undefined,
-          duty: "",
-          sex: "",
-          site: "",
           // author: ''
         }
       },
@@ -447,6 +376,7 @@
         this.resetTemp()
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
+        this.temp.unit = this.SeSyncDayta.data.name
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })
@@ -454,10 +384,8 @@
       createData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-            // this.temp.author = 'vue-element-admin'
-            createArticlelocalHost(this.temp).then(() => {
-              this.listData.unshift(this.temp)
+            addNewPeople(this.SeSyncDayta.data, this.temp).then((res) => {
+              this.getListTwo()
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -466,6 +394,7 @@
                 duration: 2000
               })
             })
+            // this.temp.author = 'vue-element-admin'
           }
         })
       },
@@ -481,17 +410,9 @@
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            const tempData = Object.assign({}, this.temp)
-            tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-            updateArticlelocalHost(tempData).then((res) => {
+            UpGroupPeople(this.temp).then((res) => {
               console.log(res)
-              for (const v of this.listData) {
-                if (v.id === this.temp.id) {
-                  const index = this.listData.indexOf(v)
-                  this.listData.splice(index, 1, this.temp)
-                  break
-                }
-              }
+              this.getListTwo(this.SeSyncDayta.data);
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',

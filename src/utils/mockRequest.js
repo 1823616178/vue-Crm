@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api 的 base_url
-  baseURL: "https://easy-mock.com/mock/5caea4dbc63ffd4f5d7e4f2f/example",
+  baseURL: "http://1.194.239.69:8094",
   timeout: 5000 // request timeout
 })
 // request interceptor

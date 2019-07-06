@@ -4,13 +4,21 @@ export function userSearch(name) {
   return request({
     url: '/search/user',
     method: 'get',
-    params: { name }
+    params: {name}
   })
 }
 
 export function LimitPageSellOrderData(data) {
   return request({
     url: '/Dynamic/LimitPageSellOrderData',
+    method: 'post',
+    data
+  })
+}
+
+export function LimitPageSlitData(data) {
+  return request({
+    url: '/Dynamic/LimitPageSlitData',
     method: 'post',
     data
   })

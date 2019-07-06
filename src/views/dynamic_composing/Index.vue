@@ -12,12 +12,13 @@
           <div v-for="(item,index) in abc"
                :key="index">
             <el-row type="flex"
-
                     justify="center"
                     style="text-align: center;">
               <div style="height: 100px;width: 50px;background: #0a76a4;line-height: 100px">{{index}}</div>
+
               <vueDragInfinite :json="item"
                                :name="name"
+                               :ratio="ratio"
                                @save="saveJson"
                                ref="dragContain"
                                :borderWidth='QieBianVal'
@@ -27,6 +28,9 @@
                                @mouseenter.native="IsMouseUp(index)"
                                @click.native="IsClickCtrl($event,index)"
                                @mouseout.native="isMouseOut(index)"
+                               @updateDataPage="updateDataPage"
+                               :key="UploadKey"
+                               :isUPload="isUPload"
               />
             </el-row>
             <div v-show="(index+1)%3===0" style="background: #4AB7BD;width: 100%;height: 10px;"></div>
@@ -71,19 +75,25 @@
                  size="mini"
                  label-width="100px">
           <el-form-item label="模板名称">
-            <el-input v-model="name"></el-input>
+            <el-select v-model="IsSetType" placeholder="请选择">
+              <el-option
+                v-for="item in SelectName"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="生产班组">
             <div class="block">
-              <!--                <span class="demonstration">当前画布宽度：{{wid}}</span>-->
               <el-select v-model="MakeGroupval"
                          @change="changWdthOrQie"
                          placeholder="选择生产班组">
                 <el-option
                   v-for="(item,index) in MakeGroup"
                   :key="index"
-                  :label="item.label"
-                  :value="item.value">
+                  :label="item.group_name"
+                  :value="item.group_id">
                 </el-option>
               </el-select>
             </div>
@@ -105,26 +115,30 @@
           <el-row>
             <el-form-item label="宽度">
               <div class="block">
-                <!--                <span class="demonstration">当前画布宽度：{{wid}}</span>-->
                 <span>当前宽度为:{{wid}}</span>
                 <el-slider v-model="wid"
                            :max="MaxWid"
                            :min="MinWid"></el-slider>
                 <span>手动输入宽度</span>
                 <div @keypress.enter="changeWidth">
-                  <el-input style="width: 100px" size="mini" v-model="wid2"></el-input>
+                  <el-input style="width: 100px" size="mini" v-model="wid"></el-input>
                 </div>
               </div>
             </el-form-item>
-            <!--            <el-form-item label="行分切数">-->
-            <!--              <el-input v-model="FenQieVal"></el-input>-->
-            <!--            </el-form-item>-->
-            <el-form-item label="分切长度">
-              <el-input v-model="FenQieLength"></el-input>
-            </el-form-item>
             <el-form-item label="行分切数">
+              <el-input v-model="rowCutVal"></el-input>
+            </el-form-item>
+            <el-form-item label="产品名称">
+              <el-input v-model="ProductName"></el-input>
+            </el-form-item>
+            <el-form-item label="产品编码">
+              <el-input v-model="ProductsCsCode"></el-input>
+            </el-form-item>
+            <el-form-item label="生成行数">
+              <el-input v-model="UseHang"></el-input>
+            </el-form-item>
+            <el-form-item label="刀数">
               <div class="block">
-                <span class="demonstration">刀数</span>
                 <el-select v-model="cutVal"
                            placeholder="请选择刀数">
                   <el-option v-for="(item,index) in cutSelect"
@@ -135,25 +149,6 @@
                 </el-select>
               </div>
             </el-form-item>
-            <el-form-item>
-              <el-button type="primary"
-                         size="mini"
-                         @click="sendData">发送请求
-              </el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary"
-                         size="mini"
-                         @click="fetchData">点击打印
-              </el-button>
-            </el-form-item>
-            <!--                        <el-form-item label="画布长度">-->
-            <!--                            <div class="block">-->
-            <!--                                <span class="demonstration">画布长度：{{heightValue}}</span>-->
-            <!--                                <el-slider v-model="heightValue"-->
-            <!--                                           :max="2000"></el-slider>-->
-            <!--                            </div>-->
-            <!--                        </el-form-item>-->
             <el-form-item label="切边距">
               <div class="block">
                 <span class="demonstration">切边距为：{{QieBianVal}}</span>
@@ -161,30 +156,20 @@
                            :max="300"></el-slider>
               </div>
             </el-form-item>
-            <!--            <el-form-item label="输出数量">-->
-            <!--              <el-input v-model.lazy="enumVal"></el-input>-->
-            <!--            </el-form-item>-->
-
+            <el-form-item label="派工规格">
+              <el-input v-model="DisPathListSync"></el-input>
+            </el-form-item>
           </el-row>
           <el-row type="flex"
                   justify="start">
-            <!--                        <el-col>-->
-            <!--                            <el-button type="primary"-->
-            <!--                                       size="mini"-->
-            <!--                                       @click="addDive()">增加模块-->
-            <!--                            </el-button>-->
-            <!--                        </el-col>-->
-            <!-- <el-col>
-              <el-button type="primary"
-                         size="mini"
-                         @click="enumData()">生成随机数
-
-              </el-button>
-            </el-col> -->
             <el-col>
               <el-button type="primary"
                          size="mini"
-                         @click="onSave">生产派工
+                         @click="onSave">生成排版
+              </el-button>
+              <el-button type="primary"
+                         size="mini"
+                         @click="OnSaveDynamicData">生产派工
               </el-button>
             </el-col>
           </el-row>
@@ -192,10 +177,18 @@
         <!--随机数代码提示-->
       </div>
     </div>
-    <dialog>
-      <DropDataList></DropDataList>
-    </dialog>
-    <!--    <el-tree :props="props" :load="loadNodel" @node-contextmenu="AddJsonArr" lazy show-checkbox></el-tree>-->
+    <el-dialog :visible.sync="DiagSyncData">
+      <el-row type="flex" justify="start" align="middle">
+        <el-col :span="10">
+          <el-input v-model="fqcd" placeholder="请输入分切长度"></el-input>
+        </el-col>
+        <el-col :offset="2">
+          <el-button type="success" @click="ComputeWinth">计算</el-button>
+        </el-col>
+      </el-row>
+
+      <DropDataList :menudata="menudata"></DropDataList>
+    </el-dialog>
     <div class="Menucontrol"
          v-drag="contain"
          v-show="dele2">
@@ -209,12 +202,41 @@
       <div style="padding:7px;"
            @mousedown="mouseDown($event,false)">
         <div @contextmenu.prevent="PostNewMakerArr">
-          <TreeTable :data="TreeData" :columns="columns" ref="isReload" @AddDivWidth="AddDivWidth($event)"
+          <TreeTable :data="TreeData" :columns="columns" :HangTotal="total" ref="isReload"
+                     @AddDivWidth="AddDivWidth($event)"
                      @NextOrderData='NextOrderData' border/>
         </div>
         <!--随机数代码提示-->
       </div>
     </div>
+    <div class="Menucontrol2"
+         v-drag="contain"
+         v-show="dele3">
+      <div style="line-height:30px;background:#409EFF;cursor:move;color:#fff;text-indent:15px;">
+        大杠膜存货信息
+      </div>
+      <el-button type="danger"
+                 class="del"
+                 @click="deel3(index,$event)"
+                 circle></el-button>
+      <div style="padding:7px;"
+           @mousedown="mouseDown($event,false)">
+        <div @contextmenu.prevent="HangNewMakerArr">
+          <TreeTable :data="TreeDataOrder" :columns="columns2" ref="isReloadPub"
+                     @NextOrderData='NextOrderDataTwo' :HangTotal="HangTotal" border/>
+        </div>
+        <!--随机数代码提示-->
+      </div>
+    </div>
+    <el-dialog title="是否跳转到派工单界面" :visible.sync="GotoSyncDiag">
+      <el-row type="flex" align="middle" justify="center">
+        <el-col :span="5">
+          <router-link id="LiuYan" to="/production/FenQieManage">
+            <el-button>跳转到分切管理</el-button>
+          </router-link>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -225,8 +247,8 @@
   import indexVue from '../login/index.vue';
   import {constants} from 'fs';
   import {setTimeout} from 'timers';
-  import {DynamicOrder} from '@/api/article.js'
-  import {LimitPageSellOrderData} from '@/api/remoteSearch.js'
+  import {DynamicOrder, HangData, GroupTeamSelectData} from '@/api/article.js'
+  import {LimitPageSellOrderData, LimitPageSlitData} from '@/api/remoteSearch.js'
   import DropDataList from './DropDataList'
 
   export default {
@@ -271,60 +293,147 @@
         return parseInt(this.FenQieLength)
       }
     },
-    components: {vueDragInfinite, Axios, TreeTable,DropDataList},
+    components: {vueDragInfinite, Axios, TreeTable, DropDataList},
     data: function () {
       return {
+        GotoSyncDiag: false,
+        IsSetType: '',
+        UseHang: "",
+        dele3: true,
+        ProductsCsCode: undefined,
+        UploadKey: 0,
+        ProductName: "",
+        DisPathListSync: undefined,
+        fqcd: undefined,
+        name: undefined,
+        DiagSyncData: false,
         valList: 0,
         dele2: true,
         divindexData: undefined,
         addWidthDataSon: undefined,
         isColorStop: false,
         TreeData: [],
-        columns: [
+        TreeDataOrder: [],
+        columns2: [
           {
-            label: "订单编号",
-            key: "cSOCode",
+            label: "产品编码",
+            key: "sCoCOde",
             width: 200,
             checkbox: true,
             expand: true
           },
           {
-            label: "订单时间",
-            key: "dDate",
+            label: "规格",
+            key: "spec",
           },
           {
-            label: "客户名称",
-            key: "cCusName",
+            label: "派工单编号",
+            key: "dispathid",
+            width: 120
           },
           {
-            label: "供货时间",
-            key: "dPreDate",
+            label: "产品名称",
+            key: "productName",
+          },
+          {
+            label: "宽度",
+            key: "width",
+          },
+          {
+            label: "杠数",
+            key: "hangval",
+          },
+        ],
+        columns: [
+          {
+            label: "产品编码",
+            key: "cInvCode",
+            width: 200,
+            checkbox: true,
+            expand: true
+          },
+          {
+            label: "产品名称",
+            key: "cInvName",
+          },
+          {
+            label: "规格",
+            key: "cInvStdtd",
+          },
+          {
+            label: "总重量",
+            key: "Allup",
+          },
+          {
+            label: "件数",
+            key: "pice",
+          },
+          {
+            label: "米数",
+            key: "rice",
+          },
+          {
+            label: "产品规格",
+            key: "cInvStd",
+          },
+          {
+            label: "订货米数",
+            key: "cbdefine3",
+          },
+          {
+            label: "产品编码",
+            key: "cInvCodeSS",
+          }, {
+            label: "产品名称",
+            key: "cInvNameName",
+          },
+          {
+            label: "定长",
+            key: "fLength",
+          },
+          {
+            label: "客户简称",
+            key: "cCusAbbName",
           },
           {
             label: "订货数量",
             key: "iQuantity",
           },
-          // {
-          //   label: "长度",
-          //   key: "count",
-          // },
           {
-            label: "宽度",
+            label: "订货宽度",
             key: "cDefine34",
           },
+          {
+            label: "订货日期",
+            key: "dDate",
+          },
+          {
+            label: "供货日期",
+            key: "dPreDate",
+          },
+          {
+            label: "客户编码",
+            key: "cCusCode",
+          },
+
+
         ],
         props: {
           label: 'name',
           children: 'zones',
           isLeaf: 'leaf'
         },
+        rowCutVal: undefined,
         menudata: [],
+        abcCopys: [],
         isDataLoad: 0,
         FenQieLength: 100,//分切长度
         FenQieVal: undefined,//分切数
         blackVal: undefined,
         MaxWid: 2000,
+        ratio: 0,
         MinWid: 0,
+        groupCode: '',
         HttpUrl: "http://127.0.0.1",
         MakeGroup: [],
         MakeGroupval: undefined,
@@ -358,6 +467,8 @@
             value: 5,
           }
         ],
+        HangTotal: 0,
+        HangPageVal: 1,
         POSTDATA: undefined,
         enumVal: undefined,
         enumMax: 1000,
@@ -368,8 +479,19 @@
         wid2: undefined,
         QieVal: 0,//切边距
         heightValue: 100,
+        total: undefined,
+        HangListVl: undefined,
         json: [],
-        name: '动态排版',
+        SelectName: [
+          {
+            value: 'cationg',
+            label: '流延排版'
+          },
+          {
+            value: 'slitting',
+            label: '分切排版'
+          }
+        ],
         contain: {
           xx: 500,
           yy: 500
@@ -378,47 +500,135 @@
         abccope: [],
         add: [],
         busy: false,
-        tableData1: [{
-          id: 1,
-
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          id: 2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          id: 3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          hasChildren: true
-        }, {
-          id: 4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
+        isUPload: false
       }
     },
     created() {
       this.heig = window.innerHeight;
       // this.GetListData();
       // this.groupMaker();
+      this.SelectGruopList();
       this.OrderListData();
-
+      this.HangeLineData();
     },
     methods: {
+      SelectGruopList() {
+        GroupTeamSelectData().then((res) => {
+          this.MakeGroup = res.data
+        })
+      },
+      HangNewMakerArr() {
+        var arr1 = []
+        for (let i in this.TreeDataOrder) {
+          if (this.TreeDataOrder[i]._select == true) {
+            for (let j in this.TreeDataOrder[i].style) {
+              for (let k in this.TreeDataOrder[i].style[j]) {
+                arr1.push(this.TreeDataOrder[i].style[j][k])
+              }
+            }
+          }
+        }
+        console.log(arr1)
+        this.HangListVl = arr1
+        this.$refs['isReloadPub'].RestartData()
+      },
+      NextOrderDataTwo(data) {
+        this.HangPageVal = data.page
+        this.HangeLineData()
+      },
+      HangeLineData() {
+        const data = {
+          page: this.HangPageVal
+        }
+        HangData(data).then((res) => {
+          this.TreeDataOrder = res.data.data
+          this.HangTotal = res.data.total
+          console.log(this.HangTotal)
+        })
+      },
+      deel3() {
+        this.dele3 = false;
+      },
+      updateDataPage() {
+        this.isUPload = true
+      },
+      OnSaveDynamicData() {
+        var arr1 = []
+        console.log(this.abc)
+        for (let i in this.abc) {
+          var arr2 = []
+          for (let j in this.abc[i]) {
+            var val1 = this.abc[i][j].style.yuanwid
+            var val2 = parseInt(val1.slice(0, -2))
+            arr2.push(val2)
+          }
+          arr1.push(arr2)
+        }
+        var isPostData = [];
+        console.log(arr2)
+        if (this.UseHang != 0) {
+          for (let i in this.UseHang) {
+            isPostData.push(arr1[i-1])
+          }
+        } else {
+          isPostData = arr1
+        }
+        var data = {
+          arr: isPostData,
+          Width: this.wid,
+          SoCode: this.ProductsCsCode,
+          Name: this.ProductName,
+          spec: this.DisPathListSync,
+          cut: this.cutVal,
+          FenQie: this.fqcd,
+          group: this.groupCode,
+          MakeGroupval: this.MakeGroupval
+        }
+
+        if (this.IsSetType == "cationg") {
+          LimitPageSellOrderData(data).then((res) => {
+            console.log(res)
+            if (res) {
+              this.$message("派工完成")
+            }
+          })
+        }
+        if (this.IsSetType == undefined || this.IsSetType == null || this.IsSetType == 0) {
+          this.$message("请选择模式")
+        }
+        if (this.IsSetType == "slitting") {
+          LimitPageSlitData(data).then((res) => {
+            if (res) {
+              this.$message("派工完成")
+            }
+          })
+        }
+      },
+      ComputeWinth() {
+        this.valList = 0;
+        if (this.fqcd != undefined) {
+          for (let i in this.menudata) {
+            this.menudata[i].count = Math.ceil(this.menudata[0].cInvCode * 0.000001 * this.menudata[i].coding * 0.001 * 900 * this.fqcd)
+            this.valList = this.valList + this.menudata[i].count
+          }
+        }
+        console.log(this.valList)
+      },
       NextOrderData(data) {
         DynamicOrder(data).then((res) => {
-          this.TreeData = res.data
+          var js = JSON.parse(res.data.res)
+          var arr = [];
+          for (let i in js) {
+            arr.push(js[i])
+          }
+          this.TreeData = arr
+          this.total = res.data.total
         })
       },
       OrderListData() {
         DynamicOrder().then((res) => {
-          this.TreeData = res.data;
+          this.TreeData = res.data.data
+          this.total = res.data.total
         })
       },
       showIndentLeft() {
@@ -429,22 +639,25 @@
       },
       PostNewMakerArr() {
         let arr = [];
+        this.DiagSyncData = true
         var valList = 0;
         if (this.valList > 2000) {
           this.$message("数据总数已大于2000，请谨慎选择;总数为：" + this.valList)
+          this.DiagSyncData = true
         } else {
           for (let i in this.TreeData) {
             for (let j in this.TreeData[i].children) {
               if (this.TreeData[i].children[j]._select === true) {
                 let arr2 = {
-                  count: parseInt(this.TreeData[i].children[j].iQuantity),
+                  number: parseInt(this.TreeData[i].children[j].cSOCode),
+                  count: parseInt(this.TreeData[i].children[j].pice),
                   coding: parseInt(this.TreeData[i].children[j].cDefine34),
+                  cInvCode: parseInt(this.TreeData[i].children[j].cInvStd),
                 };
                 this.menudata.push(arr2)
               }
             }
           }
-
           this.$refs.isReload.RestartData();
         }
         for (let i in this.menudata) {
@@ -455,10 +668,9 @@
           this.$message("数据总数已大于2000，请谨慎选择;总数为：" + valList)
         }
         this.$message("菜单选择完成，请生产派工;总数为：" + this.valList)
-        if(this.valList>3000){
+        if (this.valList > 3000) {
 
         }
-        console.log(valList)
       },
       isMouseOut(index) {
         let re = document.querySelectorAll('.contain');
@@ -484,9 +696,11 @@
         this.addWidthDataSon = data;
         if (this.divindexData || this.divindexData === 0) {
           if (data) {
-            let wid = data + 'px';
+            let wid = Math.ceil(data / this.ratio) + 'px';
             let addjson = {
               style: {
+                yuanwid: data + 'px',
+                yuanwidth: '',
                 float: 'left',
                 width: wid,
                 height: '100px',
@@ -507,25 +721,14 @@
             }
             addjson.style.left = le + 'px';
             this.abc[this.divindexData].push(addjson)
+            console.log(this.abc[this.divindexData])
           }
         } else {
           this.$message("请按Ctrl+鼠标左键选择你想要编辑的行")
         }
       },
       load(tree, treeNode, resolve) {
-        resolve([
-          {
-            id: 31,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }, {
-            id: 32,
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          }
-        ])
+        resolve([])
       },
       AddJsonArr(MouseData, ListData, DataData) {
         console.log(DataData)
@@ -549,14 +752,15 @@
         }
       },
       changWdthOrQie(values) {
-        let data = values;
-        let data2 = data.split('-')
-        this.wid = parseInt(data2[0]);
-        this.MinWid = parseInt(data2[0]);
-        this.MaxWid = parseInt(data2[1]);
-        // this.wid = values.MinWidth;
-        // this.MinWid = values.MinWidth;
-        // this.MaxWid = values.MaxWidth;
+        var machine;
+        for (let i in this.MakeGroup) {
+          if (this.MakeGroup[i].group_id == values) {
+            machine = this.MakeGroup[i].group_id
+            this.MinWid = parseInt(this.MakeGroup[i].group_Minscope)
+            this.MaxWid = parseInt(this.MakeGroup[i].group_Maxscope)
+            this.groupCode = this.MakeGroup[i].groupCode
+          }
+        }
       },
       changeWidth() {
         this.wid = parseInt(this.wid2);
@@ -647,28 +851,10 @@
             arr2.push(arr1)
           }
           this.abccope = arr2;
-          console.log(this.abccope);
-          // this.ListVal = res.data.data;
-          // this.arrList = res.data.List;
           this.PostLoding = false;
-          // console.log(res.data)
-          // var ListData={
-          //     style:{
-          //         width:undefined
-          //     }
-          // };
-          // var arr2 = [];
-          // for(let i in res.data){
-          //     for(let j in res.data[i]){
-          //         ListData.style.width = res.data[i][j];
-          //         arr2.push(ListData);
-          //     }
-          // }
-          // console.log(arr2)
-          // this.abc = res.data
         })
       },
-      /*
+      /*valList
       /生产班组
        */
       groupMaker() {
@@ -677,62 +863,100 @@
         })
       },
       /*
-      * 生产派工
+      * 生成排版
       * */
       onSave() {
-        let data = {
-          kw: this.wid,
-          bj: this.QieVal,
-          hfqs: this.cutVal,
-          menuwid: this.menudata,
-          remark: {
-            kw: '宽度',
-            bj: "切边距",
-            hfqs: "行分切数",
-            menuwid: "选择的宽度"
+        console.log(this.menudata)
+        if (this.IsSetType == "cationg") {
+          let data = {
+            kd: this.wid,
+            bj: this.QieVal,
+            yfqs: this.cutVal,
+            menuwid: this.menudata,
+            hfqs: this.rowCutVal,
+            n: this.valList,
+            pbsj: [],
+            num: 0,
+            remark: {
+              kw: '宽度',
+              bj: "切边距",
+              hfqs: "行分切数",
+              menuwid: "选择的宽度"
+            }
           }
+
+          if (data.menuwid.length == 0) {
+            this.$message("请先选择订单")
+          } else {
+            console.log(data)
+          }
+          Axios.post("http://1.194.239.69:8094/dtpb/LayoAlgo", data)
+            .then((ress) => {
+              var startVal = 0
+              var arrRess = [];
+              this.$nextTick(() => {
+                this.abc = [];
+                this.abccope = [];
+                setTimeout(() => {
+                  var a = ress.data.pbsj
+                  this.abc = a
+                  this.ratio = this.wid / 1000
+                  console.log(this.abc)
+                }, 500);
+                console.log(this.abc)
+                this.PostLoding = false
+              })
+            });
         }
-        if (data.menuwid.length == 0) {
-          this.$message("请先选择订单")
-        } else {
-          console.log(data)
+        if (this.IsSetType == undefined || this.IsSetType == null || this.IsSetType == 0) {
+          this.$message("请选择模式")
         }
-        // "http://192.168.2.118/Spb/testsf?n="+this.enumVal+"&kw="+this.wid+'&bj='+this.QieVal+"&hfqs="+this.blackVal+"&fqs="+this.FenQieVal
-        /* Axios.post("http://118.24.131.216/production/GetPaixuListData", {data}).then((ress) => {
-           this.$nextTick(() => {
-             this.abc = [];
-             this.abccope = [];
-             setTimeout(() => {
-               this.abc = ress.data.arr
-             }, 500);
-             console.log(this.abc.arr)
-             var arr2 = [];
-             for (var i in ress.data.arr) {
-               var arr1 = []
-               for (var j in ress.data.arr[i]) {
-                 var val1 = ress.data.arr[i][j].style.width
-                 var val2 = val1.indexOf('p')
-                 var wid = parseInt(val1.slice(0, val2))
-                 arr1.push(wid)
-               }
-               arr2.push(arr1)
-             }
-             setTimeout(() => {
-               this.abccope = arr2
-               console.log(this.abccope)
-             }, 500)
-             // var code = JSON.stringfy(ress.data.arr)
-             // this.abc.push();
-             this.PostLoding = false
-           })
-           // if (ress) {
-           //   Axios.post("http://192.168.2.118/Spb/testArr?n=" + this.enumVal).then((res) => {
-           //     // this.abc = res.data
-           //     // this.POSTDATA = ress.data,
-           //     // this.centerDialogVisible = true
-           //   })
-           // }
-         });*/
+        if (this.IsSetType == "slitting") {
+          var num = this.HangListVl.length
+          let data = {
+            kd: this.wid,
+            bj: this.QieVal,
+            yfqs: this.cutVal,
+            menuwid: this.menudata,
+            hfqs: this.rowCutVal,
+            n: this.valList + num,
+            pbsj: this.HangListVl,
+            num: num,
+            remark: {
+              kw: '宽度',
+              bj: "切边距",
+              hfqs: "行分切数",
+              menuwid: "选择的宽度"
+            }
+          }
+          if (data.menuwid.length == 0) {
+            this.$message("请先选择订单")
+          } else {
+            console.log(data)
+          }
+          console.log(this.HangListVl)
+          Axios.post("http://1.194.239.69:8094/dtpb/LayoAlgo", data)
+            .then((ress) => {
+              var startVal = 0
+              var arrRess = [];
+              this.$nextTick(() => {
+                this.abc = [];
+                this.abccope = [];
+                setTimeout(() => {
+                  this.abc = ress.data.pbsj
+                  console.log(this.abc)
+                  this.ratio = this.wid / 1000
+                }, 500);
+                for (let i in this.abc) {
+                  this.abc[i]['value'] = startVal
+                  startVal += 1
+                }
+                console.log(this.abc)
+                this.PostLoding = false
+              })
+            });
+        }
+
       },
       enumData() {
         this.enumArr = []
@@ -823,7 +1047,7 @@
   }
 
   .Menucontrol {
-    width: 800px;
+    width: 1500px;
     border-radius: 5px;
     overflow: hidden;
     background-color: #b3c0d1;
@@ -831,6 +1055,17 @@
     z-index: 999;
     left: 220px;
     top: 100px;
+  }
+
+  .Menucontrol2 {
+    width: 700px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #b3c0d1;
+    position: fixed;
+    z-index: 999;
+    left: 220px;
+    top: 200px;
   }
 
   .control {
