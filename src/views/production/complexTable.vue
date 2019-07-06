@@ -6,32 +6,6 @@
                 style="width: 200px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter"/>
-      <!--      <el-select v-model="listQuery.id"-->
-      <!--                 :placeholder="$t('production.id')"-->
-      <!--                 clearable-->
-      <!--                 style="width: 90px"-->
-      <!--                 class="filter-item">-->
-      <!--        <el-option v-for="(item,index) in importanceOptions"-->
-      <!--                   :key="index"-->
-      <!--                   :label="item.id"-->
-      <!--                   :value="item.id"/>-->
-      <!--      </el-select>-->
-      <!--      <el-select v-model="listQuery.code"-->
-      <!--                 :placeholder="$t('production.code')"-->
-      <!--                 clearable-->
-      <!--                 class="filter-item"-->
-      <!--                 style="width: 130px">-->
-      <!--        <el-option v-for="(item,index) in calendarTypeOptions"-->
-      <!--                   :key="index"-->
-      <!--                   :label="item.code"-->
-      <!--                   :value="item.code"/>-->
-      <!--      </el-select>-->
-      <el-button v-waves
-                 class="filter-item"
-                 type="primary"
-                 icon="el-icon-search"
-                 @click="handleFilter">{{ $t('table.search') }}
-      </el-button>
       <el-button v-waves
                  :loading="downloadLoading"
                  class="filter-item"
