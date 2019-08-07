@@ -5,8 +5,7 @@
              :settings="chartSettings"
              :extend='extend'
              :tooltip-formatter="tooltipFormatter"
-             :events="chartEvents"
-    />
+             :events="chartEvents"/>
     <el-row type="flex"
             justify="center"
             align="middle">

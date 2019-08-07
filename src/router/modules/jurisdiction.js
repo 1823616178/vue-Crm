@@ -41,13 +41,13 @@ const jurisdiction = {
       }
     },
     {
-      path: 'TeamGroupManage',
-      component: () => import('@/views/jurisdiction/TeamGroupManage'),
-      name: 'TeamGroupManage',
+      path: 'BusinessManage',
+      component: () => import('@/views/jurisdiction/BusinessManage'),
+      name: 'BusinessManage',
       meta: {
-        title: 'TeamGroupManage',
+        title: 'BusinessManage',
       }
-    }
+    },
   ]
 }
 

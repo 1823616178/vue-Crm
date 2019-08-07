@@ -13,10 +13,12 @@ import jurisdiction from './modules/jurisdiction.js'
 // import chartsRouter from './modules/charts'
 // import tableRouter from './modules/table'
 // import treeTableRouter from './modules/tree-table'
-import production from './modules/production'
+// import production from './modules/production'
 // import nestedRouter from './modules/nested'
-import saleTableRouter from './modules/sale-table'
-import stockManage from './modules/stock-manage.js'
+// import saleTableRouter from './modules/sale-table'
+// import stockManage from './modules/stock-manage.js'
+import BusinessManageRouter from './modules/BusinessManage.js'
+import MyInfo from './modules/MyInfo'
 // import TextContent from "@/views/TextContent/Index.vue"
 
 /** note: sub-menu only appear when children.length>=1
@@ -89,13 +91,13 @@ export default new Router({
 })
 
 export const asyncRoutes = [
-
-
     /** When your routing table is too long, you can split it into small modules**/
     jurisdiction,
-    saleTableRouter,
-    production,
-    stockManage,
+    // saleTableRouter,
+    // production,
+    // stockManage,
+    BusinessManageRouter,
+    MyInfo,
     // componentsRouter,
     // chartsRouter,
     // nestedRouter,

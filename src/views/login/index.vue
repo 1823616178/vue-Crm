@@ -4,19 +4,19 @@
       <div class="video-container">
         <div :style="fixStyle"
              class="filter">
-          <video :style="fixStyle"
-                 autoplay
-                 loop
-                 v-on:canplay="canplay">
-            <source src="../../../src/MP4/ofo.mp4"
-                    type="video/mp4"/>
-          </video>
-          <div class="poster hidden"
-               v-if="!vedioCanPlay">
-            <img :style="fixStyle"
-                 src="../../../src/MP4/ofo.png"
-                 alt="">
-          </div>
+<!--          <video :style="fixStyle"-->
+<!--                 autoplay-->
+<!--                 loop-->
+<!--                 v-on:canplay="canplay">-->
+<!--            <source src="../../../src/MP4/ofo.mp4"-->
+<!--                    type="video/mp4"/>-->
+<!--          </video>-->
+<!--          <div class="poster hidden"-->
+<!--               v-if="!vedioCanPlay">-->
+<!--            <img :style="fixStyle"-->
+<!--                 src="../../../src/MP4/ofo.png"-->
+<!--                 alt="">-->
+<!--          </div>-->
           <div class="login-container">
             <el-form ref="loginForm"
                      :model="loginForm"
@@ -253,8 +253,13 @@
   .video-container .filter {
     z-index: 1;
     position: absolute;
-    background: rgba(0, 0, 0, 0.4);
+    /*background: rgba(0, 0, 0, 0.4);*/
+    /*background: -webkit-linear-gradient(red, blue); !* Safari 5.1 - 6.0 *!*/
+    /*background: -o-linear-gradient(red, blue); !* Opera 11.1 - 12.0 *!*/
+    /*background: -moz-linear-gradient(red, blue); !* Firefox 3.6 - 15 *!*/
+    background: linear-gradient(#939394, #0a76a4); /* 标准的语法 */
   }
+
 </style>
 
 

@@ -57,36 +57,36 @@ const permission = {
   },
   mutations: {
     SET_ROUTES: (state, routes) => {
-      state.addRoutes = routes
+      state.addRoutes = routes;
       state.routes = constantRoutes.concat(routes)
     }
   },
   actions: {
     GenerateRoutes({commit}, data) {
       return new Promise(resolve => {
-          const {roles} = data
-          var accessedRoutes
+          const {roles} = data;
+          var accessedRoutes;
           if (roles.includes('admin')) {
-            accessedRoutes = asyncRoutes
-            commit('SET_ROUTES', accessedRoutes)
+            accessedRoutes = asyncRoutes;
+            commit('SET_ROUTES', accessedRoutes);
             resolve(accessedRoutes)
           } else {
             getEditor(roles).then((res) => {
                 if (res) {
-                  var Routers = res.data
-                  accessedRoutes = filterAsyncRoutes(Routers, roles)
+                  var Routers = res.data;
+                  accessedRoutes = filterAsyncRoutes(Routers, roles);
                   for (let i in asyncRoutes) {
                     for (let j in accessedRoutes) {
                       if (accessedRoutes[j].path === asyncRoutes[i].path) {
-                        accessedRoutes[j].component = asyncRoutes[i].component
+                        accessedRoutes[j] = asyncRoutes[i];
                         // accessedRoutes[j].children = asyncRoutes[i].children
-                        for (let o in asyncRoutes[i].children) {
-                          for (let u in accessedRoutes[j].children) {
-                            if (accessedRoutes[j].children[u].path === asyncRoutes[i].children[o].path) {
-                              accessedRoutes[j].children[u].component = asyncRoutes[i].children[o].component
-                            }
-                          }
-                        }
+                        // for (let o in asyncRoutes[i].children) {
+                        //   for (let u in accessedRoutes[j].children) {
+                        //     if (accessedRoutes[j].children[u].path === asyncRoutes[i].children[o].path) {
+                        //       accessedRoutes[j].children[u].component = asyncRoutes[i].children[o].component
+                        //     }
+                        //   }
+                        // }
                       }
                     }
                   }
@@ -96,7 +96,7 @@ const permission = {
                   // }
                   // let Routers = arr
                   // accessedRoutes = filterAsyncRoutes(Routers, roles)
-                  commit('SET_ROUTES', accessedRoutes)
+                  commit('SET_ROUTES', accessedRoutes);
                   resolve(accessedRoutes)
                 }
               }
