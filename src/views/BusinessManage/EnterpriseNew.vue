@@ -317,6 +317,7 @@
                     queryData: "",
                     queryStatus: "",
                     queryPeople: "",
+                    queryName: ""
                 },
                 BaseUrl: "http://127.0.0.1",
                 EnterPriseList: [],

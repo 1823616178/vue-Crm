@@ -79,30 +79,14 @@ const permission = {
                     for (let j in accessedRoutes) {
                       if (accessedRoutes[j].path === asyncRoutes[i].path) {
                         accessedRoutes[j] = asyncRoutes[i];
-                        // accessedRoutes[j].children = asyncRoutes[i].children
-                        // for (let o in asyncRoutes[i].children) {
-                        //   for (let u in accessedRoutes[j].children) {
-                        //     if (accessedRoutes[j].children[u].path === asyncRoutes[i].children[o].path) {
-                        //       accessedRoutes[j].children[u].component = asyncRoutes[i].children[o].component
-                        //     }
-                        //   }
-                        // }
                       }
                     }
                   }
-                  // var arr = []
-                  // for (let i in res.data) {
-                  //   arr.push(res.data[i])
-                  // }
-                  // let Routers = arr
-                  // accessedRoutes = filterAsyncRoutes(Routers, roles)
                   commit('SET_ROUTES', accessedRoutes);
                   resolve(accessedRoutes)
                 }
               }
             )
-            // commit('SET_ROUTES', accessedRoutes)
-            // resolve(accessedRoutes)
           }
         }
       )

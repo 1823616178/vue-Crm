@@ -143,6 +143,7 @@
                     queryData: "",
                     queryStatus: "",
                     queryPeople: "",
+                    queryName: ""
                 },
                 DiagQuert: {
                     page: 1,
@@ -151,7 +152,7 @@
             }
         },
         mounted() {
-            this.GetEnterPriseData()
+            // this.GetEnterPriseData()
         },
         created() {
             this.GetEnterPriseData()

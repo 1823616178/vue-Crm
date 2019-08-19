@@ -9,8 +9,8 @@ NProgress.configure({showSpinner: false}) // NProgress Configuration
 
 // permission judge function
 function hasPermission(roles, permissionRoles) {
-    if (roles.includes('admin')) return true
-    if (!permissionRoles) return true
+    // if (roles.includes('admin')) return true
+    // if (!permissionRoles) return true
     return true
 }
 
@@ -18,10 +18,12 @@ const whiteList = ['/login', '/auth-redirect']
 
 router.beforeEach((to, from, next) => {
     NProgress.start()
+
     if (getToken()) {
         // determine if there has token
 
         /* has token*/
+
         if (to.path === '/login') {
             next({path: '/'})
             NProgress.done()
@@ -31,13 +33,27 @@ router.beforeEach((to, from, next) => {
                 store
                     .dispatch('GetUserInfo')
                     .then(res => {
-                        // 拉取user_info
-                        const roles = res.data.roles
-                        store.dispatch('GenerateRoutes', {roles}).then(accessRoutes => {
-                            // 根据roles权限生成可访问的路由表
-                            router.addRoutes(accessRoutes) // 动态添加可访问路由表
-                            next({...to, replace: true}) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
-                        })
+                        if (to.matched.length == 0) {
+                            const roles = res.data.roles
+                            store.dispatch('GenerateRoutes', {roles}).then(accessRoutes => {
+                                if (to.name == null) {
+                                    next({path: '/'})
+                                }
+                                // 根据roles权限生成可访问的路由表
+                                router.addRoutes(accessRoutes) // 动态添加可访问路由表
+                            })
+                            next()
+
+                        } else {
+                            // 拉取user_info
+                            const roles = res.data.roles
+                            store.dispatch('GenerateRoutes', {roles}).then(accessRoutes => {
+                                // 根据roles权限生成可访问的路由表
+                                router.addRoutes(accessRoutes) // 动态添加可访问路由表
+                                next({...to, replace: true}) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+                            })
+                        }
+
                     })
                     .catch(err => {
                         store.dispatch('FedLogOut').then(() => {
@@ -45,13 +61,12 @@ router.beforeEach((to, from, next) => {
                             next({path: '/'})
                         })
                     })
-            }
-            else {
+            } else {
                 // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
                 if (hasPermission(store.getters.roles, to.meta.roles)) {
                     next()
                 } else {
-                    next({path: '/401', replace: true, query: {noGoBack: true}})
+                    next()
                 }
                 // 可删 ↑
             }
